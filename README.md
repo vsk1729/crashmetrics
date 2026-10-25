@@ -16,7 +16,11 @@ Python tools for automotive crash engineering calculations.
 
 ## Installation
 
-The package is not yet published on PyPI. Install it from GitHub:
+```bash
+python -m pip install crashmetrics
+```
+
+To get the latest unreleased changes, install from GitHub instead:
 
 ```bash
 python -m pip install "git+https://github.com/vsk1729/crashmetrics.git"
@@ -227,6 +231,21 @@ mypy                  # type check
 
 The version is set only in `src/crashmetrics/__init__.py`. Record
 user-visible changes in [CHANGELOG.md](CHANGELOG.md).
+
+### Releasing
+
+Releases are published by `.github/workflows/release.yml` using PyPI
+Trusted Publishing, so no API tokens are stored in the repository.
+
+1. Bump `__version__` and add the CHANGELOG entry; merge to `main`.
+2. Optional dry run: run the **Release** workflow manually from the
+   Actions tab to publish to TestPyPI.
+3. Publish a GitHub release with tag `v<version>`, for example
+   `v0.3.0`. The workflow checks the tag matches `__version__`,
+   builds and checks the sdist and wheel, and publishes to PyPI.
+
+A version can be uploaded to PyPI only once; fix mistakes with a new
+version.
 
 ## Engineering disclaimer
 

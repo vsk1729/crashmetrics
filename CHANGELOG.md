@@ -19,6 +19,13 @@ follow [Semantic Versioning](https://semver.org/).
 - `crashmetrics.acceleration.exceedance_level` and
   `exceedance_duration`, generalising the 3 ms clip to any duration
   and signal.
+- Release workflow publishing to TestPyPI (manual run) and PyPI (GitHub
+  release) with Trusted Publishing.
+
+### Fixed
+
+- LICENSE now contains the complete MIT licence text, including the
+  limitation of liability clause, and is included in the distributions.
 
 ## [0.2.0] - 2026-10-25
 
