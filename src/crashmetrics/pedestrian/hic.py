@@ -1,6 +1,6 @@
-
 """Head Injury Criterion (HIC) calculations."""
 
+import warnings
 from dataclasses import dataclass
 
 import numpy as np
@@ -35,7 +35,9 @@ def calculate_hic(
     acceleration:
         One-dimensional non-negative resultant acceleration in g.
     window_ms:
-        Maximum interval duration in milliseconds.
+        Maximum interval duration in milliseconds. If the signal is
+        shorter than this, a ``UserWarning`` is issued and the search
+        is limited to the signal duration.
     resolution_ms:
         Spacing of the refined time grid in milliseconds.
 
@@ -91,12 +93,18 @@ def calculate_hic(
         raise ValueError("The input time duration must be positive.")
 
     if duration < max_duration:
-        raise ValueError(
-            "The input signal must span at least window_ms."
+        # HIC is the maximum over intervals of at most window_ms, so a
+        # shorter record still has a well-defined value: the search is
+        # limited to the available duration.
+        warnings.warn(
+            f"The input signal spans {duration * 1000.0:.3f} ms, which is "
+            f"shorter than window_ms={window_ms:g}. HIC is evaluated over "
+            "the available duration only; check that the record contains "
+            "the whole impact.",
+            UserWarning,
+            stacklevel=2,
         )
-
-    # Refine the signal using linear interpolation.
-
+        max_duration = duration
 
     # Uniform refinement grid, including the final time.
     base_grid = np.arange(t[0], t[-1], step)
@@ -123,8 +131,6 @@ def calculate_hic(
         np.concatenate((base_grid, original_grid, shifted_grid))
     )
     refined_a = np.interp(grid, t, a)
-
-
 
     # Cumulative trapezoidal integration.
     increments = (

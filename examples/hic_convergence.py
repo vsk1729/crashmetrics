@@ -7,7 +7,6 @@ import numpy as np
 
 from crashmetrics.pedestrian.hic import calculate_hic
 
-
 # Synthetic crash pulse; this is not experimental vehicle data.
 time_s = np.arange(0.0, 0.10001, 0.0005)
 
