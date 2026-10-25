@@ -10,10 +10,10 @@ Available now:
 
 - Head Injury Criterion (HIC), for example HIC15 and HIC36, via `crashmetrics.pedestrian.calculate_hic`
 - Signal processing in `crashmetrics.signals`: SAE J211 CFC filtering (`cfc_filter`), resultants (`resultant`), unit conversion (`to_g`, `to_seconds`) and uniform resampling (`resample_uniform`)
+- Acceleration metrics in `crashmetrics.acceleration`: peak value and time (`peak`) and the 3 ms clip, cumulative or continuous (`clip_3ms`)
 
 Planned (not yet implemented):
 
-- Acceleration time-history metrics such as peak and 3 ms clip (`crashmetrics.acceleration`)
 - Energy and force–displacement metrics (`crashmetrics.energy`)
 
 ## Installation
@@ -75,8 +75,31 @@ hic15 = calculate_hic(t, a_res, window_ms=15.0)
 print(f"HIC15 = {hic15.value:.0f} over {hic15.duration_ms:.2f} ms")
 ```
 
+The same filtered resultant gives the peak and the 3 ms clip:
+
+```python
+from crashmetrics.acceleration import clip_3ms, peak
+
+a_peak = peak(t, a_res)
+print(f"Peak = {a_peak.value:.1f} g at {a_peak.time * 1000:.2f} ms")
+print(f"3 ms clip = {clip_3ms(t, a_res):.1f} g")
+```
+
 If the output interval is not uniform, use
 `resample_uniform(t, a, sample_rate)` before filtering.
+
+### 3 ms clip
+
+`clip_3ms` returns the highest level that the signal reaches or
+exceeds for 3 ms (change with `duration_ms`):
+
+- `mode="cumulative"` (default): 3 ms in total, possibly over several
+  separate intervals. Computed exactly for the linearly interpolated
+  signal.
+- `mode="continuous"`: 3 ms in a single interval. Never higher than
+  the cumulative value.
+
+Check which definition your assessment protocol requires.
 
 ### CFC filter
 
