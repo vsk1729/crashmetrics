@@ -6,17 +6,34 @@ Python tools for automotive crash engineering calculations.
 
 ## Features
 
-- Head Injury Criterion (HIC) calculations
-- Acceleration time-history analysis
-- Planned energy and force–displacement metrics
+Available now:
+
+- Head Injury Criterion (HIC), for example HIC15 and HIC36, via `crashmetrics.pedestrian.calculate_hic`
+
+Planned (not yet implemented):
+
+- Signal processing: SAE J211 CFC filtering, resultants, unit conversion (`crashmetrics.signals`)
+- Acceleration time-history metrics such as peak and 3 ms clip (`crashmetrics.acceleration`)
+- Energy and force–displacement metrics (`crashmetrics.energy`)
 
 ## Installation
 
+The package is not yet published on PyPI. Install it from GitHub:
+
 ```bash
-python -m pip install crashmetrics
+python -m pip install "git+https://github.com/vsk1729/crashmetrics.git"
 ```
 
-The package is under development. Install from source if a public release is not yet available.
+For development, clone the repository and install it in editable mode with the test tools:
+
+```bash
+git clone https://github.com/vsk1729/crashmetrics.git
+cd crashmetrics
+python -m pip install -e ".[dev]"
+python -m pytest
+```
+
+Requires Python 3.10 or later and NumPy 1.24 or later.
 
 ## Example
 
@@ -44,6 +61,8 @@ print(result.duration_ms)
 - Numerical integration: trapezoidal rule on a refined, linearly interpolated time grid
 
 Results depend on the selected grid resolution and the numerical method.
+
+If the record is shorter than `window_ms`, `calculate_hic` issues a `UserWarning` and evaluates HIC over the available duration. Make sure the record contains the whole impact.
 
 ## Engineering disclaimer
 

@@ -1,4 +1,3 @@
-
 """Independent numerical reference checks for HIC."""
 
 import numpy as np
@@ -36,7 +35,13 @@ def reference_hic(time, acceleration, window_ms, step_ms=0.02):
             segment_t = grid[i:j + 1]
             segment_a = values[i:j + 1]
 
-            integral = np.trapezoid(segment_a, segment_t)
+            # Written out by hand: np.trapezoid needs NumPy >= 2.0
+            # and np.trapz is deprecated there.
+            integral = np.sum(
+                0.5
+                * (segment_a[:-1] + segment_a[1:])
+                * np.diff(segment_t)
+            )
             average = integral / duration
             best = max(best, duration * average**2.5)
 

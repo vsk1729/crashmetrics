@@ -1,3 +1,4 @@
+import warnings
 
 import numpy as np
 import pytest
@@ -129,11 +130,37 @@ def test_rejects_invalid_resolution():
         calculate_hic(time, acceleration, resolution_ms=0.0)
 
 
-def test_rejects_signal_shorter_than_window():
+def test_signal_shorter_than_window_warns_and_uses_available_duration():
     time = np.linspace(0.0, 0.010, 11)
     acceleration = np.full_like(time, 10.0)
 
-    with pytest.raises(ValueError):
+    with pytest.warns(UserWarning, match="shorter than window_ms"):
+        result = calculate_hic(time, acceleration, window_ms=15.0)
+
+    assert result.value == pytest.approx(0.010 * 10.0**2.5)
+    assert result.duration_ms == pytest.approx(10.0)
+
+
+def test_short_signal_matches_reference_of_same_window():
+    # With a 12 ms record, HIC15 must equal HIC12: no interval longer
+    # than the record can exist.
+    time = np.array([0.0, 0.002, 0.004, 0.006, 0.009, 0.012])
+    acceleration = np.array([0.0, 40.0, 90.0, 70.0, 30.0, 0.0])
+
+    with pytest.warns(UserWarning):
+        hic15 = calculate_hic(time, acceleration, window_ms=15.0)
+
+    hic12 = calculate_hic(time, acceleration, window_ms=12.0)
+
+    assert hic15.value == pytest.approx(hic12.value)
+
+
+def test_no_warning_when_signal_covers_window():
+    time = np.linspace(0.0, 0.020, 21)
+    acceleration = np.full_like(time, 10.0)
+
+    with warnings.catch_warnings():
+        warnings.simplefilter("error")
         calculate_hic(time, acceleration, window_ms=15.0)
 
 
