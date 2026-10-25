@@ -10,7 +10,6 @@ Available now:
 
 - Head Injury Criterion (HIC), for example HIC15 and HIC36, via `crashmetrics.pedestrian.calculate_hic`
 - Signal processing in `crashmetrics.signals`: SAE J211 CFC filtering (`cfc_filter`), resultants (`resultant`), unit conversion (`to_g`, `to_seconds`) and uniform resampling (`resample_uniform`)
-
 - Acceleration metrics in `crashmetrics.acceleration`: peak value and time (`peak`) and the 3 ms clip, cumulative or continuous (`clip_3ms`)
 
 Planned (not yet implemented):
