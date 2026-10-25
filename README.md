@@ -6,8 +6,6 @@ Python tools for automotive crash engineering calculations.
 
 ## Features
 
-Available now:
-
 - Head Injury Criterion (HIC), for example HIC15 and HIC36, via `crashmetrics.pedestrian.calculate_hic`
 - Signal processing in `crashmetrics.signals`: SAE J211 CFC filtering (`cfc_filter`), resultants (`resultant`), unit conversion (`to_g`, `to_seconds`) and uniform resampling (`resample_uniform`)
 - Acceleration metrics in `crashmetrics.acceleration`: peak value and time (`peak`) and the 3 ms clip, cumulative or continuous (`clip_3ms`)
@@ -19,15 +17,6 @@ The package is not yet published on PyPI. Install it from GitHub:
 
 ```bash
 python -m pip install "git+https://github.com/vsk1729/crashmetrics.git"
-```
-
-For development, clone the repository and install it in editable mode with the test tools:
-
-```bash
-git clone https://github.com/vsk1729/crashmetrics.git
-cd crashmetrics
-python -m pip install -e ".[dev]"
-python -m pytest
 ```
 
 Requires Python 3.10 or later and NumPy 1.24 or later.
@@ -145,7 +134,7 @@ Each end of the signal is padded by odd reflection (`pad_ms`, default
 10 ms) to reduce start-up transients. This padding choice is part of
 this package, not of J211; confirm it matches your protocol.
 
-## Units and numerical method
+## HIC units and numerical method
 
 - Time input: seconds
 - Acceleration input: non-negative resultant magnitude in g
@@ -155,6 +144,31 @@ this package, not of J211; confirm it matches your protocol.
 Results depend on the selected grid resolution and the numerical method.
 
 If the record is shorter than `window_ms`, `calculate_hic` issues a `UserWarning` and evaluates HIC over the available duration. Make sure the record contains the whole impact.
+
+## Development
+
+Clone the repository and install it in editable mode with the
+development tools (pytest, ruff, mypy, build):
+
+```bash
+git clone https://github.com/vsk1729/crashmetrics.git
+cd crashmetrics
+python -m pip install -e ".[dev]"
+```
+
+Run the same checks as CI before opening a pull request:
+
+```bash
+python -m pytest      # tests
+ruff check .          # lint
+mypy                  # type check
+```
+
+`examples/hic_convergence.py` shows how the HIC result changes with
+`resolution_ms`; run it after changing the HIC algorithm.
+
+The version is set only in `src/crashmetrics/__init__.py`. Record
+user-visible changes in [CHANGELOG.md](CHANGELOG.md).
 
 ## Engineering disclaimer
 

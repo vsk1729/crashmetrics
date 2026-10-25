@@ -4,15 +4,36 @@ import warnings
 from dataclasses import dataclass
 
 import numpy as np
+from numpy.typing import ArrayLike
 
 
 @dataclass(frozen=True)
 class HICResult:
-    """Result of a HIC calculation."""
+    """Result of a HIC calculation.
+
+    ``start_time`` and ``end_time`` are in seconds, like the input
+    time; the ``*_ms`` properties give the same values in
+    milliseconds.
+    """
 
     value: float
+    """HIC value (dimensionless by convention)."""
+
     start_time: float
+    """Start of the critical interval in seconds."""
+
     end_time: float
+    """End of the critical interval in seconds."""
+
+    @property
+    def start_time_ms(self) -> float:
+        """Start of the critical interval in milliseconds."""
+        return self.start_time * 1000.0
+
+    @property
+    def end_time_ms(self) -> float:
+        """End of the critical interval in milliseconds."""
+        return self.end_time * 1000.0
 
     @property
     def duration_ms(self) -> float:
@@ -21,8 +42,8 @@ class HICResult:
 
 
 def calculate_hic(
-    time,
-    acceleration,
+    time: ArrayLike,
+    acceleration: ArrayLike,
     window_ms: float = 15.0,
     resolution_ms: float = 0.1,
 ) -> HICResult:

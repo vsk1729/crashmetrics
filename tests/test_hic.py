@@ -180,3 +180,17 @@ def test_coarse_resolution_can_reach_exact_window():
     assert result.value == pytest.approx(
         0.015 * 10.0**2.5
     )
+
+
+def test_result_reports_times_in_ms():
+    time = np.linspace(0.0, 0.030, 31)
+    acceleration = np.zeros_like(time)
+    acceleration[10:21] = 50.0  # 10 ms to 20 ms
+
+    result = calculate_hic(time, acceleration, window_ms=15.0)
+
+    assert result.start_time_ms == pytest.approx(result.start_time * 1000.0)
+    assert result.end_time_ms == pytest.approx(result.end_time * 1000.0)
+    assert result.duration_ms == pytest.approx(
+        result.end_time_ms - result.start_time_ms
+    )
