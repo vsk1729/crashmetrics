@@ -30,6 +30,7 @@ import math
 from dataclasses import dataclass
 
 import numpy as np
+from numpy.typing import ArrayLike, NDArray
 
 __all__ = [
     "CrushResult",
@@ -61,7 +62,12 @@ def _cumulative_trapezoid(x, y, initial=0.0):
     return initial + np.concatenate(([0.0], np.cumsum(increments)))
 
 
-def integrate_acceleration(time, acceleration, v0=0.0, x0=0.0):
+def integrate_acceleration(
+    time: ArrayLike,
+    acceleration: ArrayLike,
+    v0: float = 0.0,
+    x0: float = 0.0,
+) -> tuple[NDArray[np.float64], NDArray[np.float64]]:
     """Integrate acceleration to velocity and displacement.
 
     Parameters
@@ -101,7 +107,9 @@ def integrate_acceleration(time, acceleration, v0=0.0, x0=0.0):
     return velocity, displacement
 
 
-def absorbed_energy(displacement, force):
+def absorbed_energy(
+    displacement: ArrayLike, force: ArrayLike
+) -> NDArray[np.float64]:
     """Cumulative energy along a force-displacement curve.
 
     Parameters
@@ -170,7 +178,12 @@ def _cut_at_displacement(d, f, limit):
     )
 
 
-def crush_metrics(displacement, force, mass=None, max_displacement=None):
+def crush_metrics(
+    displacement: ArrayLike,
+    force: ArrayLike,
+    mass: float | None = None,
+    max_displacement: float | None = None,
+) -> CrushResult:
     """Summarise a crush response from its force-displacement curve.
 
     Parameters
@@ -233,7 +246,9 @@ def crush_metrics(displacement, force, mass=None, max_displacement=None):
     )
 
 
-def kinetic_energy(mass, velocity):
+def kinetic_energy(
+    mass: float, velocity: ArrayLike
+) -> float | NDArray[np.float64]:
     """Return the kinetic energy ``0.5 * mass * velocity**2``.
 
     Works element-wise on arrays. With mass in kg and velocity in m/s

@@ -172,3 +172,8 @@ def test_clip_rejects_unknown_mode():
     t = np.linspace(0.0, 0.01, 11)
     with pytest.raises(ValueError, match="mode"):
         clip_3ms(t, np.ones_like(t), mode="average")
+
+
+def test_peak_time_ms():
+    result = peak([0.0, 0.0125, 0.02], [0.0, 9.0, 1.0])
+    assert result.time_ms == pytest.approx(12.5)

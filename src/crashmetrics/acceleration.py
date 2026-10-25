@@ -15,8 +15,10 @@ treated as piecewise linear between samples.
 
 import math
 from dataclasses import dataclass
+from typing import Literal
 
 import numpy as np
+from numpy.typing import ArrayLike
 
 __all__ = ["PeakResult", "clip_3ms", "peak"]
 
@@ -26,8 +28,15 @@ class PeakResult:
     """Result of a peak calculation."""
 
     value: float
+    """Peak value, in the unit of the input acceleration."""
+
     time: float
     """Time of the peak in seconds."""
+
+    @property
+    def time_ms(self) -> float:
+        """Time of the peak in milliseconds."""
+        return self.time * 1000.0
 
 
 def _validate(time, acceleration):
@@ -48,7 +57,11 @@ def _validate(time, acceleration):
     return t, a
 
 
-def peak(time, acceleration, absolute=False):
+def peak(
+    time: ArrayLike,
+    acceleration: ArrayLike,
+    absolute: bool = False,
+) -> PeakResult:
     """Return the peak acceleration and when it occurs.
 
     Parameters
@@ -176,7 +189,12 @@ def _continuous_level(t, a, duration):
     return low
 
 
-def clip_3ms(time, acceleration, duration_ms=3.0, mode="cumulative"):
+def clip_3ms(
+    time: ArrayLike,
+    acceleration: ArrayLike,
+    duration_ms: float = 3.0,
+    mode: Literal["cumulative", "continuous"] = "cumulative",
+) -> float:
     """Return the 3 ms clip of an acceleration signal.
 
     Parameters

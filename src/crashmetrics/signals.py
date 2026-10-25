@@ -21,6 +21,7 @@ Filter the components, not the resultant.
 import math
 
 import numpy as np
+from numpy.typing import ArrayLike, NDArray
 
 __all__ = [
     "STANDARD_GRAVITY",
@@ -90,7 +91,12 @@ def _uniform_step(time, rel_tol=1.0e-3):
     return step
 
 
-def cfc_filter(time, signal, cfc, pad_ms=10.0):
+def cfc_filter(
+    time: ArrayLike,
+    signal: ArrayLike,
+    cfc: float,
+    pad_ms: float = 10.0,
+) -> NDArray[np.float64]:
     """Apply an SAE J211 channel frequency class (CFC) filter.
 
     Parameters
@@ -198,7 +204,7 @@ def _second_order_pass(x, a0, a1, a2, b1, b2):
     return y
 
 
-def resultant(*components):
+def resultant(*components: ArrayLike) -> NDArray[np.float64]:
     """Return the resultant magnitude of two or three components.
 
     Parameters
@@ -230,7 +236,7 @@ def _normalise_unit(unit):
     return _ACCELERATION_ALIASES.get(key, key)
 
 
-def to_g(acceleration, unit):
+def to_g(acceleration: ArrayLike, unit: str) -> NDArray[np.float64]:
     """Convert acceleration to g (standard gravity, 9.80665 m/s^2).
 
     Parameters
@@ -260,7 +266,7 @@ def to_g(acceleration, unit):
     return a * (_ACCELERATION_UNITS[key] / STANDARD_GRAVITY)
 
 
-def to_seconds(time, unit):
+def to_seconds(time: ArrayLike, unit: str) -> NDArray[np.float64]:
     """Convert time to seconds.
 
     Parameters
@@ -283,7 +289,11 @@ def to_seconds(time, unit):
     return np.asarray(time, dtype=float) * _TIME_UNITS[key]
 
 
-def resample_uniform(time, signal, sample_rate):
+def resample_uniform(
+    time: ArrayLike,
+    signal: ArrayLike,
+    sample_rate: float,
+) -> tuple[NDArray[np.float64], NDArray[np.float64]]:
     """Linearly interpolate a signal onto a uniform time grid.
 
     Parameters
