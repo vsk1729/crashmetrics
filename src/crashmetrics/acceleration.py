@@ -7,6 +7,10 @@ peak
 clip_3ms
     The "3 ms clip": the highest acceleration level that is reached
     or exceeded for 3 ms, cumulatively or continuously.
+exceedance_level
+    The highest level reached or exceeded for any given duration.
+exceedance_duration
+    How long a signal is at or above a given level.
 
 Inputs are normally a filtered resultant in g (see
 ``crashmetrics.signals``), with time in seconds. The signal is
@@ -20,7 +24,13 @@ from typing import Literal
 import numpy as np
 from numpy.typing import ArrayLike
 
-__all__ = ["PeakResult", "clip_3ms", "peak"]
+__all__ = [
+    "PeakResult",
+    "clip_3ms",
+    "exceedance_duration",
+    "exceedance_level",
+    "peak",
+]
 
 
 @dataclass(frozen=True)
@@ -228,10 +238,45 @@ def clip_3ms(
     precision. The continuous value is never higher than the
     cumulative value.
     """
-    t, a = _validate(time, acceleration)
-
     if not math.isfinite(duration_ms) or duration_ms <= 0:
         raise ValueError("duration_ms must be positive and finite.")
+    return exceedance_level(time, acceleration, duration_ms, mode)
+
+
+def exceedance_level(
+    time: ArrayLike,
+    signal: ArrayLike,
+    duration_ms: float,
+    mode: Literal["cumulative", "continuous"] = "cumulative",
+) -> float:
+    """Return the highest level reached or exceeded for ``duration_ms``.
+
+    This generalises :func:`clip_3ms` to any duration and any signal,
+    for example a femur force. A duration of 0 returns the maximum.
+
+    Parameters
+    ----------
+    time:
+        1D time array in seconds.
+    signal:
+        1D signal.
+    duration_ms:
+        Exceedance duration in milliseconds, zero or more.
+    mode:
+        ``"cumulative"`` (total time, possibly over several intervals)
+        or ``"continuous"`` (a single interval).
+
+    Returns
+    -------
+    float
+        Level, in the unit of ``signal``.
+    """
+    t, a = _validate(time, signal)
+
+    if not math.isfinite(duration_ms) or duration_ms < 0:
+        raise ValueError("duration_ms must be non-negative and finite.")
+    if mode not in ("cumulative", "continuous"):
+        raise ValueError("mode must be 'cumulative' or 'continuous'.")
 
     duration = duration_ms / 1000.0
     if t[-1] - t[0] < duration:
@@ -239,9 +284,44 @@ def clip_3ms(
             f"The signal spans {(t[-1] - t[0]) * 1000.0:.3f} ms, shorter "
             f"than duration_ms={duration_ms:g}."
         )
+    if duration == 0:
+        return float(np.max(a))
 
     if mode == "cumulative":
         return _cumulative_level(t, a, duration)
+    return _continuous_level(t, a, duration)
+
+
+def exceedance_duration(
+    time: ArrayLike,
+    signal: ArrayLike,
+    level: float,
+    mode: Literal["cumulative", "continuous"] = "cumulative",
+) -> float:
+    """Return how long the signal is at or above ``level``, in ms.
+
+    Parameters
+    ----------
+    time:
+        1D time array in seconds.
+    signal:
+        1D signal, linearly interpolated between samples.
+    level:
+        Threshold, in the unit of ``signal``.
+    mode:
+        ``"cumulative"``: total time at or above ``level``.
+        ``"continuous"``: the longest single interval at or above it.
+
+    Returns
+    -------
+    float
+        Duration in milliseconds.
+    """
+    t, a = _validate(time, signal)
+    if not math.isfinite(level):
+        raise ValueError("level must be finite.")
+    if mode == "cumulative":
+        return 1000.0 * _time_at_or_above(t, a, level)
     if mode == "continuous":
-        return _continuous_level(t, a, duration)
+        return 1000.0 * _longest_run_at_or_above(t, a, level)
     raise ValueError("mode must be 'cumulative' or 'continuous'.")
