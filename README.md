@@ -11,10 +11,7 @@ Available now:
 - Head Injury Criterion (HIC), for example HIC15 and HIC36, via `crashmetrics.pedestrian.calculate_hic`
 - Signal processing in `crashmetrics.signals`: SAE J211 CFC filtering (`cfc_filter`), resultants (`resultant`), unit conversion (`to_g`, `to_seconds`) and uniform resampling (`resample_uniform`)
 - Acceleration metrics in `crashmetrics.acceleration`: peak value and time (`peak`) and the 3 ms clip, cumulative or continuous (`clip_3ms`)
-
-Planned (not yet implemented):
-
-- Energy and force–displacement metrics (`crashmetrics.energy`)
+- Energy and force–displacement metrics in `crashmetrics.energy`: velocity and displacement from acceleration (`integrate_acceleration`), cumulative absorbed energy (`absorbed_energy`), crush summary with peak and mean force, crush force efficiency and specific energy absorption (`crush_metrics`), and `kinetic_energy`
 
 ## Installation
 
@@ -87,6 +84,40 @@ print(f"3 ms clip = {clip_3ms(t, a_res):.1f} g")
 
 If the output interval is not uniform, use
 `resample_uniform(t, a, sample_rate)` before filtering.
+
+### Energy and crush metrics
+
+For a crash box or rail with force in kN and crush in mm (energy in J):
+
+```python
+from crashmetrics.energy import absorbed_energy, crush_metrics
+
+energy_curve = absorbed_energy(crush_mm, force_kN)  # J at each sample
+
+result = crush_metrics(crush_mm, force_kN, mass=1.2, max_displacement=150.0)
+print(f"Energy {result.energy:.0f} J, mean force {result.mean_force:.1f} kN")
+print(f"Peak {result.peak_force:.1f} kN at {result.peak_force_displacement:.1f} mm")
+print(f"CFE {result.crush_force_efficiency:.2f}, SEA {result.specific_energy_absorption:.0f} J/kg")
+```
+
+`max_displacement` evaluates the metrics over a fixed stroke. Mean
+force is net energy divided by crush distance and CFE is mean force
+divided by peak force, so always report the stroke with them.
+
+From a vehicle or impactor acceleration pulse (mm/ms² and ms give
+m/s and mm):
+
+```python
+from crashmetrics.energy import integrate_acceleration, kinetic_energy
+
+velocity, displacement = integrate_acceleration(time_ms, accel_mm_ms2, v0=15.6)
+print(f"Dynamic crush {displacement.max():.0f} mm")
+print(f"Initial kinetic energy {kinetic_energy(1200.0, 15.6) / 1000:.1f} kJ")
+```
+
+The energy functions do not convert units; use a consistent system.
+Integration amplifies sensor offset and drift, so check the input
+pulse before integrating test data.
 
 ### 3 ms clip
 
