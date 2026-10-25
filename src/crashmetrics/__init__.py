@@ -10,7 +10,11 @@ crashmetrics.acceleration
     Peak acceleration and the 3 ms clip.
 crashmetrics.energy
     Energy and force-displacement metrics.
+crashmetrics.pulse
+    Occupant Load Criterion and crash pulse summary.
+crashmetrics.lower_extremity
+    Tibia Index and femur force criterion.
 """
 
 # Single source of the package version; pyproject.toml reads it.
-__version__ = "0.2.0"
+__version__ = "0.3.0"
