@@ -7,6 +7,7 @@ Python tools for automotive crash engineering calculations.
 ## Features
 
 - Head Injury Criterion (HIC), for example HIC15 and HIC36, via `crashmetrics.pedestrian.calculate_hic`
+- Euro NCAP headform grid scoring in `crashmetrics.pedestrian`: HIC colour bands, verification tolerance, correction factor, blue, default red and A-pillar points, and the head score for the 2023 and 2026 protocols (`headform_score`)
 - Signal processing in `crashmetrics.signals`: SAE J211 CFC filtering (`cfc_filter`), resultants (`resultant`), unit conversion (`to_g`, `to_seconds`) and uniform resampling (`resample_uniform`)
 - Acceleration metrics in `crashmetrics.acceleration`: peak value and time (`peak`) and the 3 ms clip, cumulative or continuous (`clip_3ms`)
 - Vehicle pulse metrics in `crashmetrics.pulse`: Occupant Load Criterion (`olc`) and a pulse summary with delta-V, time to zero velocity, maximum displacement, rebound and deceleration (`pulse_summary`)
@@ -114,6 +115,60 @@ print(f"Initial kinetic energy {kinetic_energy(1200.0, 15.6) / 1000:.1f} kJ")
 The energy functions do not convert units; use a consistent system.
 Integration amplifies sensor offset and drift, so check the input
 pulse before integrating test data.
+
+### Euro NCAP headform grid score
+
+Give every grid point its predicted HIC15 (for example from CAE) or a
+colour, mark special points with a label, and add the test results:
+
+```python
+from crashmetrics.pedestrian import headform_score
+
+grid = {
+    (9, 2): 541.0,          # predicted HIC15 -> green
+    (1, -1): "yellow",      # or a predicted colour
+    (12, -6): "red",
+    (16, 8): "a_pillar",
+    (18, 0): "default_red",
+    (11, 1): "blue",
+    # ... every grid point
+}
+
+result = headform_score(
+    grid,
+    verification={(9, 2): 558.9, (1, -1): 813.8},   # 40 km/h tests, HIC15
+    blue_results={(11, 1): 1200.0},                  # per blue point
+    a_pillar_results={(16, 8): [(20.0, 950.0)]},     # (km/h, HIC15), 2026 only
+    protocol="euroncap_2026",
+)
+print(f"Head score {result.score:.3f} / {result.max_score:g} ({result.percentage:.1f} %)")
+print(f"Correction factor {result.correction.factor:.3f}, accepted: {result.correction.accepted}")
+```
+
+Without `verification`, no correction is applied, which gives the
+predicted score from CAE results alone.
+
+The rules follow the Euro NCAP protocols:
+
+| | `"euroncap_2026"` | `"euroncap_2023"` |
+|---|---|---|
+| Protocol | Crash Protection – VRU Impacts v1.1 | Assessment Protocol – VRU v11.4 |
+| Head maximum | 10 points | 18 points |
+| Colour bands (HIC15) | green < 650 ≤ yellow < 1000 ≤ orange < 1350 ≤ brown < 1700 ≤ red | same |
+| Points per grid point | 1, 0.75, 0.5, 0.25, 0 | same |
+| Correction factor | tested ÷ predicted points of the verification tests, rounded to 3 decimals, accepted 0.850–1.150 | same |
+| Verification colour | predicted colour kept if HIC15 is within its 10 % tolerance range, else colour from the measured HIC15 | same |
+| Blue points | scored from their tests, not corrected | same |
+| A-pillar points | reward for the highest passing speed: 20 km/h HIC15 < 1000 → 1, 30 km/h < 1700 → 2, 40 km/h < 1700 → 3 | default red |
+
+Score = min(corrected predicted points + blue points + A-pillar points,
+number of grid points) / number of grid points × head maximum. The
+tests reproduce the worked examples of both protocols (2023: 10.554 of
+18 points; 2026: correction factor 1.120).
+
+How the A-pillar rewards add to the grid total is this package's
+reading of the 2026 protocol (added to the grid score, maximum still
+the number of grid points); confirm it before relying on it.
 
 ### Occupant Load Criterion and pulse summary
 
