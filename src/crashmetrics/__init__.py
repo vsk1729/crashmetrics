@@ -5,7 +5,7 @@ Modules
 crashmetrics.signals
     CFC filtering, resultants, unit conversion and resampling.
 crashmetrics.pedestrian
-    Head Injury Criterion (HIC).
+    Head Injury Criterion (HIC) and Euro NCAP headform grid scoring.
 crashmetrics.acceleration
     Peak acceleration and the 3 ms clip.
 crashmetrics.energy
@@ -17,4 +17,4 @@ crashmetrics.lower_extremity
 """
 
 # Single source of the package version; pyproject.toml reads it.
-__version__ = "0.3.0"
+__version__ = "0.4.0"

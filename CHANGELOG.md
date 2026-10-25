@@ -4,6 +4,17 @@ All notable changes to this project are listed here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions
 follow [Semantic Versioning](https://semver.org/).
 
+## [0.4.0] - 2026-10-26
+
+### Added
+
+- `crashmetrics.pedestrian` headform grid scoring for Euro NCAP 2026
+  (Crash Protection - VRU Impacts v1.1, head maximum 10 points, A-pillar
+  rewards) and 2023 (VRU Assessment Protocol v11.4, 18 points):
+  `hic_colour`, `verification_colour` (10 % tolerance),
+  `correction_factor` and `headform_score`, with blue, default red and
+  A-pillar points and the 100 % cap.
+
 ## [0.3.0] - 2026-10-25
 
 ### Added
@@ -63,6 +74,7 @@ follow [Semantic Versioning](https://semver.org/).
 - `crashmetrics.pedestrian.calculate_hic` for HIC on a refined,
   linearly interpolated time grid.
 
-[0.3.0]: https://github.com/vsk1729/crashmetrics/compare/03d71b7...main
+[0.4.0]: https://github.com/vsk1729/crashmetrics/compare/v0.3.0...main
+[0.3.0]: https://github.com/vsk1729/crashmetrics/compare/03d71b7...v0.3.0
 [0.2.0]: https://github.com/vsk1729/crashmetrics/compare/80a5615...03d71b7
 [0.1.0]: https://github.com/vsk1729/crashmetrics/tree/80a5615
