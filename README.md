@@ -15,6 +15,7 @@ Python tools for automotive crash engineering calculations.
 - Lower-extremity criteria in `crashmetrics.lower_extremity`: Tibia Index (`tibia_index`) and femur compressive force against a force–time limit (`femur_force_criterion`)
 - Generic exceedance helpers in `crashmetrics.acceleration`: `exceedance_level` and `exceedance_duration`
 - Simulation energy checks for any load case in `crashmetrics.energy_check` (energy ratio, hourglass, negative contact, damping, added mass, eroded energy, per-part hourglass and negative internal energy), LS-DYNA glstat/matsum readers in `crashmetrics.lsdyna`, and the `crashmetrics-energy` command
+- LS-DYNA d3hsp reader (`read_d3hsp`): run information, termination status, warnings and errors, model size and settings, keyword counts, part masses, smallest time steps, timing and memory
 - Energy and force–displacement metrics in `crashmetrics.energy`: velocity and displacement from acceleration (`integrate_acceleration`), cumulative absorbed energy (`absorbed_energy`), crush summary with peak and mean force, crush force efficiency and specific energy absorption (`crush_metrics`), and `kinetic_energy`
 
 ## Installation
@@ -158,9 +159,51 @@ report = check_energies(read_glstat("run01/glstat"), read_matsum("run01/matsum")
   `EnergyLimits` or on the command line.
 - The readers find values by label (glstat) and `key=` (matsum), so the
   line order and optional channels of different LS-DYNA versions do not
-  matter. For binout output, read the variables with a binout reader
+  matter. Part names come from the matsum legend and per-part added mass
+  from `+mass=`; the summary lists the parts with the most added mass.
+- Verified on real LS-DYNA R14.1 and R16.1 output: every parsed value
+  matches the files, and the total-energy and energy-ratio formulas
+  reproduce LS-DYNA's own values to the file's 6-digit precision. For binout output, read the variables with a binout reader
   (such as lasso-python) and pass them to `GlobalEnergies.from_mapping`
   and `PartEnergies.from_mapping`, which accept glstat and binout names.
+
+### LS-DYNA d3hsp reader
+
+```python
+from crashmetrics.lsdyna import read_d3hsp
+
+run = read_d3hsp("run01/d3hsp")
+print(run.summary())
+```
+
+```text
+Termination: NORMAL (10/23/26 14:41:58)
+LS-DYNA smp s R14, revision R14.1.1-4-gaf1eb871e8, WINDOWS X64 SSE2
+Input: ball_drop.k
+Model: nodes 988, solid_elements 8, shell_elements 900, beam_elements 0, ...
+Total mass: 0.000134069 (2 parts, 1 rigid)
+Smallest time step: 8.409e-07 (shell 100099, part 1)
+Problem time 0.0030004 in 3568 cycles
+Elapsed: 1 s using 4 SMP threads, CPU 2 s
+Warnings: 0, errors: 0
+```
+
+| Attribute | Content |
+|---|---|
+| `termination`, `termination_time` | `"normal"`, `"error"` or `"incomplete"` (no banner: still running or killed) |
+| `version`, `parallel`, `precision`, `release`, `revision`, `platform`, `ncpu`, `command_line`, `input_file`, `run_date` | Run information |
+| `messages`, `warnings`, `errors`, `message_counts()` | `*** Warning 41123 (SOL+1123)` messages with their text |
+| `model` | Nodes, elements by type, materials, contacts |
+| `parameters` | Every echoed `label.....  value` setting, e.g. `parameters["time_step_scale_factor"]` |
+| `keyword_counts` | Keywords in the deck, e.g. `keyword_counts["*CONTACT_option"]` |
+| `part_masses`, `rigid_parts`, `total_mass` | Mass summary |
+| `smallest_timesteps`, `min_timestep` | The 100 smallest time steps table |
+| `problem_time`, `problem_cycles`, `cpu_seconds`, `elapsed_seconds`, `workers`, `worker_type`, `timing`, `memory` | Timing breakdown and memory |
+
+The reader was built and tested on real SMP d3hsp files from LS-DYNA
+R14.1 and R16.1. It accepts MPP runs (`mpp` in the version line, `MPP
+procs` in the elapsed-time line), but has not yet been checked on real
+MPP output; please report any MPP file it misreads.
 
 ### Energy and crush metrics
 

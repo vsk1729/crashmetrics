@@ -10,6 +10,10 @@ crashmetrics.acceleration
     Peak acceleration and the 3 ms clip.
 crashmetrics.energy
     Energy and force-displacement metrics.
+crashmetrics.lsdyna, crashmetrics.d3hsp
+    LS-DYNA glstat, matsum and d3hsp readers.
+crashmetrics.energy_check
+    Simulation energy checks for any load case.
 crashmetrics.pulse
     Occupant Load Criterion and crash pulse summary.
 crashmetrics.lower_extremity
@@ -17,4 +21,4 @@ crashmetrics.lower_extremity
 """
 
 # Single source of the package version; pyproject.toml reads it.
-__version__ = "0.5.0"
+__version__ = "0.6.0"

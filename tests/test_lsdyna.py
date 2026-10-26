@@ -5,6 +5,8 @@ glstat, key= value pairs in matsum). Validate against your own solver
 version's files as well.
 """
 
+from pathlib import Path
+
 import numpy as np
 import pytest
 
@@ -15,6 +17,7 @@ from crashmetrics.lsdyna import (
     parse_glstat,
     parse_matsum,
     read_glstat,
+    read_matsum,
 )
 
 T = np.linspace(0.0, 0.1, 21)
@@ -181,3 +184,71 @@ def test_cli_limits(tmp_path, capsys):
     assert main([str(bad), "--hourglass", "0.25"]) == 0
     assert main([str(bad), "--added-mass", "1.5"]) == 1
     capsys.readouterr()
+
+
+# --- real LS-DYNA R14 output (tests/data/lsdyna/README.md) ------------------
+
+REAL_RUN = Path(__file__).parent / "data/lsdyna/kagent/drop_e2e"
+
+
+def test_real_glstat():
+    g = read_glstat(REAL_RUN / "glstat")
+    # Values from the raw file (grep).
+    np.testing.assert_allclose(g.time, [0.0, 1.42954e-5, 2.94317e-5])
+    np.testing.assert_allclose(g.kinetic, [2.00960e3, 2.00974e3, 2.00989e3])
+    np.testing.assert_allclose(g.external_work, [0.0, 1.40915e-1, 2.90126e-1])
+    np.testing.assert_allclose(g.total, [2.00960e3, 2.00974e3, 2.00989e3])
+    # LS-DYNA R14 also writes these channels; they are kept in extra.
+    assert "dissipated_kinetic_energy" in g.extra
+    assert "energy_ratio_w_o_eroded_energy" in g.extra
+
+
+def test_real_matsum_with_part_names():
+    p = read_matsum(REAL_RUN / "matsum")
+    assert list(p.part_ids) == [1, 2]
+    assert p.part_names == {1: "aluminum plate 150x150x2mm clamped",
+                            2: "rigid steel block 40x40x20mm"}
+    np.testing.assert_allclose(p.time[:2], [0.0, 1.4295e-5])
+    assert p.internal[1, 0] == pytest.approx(6.9007e-8)
+    assert p.kinetic[1, 1] == pytest.approx(2.0097e3)
+
+
+def test_real_run_passes_and_formulas_match_lsdyna():
+    report = check_run(REAL_RUN)
+    assert report.passed
+    g = read_glstat(REAL_RUN / "glstat")
+    # Our total and ratio formulas reproduce LS-DYNA's own values.
+    g_computed = type(g)(time=g.time, kinetic=g.kinetic, internal=g.internal,
+                         hourglass=g.hourglass, sliding=g.sliding,
+                         external_work=g.external_work, damping=g.damping)
+    np.testing.assert_allclose(g_computed.total_energy(), g.total, rtol=1e-5)
+    np.testing.assert_allclose(g_computed.ratio(), g.energy_ratio, atol=1e-5)
+    assert report.parts[0].name == "aluminum plate 150x150x2mm clamped"
+
+
+def test_wrapped_glstat_label_is_joined():
+    text = glstat_text().replace(
+        " added mass.....",
+        " number of shell elements that  \n"
+        " reached the minimum time step..    0\n"
+        " added mass.....",
+    )
+    g = parse_glstat(text)
+    assert "number_of_shell_elements_that_reached_the_minimum_time_step" in g.extra
+    assert "reached_the_minimum_time_step" not in g.extra
+
+
+def test_part_added_mass_from_matsum():
+    text = matsum_text().replace(
+        "-spen=  -1.0000E+00", "-spen=  -1.0000E+00     +mass=   2.5000E-05"
+    )
+    p = parse_matsum(text)
+    assert p.added_mass is not None
+    assert p.added_mass[0, 0] == pytest.approx(2.5e-5)
+
+    g = parse_glstat(glstat_text())
+    from crashmetrics.energy_check import check_energies
+
+    report = check_energies(g, p)
+    assert report.parts[0].peak_added_mass == pytest.approx(2.5e-5)
+    assert "largest added mass by part: 1 2.5e-05" in report.summary()
