@@ -44,6 +44,9 @@ dev = [
     "ruff"
 ]
 
+[project.scripts]
+crashmetrics-energy = "crashmetrics.lsdyna:main"
+
 [project.urls]
 Homepage = "https://github.com/vsk1729/crashmetrics"
 Source = "https://github.com/vsk1729/crashmetrics"

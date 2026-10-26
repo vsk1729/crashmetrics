@@ -23,6 +23,15 @@ follow [Semantic Versioning](https://semver.org/).
     rule
 - `vru_score`: total passive VRU crash protection points (20 in 2026,
   36 in 2023).
+- `crashmetrics.energy_check`: solver-agnostic energy checks for any
+  load case: energy ratio, hourglass / internal energy, negative contact
+  energy, system damping, added mass, eroded energy, and per-part
+  hourglass and negative internal energy, with configurable
+  `EnergyLimits` and a text summary.
+- `crashmetrics.lsdyna`: glstat and matsum ASCII readers (label-based,
+  Fortran exponents) and `check_run`.
+- `crashmetrics-energy` command: checks one or more run directories,
+  exit code 0 (pass), 1 (fail) or 2 (unreadable).
 
 ## [0.4.0] - 2026-10-26
 
