@@ -19,6 +19,12 @@ follow [Semantic Versioning](https://semver.org/).
 - Real LS-DYNA R14.1 test data (glstat, matsum, d3hsp excerpt) from the
   MIT-licensed K-agent project, with attribution.
 
+### Changed
+
+- The d3hsp test file now holds only the machine-readable lines the
+  reader uses; LS-DYNA's descriptive text was removed (67 KB -> 11 KB).
+- README: trademarks and non-affiliation notice.
+
 ### Fixed
 
 - glstat labels that wrap onto a second line ("number of shell elements

@@ -1,0 +1,229 @@
+      Date: 10/23/2026      Time: 14:41:57
+     |  Version : smp s R14                              |
+     |  Revision: R14.1.1-4-gaf1eb871e8                  |
+     |  Platform   : WINDOWS X64 SSE2                    |
+     |  Compiler   : Intel Fortran XE 2019 MSVC++ 2019   |
+     |  Hostname   : HOSTNAME                            |
+     |  Precision  : Single precision (I4R4)             |
+
+ Command line options: i=ball_drop.k
+                       ncpu=4
+                       memory=200m
+
+ Input file: ball_drop.k
+
+total # of *BOUNDARY_ACOUSTIC_COUPLING_DISSIPATIVE.       0
+total # of *BOUNDARY_SPC_SET.......................       1
+total # of *CONSTRAINED_SPR2/INTERPOLATION_SPOTWELD       0
+total # of *CONTACT_option.........................       1
+total # of *CONTROL_ENERGY.........................       1
+total # of *CONTROL_TERMINATION....................       1
+total # of *CONTROL_TIMESTEP.......................       1
+total # of *DATABASE_GLSTAT........................       1
+total # of *DATABASE_MATSUM........................       1
+total # of *DATABASE_BINARY_D3PLOT.................       1
+total # of *DEFINE_CURVE...........................       1
+total # of *ELEMENT_SHELL_option...................     900
+total # of *ELEMENT_SOLID..........................       8
+total # of *FATIGUE................................       1
+total # of *LOAD_BODY_Z............................       1
+total # of *MAT_option.............................       2
+total # of *NODE...................................     988
+total # of *PART_option card.......................       2
+total # of *SECTION_option.........................       2
+total # of *SET_NODE_option........................       5
+total # of *TITLE..................................       1
+
+    number of materials or property sets...........       2
+
+    number of nodal+scalar points..................     988
+
+    number of solid elements.......................       8
+
+    number of beam elements........................       0
+
+    number of shell elements.......................     900
+
+    number of thick shell elements.................       0
+
+    number of shells with extra degrees of freedom.       0
+
+    number of number of contact definitions........       1
+
+    number of parts with added mass................       0
+
+    termination time...............................    0.3000E-02
+
+    time step scale factor.........................    0.9000E+00
+
+    time step size for mass scaled solution, dt2ms.    0.0000E+00
+
+    # of solid elements with death times...........       0
+
+    # of shell elements with death times...........       0
+
+ summary of mass
+ part id   =        1   mass= 0.12149954E-03
+ part id   =        2   mass= 0.12569384E-04 rigid body
+
+ t o t a l  m a s s          = 0.13406892E-03
+
+ Memory required to begin solution      :     280K
+ Additional dynamically allocated memory:     476K
+                                   Total:     755K
+
+ 100 smallest timesteps
+ ------------------------------------------------
+ element       number                part    timestep
+ shell         100099                   1  8.4091E-07
+ shell         100098                   1  8.4091E-07
+ shell         100097                   1  8.4091E-07
+ shell         100096                   1  8.4091E-07
+ shell         100095                   1  8.4091E-07
+ shell         100094                   1  8.4091E-07
+ shell         100093                   1  8.4091E-07
+ shell         100092                   1  8.4091E-07
+ shell         100091                   1  8.4091E-07
+ shell         100090                   1  8.4091E-07
+ shell         100089                   1  8.4091E-07
+ shell         100088                   1  8.4091E-07
+ shell         100087                   1  8.4091E-07
+ shell         100086                   1  8.4091E-07
+ shell         100085                   1  8.4091E-07
+ shell         100084                   1  8.4091E-07
+ shell         100083                   1  8.4091E-07
+ shell         100082                   1  8.4091E-07
+ shell         100081                   1  8.4091E-07
+ shell         100080                   1  8.4091E-07
+ shell         100079                   1  8.4091E-07
+ shell         100078                   1  8.4091E-07
+ shell         100077                   1  8.4091E-07
+ shell         100076                   1  8.4091E-07
+ shell         100075                   1  8.4091E-07
+ shell         100074                   1  8.4091E-07
+ shell         100073                   1  8.4091E-07
+ shell         100072                   1  8.4091E-07
+ shell         100071                   1  8.4091E-07
+ shell         100070                   1  8.4091E-07
+ shell         100069                   1  8.4091E-07
+ shell         100068                   1  8.4091E-07
+ shell         100067                   1  8.4091E-07
+ shell         100066                   1  8.4091E-07
+ shell         100065                   1  8.4091E-07
+ shell         100064                   1  8.4091E-07
+ shell         100063                   1  8.4091E-07
+ shell         100062                   1  8.4091E-07
+ shell         100061                   1  8.4091E-07
+ shell         100060                   1  8.4091E-07
+ shell         100059                   1  8.4091E-07
+ shell         100058                   1  8.4091E-07
+ shell         100057                   1  8.4091E-07
+ shell         100056                   1  8.4091E-07
+ shell         100055                   1  8.4091E-07
+ shell         100054                   1  8.4091E-07
+ shell         100053                   1  8.4091E-07
+ shell         100052                   1  8.4091E-07
+ shell         100051                   1  8.4091E-07
+ shell         100050                   1  8.4091E-07
+ shell         100049                   1  8.4091E-07
+ shell         100048                   1  8.4091E-07
+ shell         100047                   1  8.4091E-07
+ shell         100046                   1  8.4091E-07
+ shell         100045                   1  8.4091E-07
+ shell         100044                   1  8.4091E-07
+ shell         100043                   1  8.4091E-07
+ shell         100042                   1  8.4091E-07
+ shell         100041                   1  8.4091E-07
+ shell         100040                   1  8.4091E-07
+ shell         100039                   1  8.4091E-07
+ shell         100038                   1  8.4091E-07
+ shell         100037                   1  8.4091E-07
+ shell         100036                   1  8.4091E-07
+ shell         100035                   1  8.4091E-07
+ shell         100034                   1  8.4091E-07
+ shell         100033                   1  8.4091E-07
+ shell         100032                   1  8.4091E-07
+ shell         100031                   1  8.4091E-07
+ shell         100030                   1  8.4091E-07
+ shell         100029                   1  8.4091E-07
+ shell         100028                   1  8.4091E-07
+ shell         100027                   1  8.4091E-07
+ shell         100026                   1  8.4091E-07
+ shell         100025                   1  8.4091E-07
+ shell         100024                   1  8.4091E-07
+ shell         100023                   1  8.4091E-07
+ shell         100022                   1  8.4091E-07
+ shell         100021                   1  8.4091E-07
+ shell         100020                   1  8.4091E-07
+ shell         100019                   1  8.4091E-07
+ shell         100018                   1  8.4091E-07
+ shell         100017                   1  8.4091E-07
+ shell         100016                   1  8.4091E-07
+ shell         100015                   1  8.4091E-07
+ shell         100014                   1  8.4091E-07
+ shell         100013                   1  8.4091E-07
+ shell         100012                   1  8.4091E-07
+ shell         100011                   1  8.4091E-07
+ shell         100010                   1  8.4091E-07
+ shell         100009                   1  8.4091E-07
+ shell         100008                   1  8.4091E-07
+ shell         100007                   1  8.4091E-07
+ shell         100006                   1  8.4091E-07
+ shell         100005                   1  8.4091E-07
+ shell         100004                   1  8.4091E-07
+ shell         100003                   1  8.4091E-07
+ shell         100002                   1  8.4091E-07
+ shell         100001                   1  8.4091E-07
+ shell         100000                   1  8.4091E-07
+
+ N o r m a l    t e r m i n a t i o n                          10/23/26 14:41:58
+
+ Memory required to complete solution   :     280K
+ Additional dynamically allocated memory:     476K
+                                   Total:     755K
+
+ T i m i n g   i n f o r m a t i o n
+                        CPU(seconds)   %CPU  Clock(seconds) %Clock
+  ----------------------------------------------------------------
+  Keyword Processing ... 0.0000E+00    0.00     1.4000E-02    0.61
+    KW Reading ......... 0.0000E+00    0.00     4.0000E-03    0.17
+    KW Writing ......... 0.0000E+00    0.00     3.0000E-03    0.13
+  Initialization ....... 1.0000E+00   50.00     1.4400E+00   62.91
+    Init Proc Phase 1 .. 0.0000E+00    0.00     3.1000E-02    1.35
+    Init Proc Phase 2 .. 0.0000E+00    0.00     1.0000E-03    0.04
+  Element processing ... 0.0000E+00    0.00     5.8600E-01   25.60
+    Solids ............. 0.0000E+00    0.00     1.5000E-02    0.66
+    Shells ............. 0.0000E+00    0.00     5.3700E-01   23.46
+    ISO Shells ......... 0.0000E+00    0.00     1.0000E-03    0.04
+    E Other ............ 0.0000E+00    0.00     1.9000E-02    0.83
+  Binary databases ..... 0.0000E+00    0.00     1.9000E-02    0.83
+  ASCII database ....... 0.0000E+00    0.00     3.3000E-02    1.44
+  Contact algorithm .... 0.0000E+00    0.00     6.4000E-02    2.80
+    Interf. ID         1 0.0000E+00    0.00     5.8000E-02    2.53
+  Rigid Bodies ......... 0.0000E+00    0.00     1.4000E-02    0.61
+  Time step size ....... 0.0000E+00    0.00     2.0000E-03    0.09
+  Others ............... 0.0000E+00    0.00     2.0000E-03    0.09
+  Misc. 1 .............. 0.0000E+00    0.00     2.0000E-02    0.87
+    Force to Accel ..... 0.0000E+00    0.00     7.0000E-03    0.31
+    Update RB nodes .... 0.0000E+00    0.00     5.0000E-03    0.22
+  Misc. 2 .............. 1.0000E+00   50.00     4.7000E-02    2.05
+  Misc. 3 .............. 0.0000E+00    0.00     1.4000E-02    0.61
+  Misc. 4 .............. 0.0000E+00    0.00     3.4000E-02    1.49
+    Timestep Init ...... 0.0000E+00    0.00     1.2000E-02    0.52
+    Apply Loads ........ 0.0000E+00    0.00     8.0000E-03    0.35
+    Compute exwork ..... 0.0000E+00    0.00     1.4000E-02    0.61
+  ----------------------------------------------------------------
+  T o t a l s            2.0000E+00  100.00     2.2890E+00  100.00
+
+ Problem time       =    3.0004E-03
+ Problem cycle      =      3568
+ Total CPU time     =         2 seconds (   0 hours  0 minutes  2 seconds)
+ CPU time per zone cycle  =        308.666 nanoseconds
+ Clock time per zone cycle=        257.736 nanoseconds
+
+ Number of CPU's    4
+ Start time   10/23/2026 14:41:57
+ End time     10/23/2026 14:41:58
+ Elapsed time       1 second  for    3568 cycles using  4 SMP threads
+
+ N o r m a l    t e r m i n a t i o n                          10/23/26 14:41:58

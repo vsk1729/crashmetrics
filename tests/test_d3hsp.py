@@ -1,8 +1,8 @@
 """Tests for the d3hsp reader.
 
-The base file is a real LS-DYNA R14.1.1 SMP d3hsp excerpt (see
-tests/data/lsdyna/README.md); expected values were taken from the raw
-file with grep. The variants (R16 mass summary, MPP, error termination,
+The base file holds the machine-readable lines of a real LS-DYNA R14.1.1
+SMP d3hsp (see tests/data/lsdyna/README.md); expected values were taken
+from the raw file with grep. The variants (R16 mass summary, MPP, error termination,
 messages, incomplete run) edit that text following layouts seen in real
 d3hsp files.
 """
@@ -14,7 +14,7 @@ import pytest
 from crashmetrics.d3hsp import parse_d3hsp, read_d3hsp
 from crashmetrics.lsdyna import read_d3hsp as read_d3hsp_from_lsdyna
 
-EXCERPT = Path(__file__).parent / "data/lsdyna/kagent/cold_start/d3hsp_excerpt"
+EXCERPT = Path(__file__).parent / "data/lsdyna/kagent/cold_start/d3hsp_minimal"
 TEXT = EXCERPT.read_text()
 
 
@@ -57,7 +57,7 @@ def test_model_size_and_settings(real):
 
 
 def test_keyword_counts(real):
-    assert len(real.keyword_counts) == 640  # grep -c "total # of"
+    assert len(real.keyword_counts) == TEXT.count("total # of")
     assert real.keyword_counts["*NODE"] == 988
     assert real.keyword_counts["*ELEMENT_SHELL_option"] == 900
     assert real.keyword_counts["*PART_option card"] == 2
