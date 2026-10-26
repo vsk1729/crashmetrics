@@ -504,6 +504,18 @@ version.
 
 This software is an engineering calculation aid. Users must independently validate numerical results and confirm that input processing, filtering, sampling, and calculation methods match the applicable assessment protocol. The software does not certify regulatory compliance.
 
+## Trademarks and affiliation
+
+crashmetrics is an independent open-source project. It is not
+affiliated with, endorsed by or sponsored by Ansys, Euro NCAP, UNECE or
+any other organisation whose software, file formats, protocols or
+regulations it refers to. LS-DYNA, Ansys and Euro NCAP are trademarks or
+registered trademarks of their respective owners and are used here only
+to describe compatibility.
+
+The LS-DYNA readers were written from the text layout of output files;
+no LS-DYNA code or documentation is included.
+
 ## License
 
 MIT. See the LICENSE file.

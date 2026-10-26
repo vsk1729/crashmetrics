@@ -12,9 +12,14 @@ R14.1.1 SMP single precision, 4 CPUs.
 
 - `drop_e2e/glstat`, `drop_e2e/matsum`: unchanged copies of
   `skills/lsdyna-kfile/template_build/drop_e2e/`.
-- `cold_start/d3hsp_excerpt`: sections of
-  `skills/lsdyna-kfile/template_build/cold_start/d3hsp` (run header,
-  keyword counts, problem size and control cards 8 and 9, element death
-  settings, mass properties to the end of the file). The Ansys legal
-  notice and copyright lines were left out and the host name replaced
-  with `HOSTNAME`.
+- `cold_start/d3hsp_minimal`: only the machine-readable lines of
+  `skills/lsdyna-kfile/template_build/cold_start/d3hsp` that the reader
+  uses: run information fields, command line, keyword counts (non-zero
+  ones and two long names), selected model-size and control settings,
+  the mass summary, memory, the smallest time steps table, termination
+  lines and timing. All descriptive text printed by LS-DYNA (banner,
+  legal notice, option descriptions, notes, mass property blocks) was
+  removed and the host name replaced with `HOSTNAME`.
+
+LS-DYNA is a trademark of its owner. This project is not affiliated with
+or endorsed by Ansys.
