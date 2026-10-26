@@ -14,6 +14,7 @@ Python tools for automotive crash engineering calculations.
 - Vehicle pulse metrics in `crashmetrics.pulse`: Occupant Load Criterion (`olc`) and a pulse summary with delta-V, time to zero velocity, maximum displacement, rebound and deceleration (`pulse_summary`)
 - Lower-extremity criteria in `crashmetrics.lower_extremity`: Tibia Index (`tibia_index`) and femur compressive force against a force–time limit (`femur_force_criterion`)
 - Generic exceedance helpers in `crashmetrics.acceleration`: `exceedance_level` and `exceedance_duration`
+- Simulation energy checks for any load case in `crashmetrics.energy_check` (energy ratio, hourglass, negative contact, damping, added mass, eroded energy, per-part hourglass and negative internal energy), LS-DYNA glstat/matsum readers in `crashmetrics.lsdyna`, and the `crashmetrics-energy` command
 - Energy and force–displacement metrics in `crashmetrics.energy`: velocity and displacement from acceleration (`integrate_acceleration`), cumulative absorbed energy (`absorbed_energy`), crush summary with peak and mean force, crush force efficiency and specific energy absorption (`crush_metrics`), and `kinetic_energy`
 
 ## Installation
@@ -82,6 +83,84 @@ print(f"3 ms clip = {clip_3ms(t, a_res):.1f} g")
 
 If the output interval is not uniform, use
 `resample_uniform(t, a, sample_rate)` before filtering.
+
+### Simulation energy checks (any load case)
+
+Check the energy balance of LS-DYNA runs from the command line. Each
+run is a directory with `glstat` (and optionally `matsum`), or a glstat
+file:
+
+```bash
+crashmetrics-energy run01 run02 run03
+crashmetrics-energy run01 --hourglass 0.05 --added-mass 2 --ratio-min 0.9 --ratio-max 1.1
+```
+
+```text
+== run01
+Energy check: FAILED (1 check)
+Reference energy: 100000
+
+Check                   Value    Limit         Status  Where
+----------------------  -------  ------------  ------  -------
+energy_ratio            1        0.95 to 1.05  PASS    t=0
+hourglass               0.03093  <= 0.1        PASS    t=0.1
+negative_contact        0        <= 0.05       PASS
+damping                 0        <= 0.05       PASS
+added_mass              2        <= 5 %        PASS    t=0.1
+part_hourglass          0.14     <= 0.1        FAIL    part 2
+part_negative_internal  0        <= 0.01       PASS
+
+- failed parts: 2
+```
+
+The exit code is 0 if every run passes, 1 if a check fails and 2 if a
+run could not be read, so it fits batch scripts and job queues. Use
+`off` to switch a limit off, for example `--hourglass off`.
+
+From Python:
+
+```python
+from crashmetrics.energy_check import EnergyLimits, check_energies
+from crashmetrics.lsdyna import check_run, read_glstat, read_matsum
+
+report = check_run("run01", limits=EnergyLimits(hourglass=0.05))
+print(report.summary())
+if not report.passed:
+    for check in report.failures:
+        print(check.name, check.value, check.part)
+
+# Or from the files / your own arrays:
+report = check_energies(read_glstat("run01/glstat"), read_matsum("run01/matsum"))
+```
+
+| Check | Value | Default limit |
+|---|---|---|
+| `energy_ratio` | total / (initial total + external work), min and max over the run | 0.95 to 1.05 |
+| `hourglass` | peak hourglass / peak internal energy | ≤ 0.10 |
+| `negative_contact` | most negative contact (sliding) energy / reference energy | ≤ 0.05 |
+| `damping` | peak system damping energy / reference energy | ≤ 0.05 |
+| `added_mass` | peak added mass, % of model mass | ≤ 5 % |
+| `eroded_energy` | peak eroded energy / reference energy | reported only |
+| `part_hourglass` | per part: peak hourglass / peak internal energy | ≤ 0.10 |
+| `part_negative_internal` | per part: most negative / peak internal energy | ≤ 0.01 |
+
+- The reference energy is the largest initial total energy plus
+  external work, so impacts (initial kinetic energy) and prescribed
+  motion or quasi-static cases (external work) are both handled.
+- Part checks cover parts with at least 1 % of the model's peak
+  internal energy (`part_min_internal_share`); every part's values are
+  in `report.parts`.
+- Hourglass, damping and rigidwall energies are only in the output when
+  `HGEN`, `RYLEN` and `RWEN` are 2 in `*CONTROL_ENERGY`; missing
+  channels are reported as skipped, with a hint.
+- The 10 % hourglass limits follow LS-DYNA's rule of thumb; the other
+  defaults are common rules of thumb. Set your own guideline values in
+  `EnergyLimits` or on the command line.
+- The readers find values by label (glstat) and `key=` (matsum), so the
+  line order and optional channels of different LS-DYNA versions do not
+  matter. For binout output, read the variables with a binout reader
+  (such as lasso-python) and pass them to `GlobalEnergies.from_mapping`
+  and `PartEnergies.from_mapping`, which accept glstat and binout names.
 
 ### Energy and crush metrics
 
