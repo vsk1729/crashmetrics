@@ -1,0 +1,54 @@
+ drop: rigid steel block drop onto clamped aluminum plate (mm-ton-s)     
+                    ls-dyna smp s R14 R14.1.1_4_af1eb87 date 03/26/2024
+
+{BEGIN LEGEND}
+ Entity #        Title
+        1     aluminum plate 150x150x2mm clamped                                      
+        2     rigid steel block 40x40x20mm                                            
+{END LEGEND}
+
+
+
+ time =   0.0000E+00
+ mat.#=    1             inten=   0.0000E+00     kinen=   0.0000E+00     eroded_ie=   0.0000E+00     eroded_ke=   0.0000E+00
+ x-mom=   0.0000E+00     y-mom=   0.0000E+00     z-mom=   0.0000E+00
+ x-rbv=   0.0000E+00     y-rbv=   0.0000E+00     z-rbv=   0.0000E+00
+                         hgeng=   0.0000E+00                             eroded_he=   0.0000E+00
+
+
+ mat.#=    2             inten=   0.0000E+00     kinen=   2.0096E+03     eroded_ie=   0.0000E+00     eroded_ke=   0.0000E+00
+ x-mom=   0.0000E+00     y-mom=   0.0000E+00     z-mom=  -1.0048E+00
+ x-rbv=   0.0000E+00     y-rbv=   0.0000E+00     z-rbv=  -4.0000E+03
+                         hgeng=   0.0000E+00                             eroded_he=   0.0000E+00
+
+
+
+
+ time =   1.4295E-05
+ mat.#=    1             inten=   6.9007E-08     kinen=   9.4238E-07     eroded_ie=   0.0000E+00     eroded_ke=   0.0000E+00
+ x-mom=   2.5605E-16     y-mom=   2.2489E-15     z-mom=  -1.3805E-05
+ x-rbv=   2.1074E-12     y-rbv=   1.8509E-11     z-rbv=  -1.1362E-01
+                         hgeng=   0.0000E+00                             eroded_he=   0.0000E+00
+
+
+ mat.#=    2             inten=   0.0000E+00     kinen=   2.0097E+03     eroded_ie=   0.0000E+00     eroded_ke=   0.0000E+00
+ x-mom=   0.0000E+00     y-mom=   0.0000E+00     z-mom=  -1.0048E+00
+ x-rbv=   0.0000E+00     y-rbv=   0.0000E+00     z-rbv=  -4.0001E+03
+                         hgeng=   0.0000E+00                             eroded_he=   0.0000E+00
+
+
+
+
+ time =   2.9432E-05
+ mat.#=    1             inten=   4.0167E-07     kinen=   3.5932E-06     eroded_ie=   0.0000E+00     eroded_ke=   0.0000E+00
+ x-mom=  -2.9111E-15     y-mom=   5.7623E-15     z-mom=  -2.5974E-05
+ x-rbv=  -2.3959E-11     y-rbv=   4.7425E-11     z-rbv=  -2.1377E-01
+                         hgeng=   0.0000E+00                             eroded_he=   0.0000E+00
+
+
+ mat.#=    2             inten=   0.0000E+00     kinen=   2.0099E+03     eroded_ie=   0.0000E+00     eroded_ke=   0.0000E+00
+ x-mom=   0.0000E+00     y-mom=   0.0000E+00     z-mom=  -1.0049E+00
+ x-rbv=   0.0000E+00     y-rbv=   0.0000E+00     z-rbv=  -4.0003E+03
+                         hgeng=   0.0000E+00                             eroded_he=   0.0000E+00
+
+

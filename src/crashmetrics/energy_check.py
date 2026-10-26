@@ -49,6 +49,7 @@ in :class:`EnergyLimits`.
 import math
 from collections.abc import Mapping
 from dataclasses import dataclass, field, fields
+from typing import Any
 
 import numpy as np
 from numpy.typing import ArrayLike, NDArray
@@ -102,6 +103,8 @@ _PART_ALIASES: dict[str, str] = {
     "kinetic_energy": "kinetic",
     "hgeng": "hourglass",
     "hourglass_energy": "hourglass",
+    "plus_mass": "added_mass",
+    "added_mass": "added_mass",
 }
 
 
@@ -238,6 +241,9 @@ class PartEnergies:
     internal: FloatArray
     kinetic: FloatArray | None = None
     hourglass: FloatArray | None = None
+    added_mass: FloatArray | None = None
+    """Added mass from mass scaling (LS-DYNA matsum ``+mass``)."""
+    part_names: dict[int, str] = field(default_factory=dict)
     extra: dict[str, FloatArray] = field(default_factory=dict)
 
     def __post_init__(self) -> None:
@@ -245,8 +251,9 @@ class PartEnergies:
         self.part_ids = np.asarray(self.part_ids, dtype=np.int64)
         if self.part_ids.ndim != 1:
             raise ValueError("part_ids must be a 1D array.")
+        self.part_names = {int(k): str(v) for k, v in self.part_names.items()}
         shape = (len(self.time), len(self.part_ids))
-        for name in ("internal", "kinetic", "hourglass"):
+        for name in ("internal", "kinetic", "hourglass", "added_mass"):
             value = getattr(self, name)
             if value is None:
                 continue
@@ -262,11 +269,13 @@ class PartEnergies:
         time: ArrayLike,
         part_ids: ArrayLike,
         data: Mapping[str, ArrayLike],
+        part_names: Mapping[int, str] | None = None,
     ) -> "PartEnergies":
         """Build from named (time, part) arrays, such as matsum variables.
 
         ``"internal_energy"`` / ``"inten"``, ``"kinetic_energy"`` /
-        ``"kinen"`` and ``"hourglass_energy"`` / ``"hgeng"`` are recognised.
+        ``"kinen"``, ``"hourglass_energy"`` / ``"hgeng"`` and
+        ``"added_mass"`` / ``"+mass"`` are recognised.
         """
         known: dict[str, ArrayLike] = {}
         extra: dict[str, ArrayLike] = {}
@@ -279,7 +288,16 @@ class PartEnergies:
                 known[target] = values
         if "internal" not in known:
             raise ValueError("Missing the part internal energy channel.")
-        return cls(time=time, part_ids=part_ids, **known, extra=extra)  # type: ignore[arg-type]
+        arrays: dict[str, Any] = {
+            k: np.asarray(v, dtype=float) for k, v in known.items()
+        }
+        return cls(
+            time=np.asarray(time, dtype=float),
+            part_ids=np.asarray(part_ids, dtype=np.int64),
+            part_names=dict(part_names or {}),
+            extra={k: np.asarray(v, dtype=float) for k, v in extra.items()},
+            **arrays,
+        )
 
 
 @dataclass(frozen=True)
@@ -342,12 +360,15 @@ class PartResult:
     """Energy check values of one part."""
 
     part_id: int
+    name: str
     peak_internal: float
     share: float
     """Peak internal energy / model peak internal energy."""
     checked: bool
     hourglass_ratio: float | None
     negative_internal_ratio: float
+    peak_added_mass: float | None
+    """Largest added mass from mass scaling, if reported."""
     passed: bool
 
 
@@ -400,8 +421,18 @@ class EnergyReport:
         if failed:
             notes.append(
                 "- failed parts: "
-                + ", ".join(str(p.part_id) for p in failed[:20])
+                + ", ".join(_part_label(p) for p in failed[:20])
                 + (" ..." if len(failed) > 20 else "")
+            )
+        scaled = sorted(
+            (p for p in self.parts if p.peak_added_mass),
+            key=lambda p: -(p.peak_added_mass or 0.0),
+        )
+        if scaled:
+            notes.append(
+                "- largest added mass by part: "
+                + ", ".join(f"{_part_label(p)} {p.peak_added_mass:.4g}"
+                            for p in scaled[:5])
             )
         n = len(self.failures)
         verdict = "PASSED" if self.passed else f"FAILED ({n} check{'s' * (n != 1)})"
@@ -410,6 +441,10 @@ class EnergyReport:
              f"Reference energy: {self.reference_energy:.6g}", ""]
             + lines + ([""] + notes if notes else [])
         )
+
+
+def _part_label(part: PartResult) -> str:
+    return f"{part.part_id} ({part.name})" if part.name else str(part.part_id)
 
 
 def _status(value: float, limit: float | None) -> str:
@@ -538,6 +573,7 @@ def _part_checks(
     peak = np.nanmax(p.internal, axis=0)
     minimum = np.nanmin(p.internal, axis=0)
     hg_peak = None if p.hourglass is None else np.nanmax(p.hourglass, axis=0)
+    am_peak = None if p.added_mass is None else np.nanmax(p.added_mass, axis=0)
 
     for j, pid in enumerate(p.part_ids):
         share = float(peak[j]) / model_peak_ie if model_peak_ie > 0 else 0.0
@@ -554,8 +590,11 @@ def _part_checks(
             ok &= hg_ratio <= limits.part_hourglass
         if checked and limits.part_negative_internal is not None:
             ok &= neg_ratio <= limits.part_negative_internal
-        results.append(PartResult(int(pid), float(peak[j]), share, checked,
-                                  hg_ratio, neg_ratio, bool(ok)))
+        results.append(PartResult(
+            int(pid), p.part_names.get(int(pid), ""), float(peak[j]), share,
+            checked, hg_ratio, neg_ratio,
+            None if am_peak is None else float(am_peak[j]), bool(ok),
+        ))
 
     checked_parts = [r for r in results if r.checked]
     note = (f"{len(checked_parts)} of {len(results)} parts checked "

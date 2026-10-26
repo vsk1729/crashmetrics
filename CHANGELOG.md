@@ -4,6 +4,26 @@ All notable changes to this project are listed here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions
 follow [Semantic Versioning](https://semver.org/).
 
+## [0.6.0] - Unreleased
+
+### Added
+
+- `crashmetrics.d3hsp` (also in `crashmetrics.lsdyna`): `read_d3hsp` /
+  `parse_d3hsp` for LS-DYNA d3hsp files: run information, termination
+  status, warnings and errors, model size, echoed settings, keyword
+  counts, part masses, smallest time steps, timing and memory. Built and
+  tested on real LS-DYNA R14.1 and R16.1 SMP files; MPP-tolerant.
+- Energy checks: part names from the matsum legend and per-part added
+  mass (`+mass=`) in `PartEnergies` and `PartResult`; the summary lists
+  the parts with the most added mass.
+- Real LS-DYNA R14.1 test data (glstat, matsum, d3hsp excerpt) from the
+  MIT-licensed K-agent project, with attribution.
+
+### Fixed
+
+- glstat labels that wrap onto a second line ("number of shell elements
+  that" / "reached the minimum time step") are read as one label.
+
 ## [0.5.0] - 2026-10-26
 
 ### Added
@@ -103,7 +123,8 @@ follow [Semantic Versioning](https://semver.org/).
 - `crashmetrics.pedestrian.calculate_hic` for HIC on a refined,
   linearly interpolated time grid.
 
-[0.5.0]: https://github.com/vsk1729/crashmetrics/compare/v0.4.0...main
+[0.6.0]: https://github.com/vsk1729/crashmetrics/compare/v0.5.0...main
+[0.5.0]: https://github.com/vsk1729/crashmetrics/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/vsk1729/crashmetrics/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/vsk1729/crashmetrics/compare/03d71b7...v0.3.0
 [0.2.0]: https://github.com/vsk1729/crashmetrics/compare/80a5615...03d71b7

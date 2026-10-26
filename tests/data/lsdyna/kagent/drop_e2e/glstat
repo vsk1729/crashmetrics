@@ -1,0 +1,80 @@
+ drop: rigid steel block drop onto clamped aluminum plate (mm-ton-s)     
+                    ls-dyna smp s R14 R14.1.1_4_af1eb87 date 03/26/2024
+
+
+ dt of cycle       1 is controlled by shell         100899 of part         1
+
+ time...........................   0.00000E+00
+ time step......................   8.40907E-07
+ kinetic energy.................   2.00960E+03
+ internal energy................   2.00000E-20
+ spring and damper energy.......   1.00000E-20
+ hourglass energy ..............   0.00000E+00
+ system damping energy..........   0.00000E+00
+ sliding interface energy.......   0.00000E+00
+ external work..................   0.00000E+00
+ eroded kinetic energy..........   0.00000E+00
+ eroded internal energy.........   0.00000E+00
+ eroded hourglass energy........   0.00000E+00
+ total energy...................   2.00960E+03
+ total energy / initial energy..   1.00000E+00
+ energy ratio w/o eroded energy.   1.00000E+00
+ global x velocity..............   0.00000E+00
+ global y velocity..............   0.00000E+00
+ global z velocity..............  -2.69601E+03
+ dissipated kinetic energy......   0.00000E+00
+ dissipated internal energy.....   0.00000E+00
+ drilling energy................   0.00000E+00
+ time per zone cycle.(nanosec)..             0
+
+
+ dt of cycle      18 is controlled by shell         100135 of part         1
+
+ time...........................   1.42954E-05
+ time step......................   8.40907E-07
+ kinetic energy.................   2.00974E+03
+ internal energy................   6.90066E-08
+ spring and damper energy.......   1.00000E-20
+ hourglass energy ..............   0.00000E+00
+ system damping energy..........   0.00000E+00
+ sliding interface energy.......   0.00000E+00
+ external work..................   1.40915E-01
+ eroded kinetic energy..........   0.00000E+00
+ eroded internal energy.........   0.00000E+00
+ eroded hourglass energy........   0.00000E+00
+ total energy...................   2.00974E+03
+ total energy / initial energy..   1.00000E+00
+ energy ratio w/o eroded energy.   1.00000E+00
+ global x velocity..............   2.14040E-12
+ global y velocity..............   5.28179E-12
+ global z velocity..............  -2.69614E+03
+ dissipated kinetic energy......   0.00000E+00
+ dissipated internal energy.....   0.00000E+00
+ drilling energy................   0.00000E+00
+ time per zone cycle.(nanosec)..             0
+
+
+ dt of cycle      36 is controlled by shell         100135 of part         1
+
+ time...........................   2.94317E-05
+ time step......................   8.40907E-07
+ kinetic energy.................   2.00989E+03
+ internal energy................   4.01670E-07
+ spring and damper energy.......   1.00000E-20
+ hourglass energy ..............   0.00000E+00
+ system damping energy..........   0.00000E+00
+ sliding interface energy.......   0.00000E+00
+ external work..................   2.90126E-01
+ eroded kinetic energy..........   0.00000E+00
+ eroded internal energy.........   0.00000E+00
+ eroded hourglass energy........   0.00000E+00
+ total energy...................   2.00989E+03
+ total energy / initial energy..   1.00000E+00
+ energy ratio w/o eroded energy.   1.00000E+00
+ global x velocity..............  -4.64401E-12
+ global y velocity..............   9.97797E-12
+ global z velocity..............  -2.69627E+03
+ dissipated kinetic energy......   0.00000E+00
+ dissipated internal energy.....   0.00000E+00
+ drilling energy................   0.00000E+00
+ time per zone cycle.(nanosec)..             0

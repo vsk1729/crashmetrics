@@ -6,6 +6,8 @@ read_glstat, parse_glstat
     Global statistics (``glstat``) ASCII file -> GlobalEnergies.
 read_matsum, parse_matsum
     Material/part energy summary (``matsum``) ASCII file -> PartEnergies.
+read_d3hsp, parse_d3hsp
+    d3hsp file -> D3hsp (see :mod:`crashmetrics.d3hsp`).
 check_run
     Read a run directory's glstat (and matsum) and check its energies.
 main
@@ -19,7 +21,9 @@ LS-DYNA version writes:
   or more dots after the label); a new record starts at each
   ``time...`` line.
 - matsum: ``key= value`` pairs; a new record starts at each ``time =``
-  and a new part at each ``mat.#=`` (or ``part=``, ``pid=``).
+  and a new part at each ``mat.#=`` (or ``part=``, ``pid=``). Part names
+  come from the ``{BEGIN LEGEND}`` block and per-part added mass from
+  ``+mass=``.
 
 Fortran numbers such as ``1.23456-100`` (no ``E``) and ``1.0D+03`` are
 read correctly. For binout output, read the variables with a binout
@@ -35,6 +39,7 @@ from pathlib import Path
 
 import numpy as np
 
+from crashmetrics.d3hsp import D3hsp, parse_d3hsp, read_d3hsp
 from crashmetrics.energy_check import (
     EnergyLimits,
     EnergyReport,
@@ -45,10 +50,13 @@ from crashmetrics.energy_check import (
 )
 
 __all__ = [
+    "D3hsp",
     "check_run",
     "main",
+    "parse_d3hsp",
     "parse_glstat",
     "parse_matsum",
+    "read_d3hsp",
     "read_glstat",
     "read_matsum",
 ]
@@ -78,11 +86,20 @@ def parse_glstat(text: str) -> GlobalEnergies:
     """Parse the text of an LS-DYNA glstat ASCII file."""
     records: list[dict[str, float]] = []
     current: dict[str, float] | None = None
+    pending = ""  # first half of a label that wraps onto the next line
     for line in text.splitlines():
         match = _GLSTAT_LINE.match(line)
         if not match:
+            stripped = line.strip()
+            # A text-only line (no digits, no dots) may start a label that
+            # continues on the next line, e.g. "number of shell elements
+            # that" / "reached the minimum time step..    0".
+            wraps = stripped and not any(c.isdigit() for c in stripped)
+            pending = stripped if wraps and "." not in stripped else ""
             continue
-        key = normalise_name(match.group("label"))
+        label = f"{pending} {match.group('label')}" if pending else match.group("label")
+        pending = ""
+        key = normalise_name(label)
         try:
             value = _to_float(match.group("value"))
         except ValueError:
@@ -117,14 +134,37 @@ def _matsum_key(raw: str) -> str:
     return prefix + normalise_name(raw)
 
 
+def _legend(text: str) -> dict[int, str]:
+    """Part names from a ``{BEGIN LEGEND}`` ... ``{END LEGEND}`` block."""
+    names: dict[int, str] = {}
+    inside = False
+    for line in text.splitlines():
+        if "{BEGIN LEGEND}" in line:
+            inside = True
+            continue
+        if "{END LEGEND}" in line:
+            break
+        if inside:
+            match = re.match(r"\s*(\d+)\s+(\S.*?)\s*$", line)
+            if match:
+                names[int(match.group(1))] = match.group(2)
+    return names
+
+
 def parse_matsum(text: str) -> PartEnergies:
     """Parse the text of an LS-DYNA matsum ASCII file."""
     blocks: list[tuple[float, dict[int, dict[str, float]]]] = []
     parts_in_order: list[int] = []
     seen: set[int] = set()
     current: dict[str, float] | None = None
+    in_legend = False
 
     for line in text.splitlines():
+        if "{BEGIN LEGEND}" in line:
+            in_legend = True
+        if in_legend:
+            in_legend = "{END LEGEND}" not in line
+            continue
         stripped = line.strip().lower()
         if stripped.startswith("summary"):
             current = None
@@ -160,7 +200,7 @@ def parse_matsum(text: str) -> PartEnergies:
                      for _, parts in blocks])
         for k in keys
     }
-    return PartEnergies.from_mapping(time, parts_in_order, data)
+    return PartEnergies.from_mapping(time, parts_in_order, data, _legend(text))
 
 
 def read_matsum(path: str | Path) -> PartEnergies:
