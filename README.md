@@ -8,6 +8,7 @@ Python tools for automotive crash engineering calculations.
 
 - Head Injury Criterion (HIC), for example HIC15 and HIC36, via `crashmetrics.pedestrian.calculate_hic`
 - Euro NCAP headform grid scoring in `crashmetrics.pedestrian`: HIC colour bands, verification tolerance, correction factor, blue, default red and A-pillar points, and the head score for the 2023 and 2026 protocols (`headform_score`)
+- Euro NCAP legform scoring in `crashmetrics.pedestrian`: aPLI femur and knee/tibia (`apli_score`), upper legform pelvis (`upper_legform_score`) with the impact energy check (`upper_legform_energy`), sliding scales, leg colours and the total passive VRU score (`vru_score`)
 - Signal processing in `crashmetrics.signals`: SAE J211 CFC filtering (`cfc_filter`), resultants (`resultant`), unit conversion (`to_g`, `to_seconds`) and uniform resampling (`resample_uniform`)
 - Acceleration metrics in `crashmetrics.acceleration`: peak value and time (`peak`) and the 3 ms clip, cumulative or continuous (`clip_3ms`)
 - Vehicle pulse metrics in `crashmetrics.pulse`: Occupant Load Criterion (`olc`) and a pulse summary with delta-V, time to zero velocity, maximum displacement, rebound and deceleration (`pulse_summary`)
@@ -169,6 +170,81 @@ tests reproduce the worked examples of both protocols (2023: 10.554 of
 How the A-pillar rewards add to the grid total is this package's
 reading of the 2026 protocol (added to the grid score, maximum still
 the number of grid points); confirm it before relying on it.
+
+### Euro NCAP legform scoring and total VRU score
+
+Units: force in N, bending moment in N m, MCL elongation in mm. Give
+every grid point (Euro NCAP names such as `"L+3"` or lateral indices)
+and the results of the tested points; untested points are filled
+automatically:
+
+```python
+from crashmetrics.pedestrian import apli_score, upper_legform_score, vru_score
+
+# aPLI: (femur moment, tibia moment, MCL elongation) per tested point.
+# Peaks, several gauge peaks or time histories; the worst value is used.
+grid_l = ["L+5", "L+4", "L+3", "L+2", "L+1", "L0", "L-1", "L-2", "L-3", "L-4", "L-5"]
+apli = apli_score(grid_l, {
+    "L+1": (400.0, 257.0, 20.0),
+    "L+3": (438.0, 300.0, 29.0),
+    "L+5": (385.0, 225.0, 36.0),
+})
+print(f"Femur {apli.femur.points:.3f} / {apli.femur.max_points}")
+print(f"Knee/tibia {apli.knee_tibia.points:.3f} / {apli.knee_tibia.max_points}")
+
+# Upper legform: sum of forces (N) per tested point.
+grid_u = ["U+4", "U+3", "U+2", "U+1", "U0", "U-1", "U-2", "U-3", "U-4"]
+pelvis = upper_legform_score(grid_u, {"U0": 5260.0, "U-2": 6800.0, "U-4": 4890.0})
+print(f"Pelvis {pelvis.points:.3f} / {pelvis.max_points}")
+
+total = vru_score(head_result, pelvis, apli.femur, apli.knee_tibia)
+print(f"VRU crash protection {total.total:.3f} / {total.max_total:g}")
+```
+
+Each result keeps the score, colour and source of every grid point
+(`scores`, `colours`, `sources`), for example `"worst adjacent 'L+3'"`.
+
+| | Higher limit (1 point) | Lower limit (0 points) |
+|---|---|---|
+| Upper legform sum of forces | 5.0 kN | 6.0 kN |
+| aPLI femur bending moment | 390 N m | 440 N m |
+| aPLI tibia bending moment | 275 N m | 320 N m |
+| aPLI MCL elongation | 27 mm | 32 mm |
+
+- Scores are linear between the limits and rounded to 3 decimals, as in
+  the protocols' worked examples (`round_to=None` to keep them exact).
+- aPLI femur score: worst femur bending moment. Knee/tibia score: the
+  lower of the tibia and MCL scores.
+- Untested points take the result of their mirror point (unless
+  declared in `asymmetric_points`), else the worst result of the
+  adjacent points, separately for each body region.
+- Region points = sum of grid-point scores / number of grid points ×
+  region maximum: pelvis 2.5, femur 2.5, knee/tibia 5 in
+  `"euroncap_2026"` (total VRU 20 with the 10-point head); 4.5, 4.5 and
+  9 in `"euroncap_2023"` (total 36 with the 18-point head).
+- Leg colours: green 1.000, yellow ≥ 0.750, orange ≥ 0.500, brown
+  ≥ 0.001, red 0.000 (`leg_colour`).
+
+The upper legform impact energy decides whether a test is needed:
+
+```python
+from crashmetrics.pedestrian import upper_legform_alpha, upper_legform_energy
+
+alpha = upper_legform_alpha(ibrl=(x_ibrl, z_ibrl), wad930=(x_930, z_930))  # x rearward
+e = upper_legform_energy(alpha)
+print(f"alpha {alpha:.1f} deg, En {e.energy:.0f} J, vt {e.test_velocity:.2f} m/s, "
+      f"test required: {e.test_required}")
+```
+
+En = 0.5 × 7.4 kg × (11.11 m/s × cos(1.2α))², vt = √(2En / 10.5 kg),
+and no test is required below 160 J. Passing `energies` (J per grid
+point) to `upper_legform_score` scores untested points below 160 J as
+`not_required_score` (default 1.0) and only shares a symmetric or
+adjacent result when the energies differ by at most 10 %.
+
+The tests reproduce the protocols' worked examples: 2023 upper legform
+1.370 / 4.5, femur 1.898 / 4.5, knee/tibia 3.908 / 9; 2026 upper
+legform 0.761 / 2.5.
 
 ### Occupant Load Criterion and pulse summary
 
