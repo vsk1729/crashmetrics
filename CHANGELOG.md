@@ -36,6 +36,13 @@ follow [Semantic Versioning](https://semver.org/).
   (`compatibility_penalty`, checked against its worked examples),
   `damage_modifier`, and the protocol's modifier tables. The full width
   test uses the 35 km/h chest limits.
+- `crashmetrics.bncap`: Bharat NCAP adult occupant protection scoring to
+  AIS-197: sliding scales, exceedance-curve scoring of neck shear,
+  neck tension and femur compression, ODB frontal and MDB side test
+  scores with modifiers and capping, the pole test check, the AOP star
+  rating with its caps and the child occupant star thresholds.
+- `crashmetrics.side`: ES-2 rib deflection and VC (worst rib), total
+  abdominal force and pubic symphysis force; `"es2"` VC constants.
 - `crashmetrics.acceleration.exceedance_check`: checks any signal
   against a force-duration (exceedance) limit, for positive, negative or
   absolute values.

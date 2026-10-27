@@ -28,6 +28,10 @@ crashmetrics.lower_extremity
     Tibia Index, tibia compression, knee slider and femur force.
 crashmetrics.frontal_scoring
     Euro NCAP MPDB and full width test scoring.
+crashmetrics.side
+    ES-2 side impact criteria.
+crashmetrics.bncap
+    Bharat NCAP (AIS-197) adult occupant scoring and star rating.
 """
 
 # Single source of the package version; pyproject.toml reads it.

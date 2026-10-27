@@ -19,6 +19,8 @@ Python tools for automotive crash engineering calculations.
   - pelvis (`crashmetrics.pelvis`): THOR acetabulum force (`acetabulum_force`) and iliac force drop (`iliac_force_drop`)
   - legs (`crashmetrics.lower_extremity`): Tibia Index (`tibia_index`), tibia compression (`tibia_compression`), knee slider displacement (`knee_slider_displacement`) and femur compressive force against a force–time limit (`femur_force_criterion`)
 - Euro NCAP frontal scoring (2026 protocols) in `crashmetrics.frontal_scoring`: colour bands from HPL/LPL, body region and dummy scores with modifiers, and the MPDB (`score_mpdb`, 20 points) and full width (`score_fwdb`, 10 points) test scores
+- Bharat NCAP adult occupant scoring (AIS-197) in `crashmetrics.bncap`: 4-point sliding scales, neck and femur exceedance-curve scoring, ODB frontal (`score_frontal`) and MDB side (`score_side`) test scores with modifiers and capping, pole test check and the star rating (`aop_rating`, `cop_stars`)
+- ES-2 side impact criteria in `crashmetrics.side`: worst rib deflection and VC, total abdominal force and pubic symphysis force
 - Generic exceedance helpers in `crashmetrics.acceleration`: `exceedance_level`, `exceedance_duration` and the force–duration limit check `exceedance_check`
 - Simulation energy checks for any load case in `crashmetrics.energy_check` (energy ratio, hourglass, negative contact, damping, added mass, eroded energy, per-part hourglass and negative internal energy), LS-DYNA glstat/matsum readers in `crashmetrics.lsdyna`, and the `crashmetrics-energy` command
 - LS-DYNA d3hsp reader (`read_d3hsp`): run information, termination status, warnings and errors, model size and settings, keyword counts, part masses, smallest time steps, timing and memory
@@ -547,6 +549,54 @@ print(result.points, result.occupants["driver"].regions["head_neck"])
   speed), in N, N m, mm, g and m/s.
 
 The limit tables are tested against Section 3.5 of the protocol.
+
+### Bharat NCAP adult occupant scoring (AIS-197)
+
+ODB frontal at 64 km/h (Hybrid III 50th driver and passenger) and MDB
+side at 50 km/h (ES-2), 16 points each, plus the 29 km/h pole test:
+
+```python
+from crashmetrics.bncap import (
+    FrontalOccupant, SideOccupant, a_pillar_modifier, aop_rating,
+    backplate_modifier, score_frontal, score_side,
+)
+
+driver = FrontalOccupant(
+    hic15=600.0, head_a3ms=60.0,                 # used with hard contact
+    neck_shear=(t, fx), neck_tension=(t, fz),    # time histories, N
+    neck_extension=30.0, chest_compression=32.0, viscous_criterion=0.6,
+    femur=((t, fz_femur_l), (t, fz_femur_r)),    # compression negative
+    knee_displacement=(3.0, 10.5), tibia_index=(0.85, 0.3),
+    tibia_force=(1000.0, 5000.0), pedal_rearward=150.0,
+    modifiers={"chest": a_pillar_modifier(150.0)},   # points to subtract
+)
+frontal = score_frontal(driver, passenger, door_openings=0)
+side = score_side(SideOccupant(hic15=400.0, head_a3ms=60.0,
+                               rib_deflection=32.0, rib_vc=0.66,
+                               abdominal_force=1500.0, pubic_force=3000.0,
+                               modifiers={"chest": backplate_modifier(2500.0)}))
+rating = aop_rating(frontal, side, max_stars_allowed=5)
+print(rating.stars, rating.points, rating.reasons)
+```
+
+- **Points**: each criterion scores 0–4 linearly between its higher and
+  lower performance limit; neck shear, neck tension and femur
+  compression are scored from their cumulative exceedance curves between
+  two force–duration curves (the lowest point on the curve). A region
+  takes its worst criterion, then point modifiers are subtracted; scores
+  are rounded to 3 decimals. Frontal groups (head & neck, chest,
+  knee/femur/pelvis, leg & foot) take the worst of driver and passenger.
+- **Modifiers**: helpers for the sliding ones (steering column,
+  A-pillar, pedal upward and blocking, backplate, T12); fixed ones
+  (airbags, steering wheel contact, belt load, knee contact, footwell,
+  door opening, fuel leakage) are passed as points.
+- **Rating**: 27 / 22 / 16 / 10 / 4 points for 5 to 1 stars; 0 stars if
+  a capping limit is exceeded, at most 1 star if a critical region is
+  red, one star less if front and side differ by more than 35 %
+  (unless both exceed 8.2 points and the total exceeds 22), and
+  `max_stars_allowed` for the safety assist qualifiers.
+  `pole_test_passed` checks the pole test; `cop_stars` converts child
+  occupant points to stars.
 
 ### Tibia Index and femur force
 
