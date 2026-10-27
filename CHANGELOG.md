@@ -4,7 +4,29 @@ All notable changes to this project are listed here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions
 follow [Semantic Versioning](https://semver.org/).
 
-## [0.7.0] - Unreleased
+## [0.8.0] - Unreleased
+
+### Added
+
+- `crashmetrics.frontal_scoring`: Euro NCAP frontal scoring to the
+  Crash Protection Frontal Impact Protocol v1.1 (2026-2028) and CP 007
+  v1.1: colour bands from HPL / LPL (`colour_band`), limits for the
+  Hybrid III 5th / 50th / 95th, THOR 50th, Q6 and Q10, body region and
+  dummy scores with occupant modifiers (`score_dummy`), and the MPDB
+  (`score_mpdb`) and full width (`score_fwdb`) test scores with
+  full-scale modifiers; the CP 007 compatibility penalty
+  (`compatibility_penalty`, checked against its worked examples),
+  `damage_modifier`, and the protocol's modifier tables. The full width
+  test uses the 35 km/h chest limits.
+- `crashmetrics.bncap`: Bharat NCAP adult occupant protection scoring to
+  AIS-197: sliding scales, exceedance-curve scoring of neck shear,
+  neck tension and femur compression, ODB frontal and MDB side test
+  scores with modifiers and capping, the pole test check, the AOP star
+  rating with its caps and the child occupant star thresholds.
+- `crashmetrics.side`: ES-2 rib deflection and VC (worst rib), total
+  abdominal force and pubic symphysis force; `"es2"` VC constants.
+
+## [0.7.0] - 2026-10-27
 
 ### Added
 
@@ -26,23 +48,6 @@ follow [Semantic Versioning](https://semver.org/).
     `iliac_force_drop`.
   - `crashmetrics.lower_extremity`: `tibia_compression` (with the R94
     limit) and `knee_slider_displacement`.
-- `crashmetrics.frontal_scoring`: Euro NCAP frontal scoring to the
-  Crash Protection Frontal Impact Protocol v1.1 (2026-2028) and CP 007
-  v1.1: colour bands from HPL / LPL (`colour_band`), limits for the
-  Hybrid III 5th / 50th / 95th, THOR 50th, Q6 and Q10, body region and
-  dummy scores with occupant modifiers (`score_dummy`), and the MPDB
-  (`score_mpdb`) and full width (`score_fwdb`) test scores with
-  full-scale modifiers; the CP 007 compatibility penalty
-  (`compatibility_penalty`, checked against its worked examples),
-  `damage_modifier`, and the protocol's modifier tables. The full width
-  test uses the 35 km/h chest limits.
-- `crashmetrics.bncap`: Bharat NCAP adult occupant protection scoring to
-  AIS-197: sliding scales, exceedance-curve scoring of neck shear,
-  neck tension and femur compression, ODB frontal and MDB side test
-  scores with modifiers and capping, the pole test check, the AOP star
-  rating with its caps and the child occupant star thresholds.
-- `crashmetrics.side`: ES-2 rib deflection and VC (worst rib), total
-  abdominal force and pubic symphysis force; `"es2"` VC constants.
 - `crashmetrics.acceleration.exceedance_check`: checks any signal
   against a force-duration (exceedance) limit, for positive, negative or
   absolute values.
