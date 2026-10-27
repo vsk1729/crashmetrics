@@ -16,9 +16,17 @@ crashmetrics.energy_check
     Simulation energy checks for any load case.
 crashmetrics.pulse
     Occupant Load Criterion and crash pulse summary.
+crashmetrics.head
+    DAMAGE, BrIC and the frontal loading phase.
+crashmetrics.neck
+    Neck loads, occipital condyle moment, force-duration limits and Nij.
+crashmetrics.thorax
+    Chest deflection, VC, THOR Rmax and abdomen deflection, and CTI.
+crashmetrics.pelvis
+    THOR acetabulum force and iliac force drop.
 crashmetrics.lower_extremity
-    Tibia Index and femur force criterion.
+    Tibia Index, tibia compression, knee slider and femur force.
 """
 
 # Single source of the package version; pyproject.toml reads it.
-__version__ = "0.6.0"
+__version__ = "0.7.0"

@@ -2,7 +2,7 @@ import numpy as np
 import pytest
 from numpy.lib.stride_tricks import sliding_window_view
 
-from crashmetrics.acceleration import clip_3ms, peak
+from crashmetrics.acceleration import clip_3ms, exceedance_check, peak
 
 
 def triangle(peak_g=100.0, base_ms=10.0, start_ms=0.0):
@@ -177,3 +177,64 @@ def test_clip_rejects_unknown_mode():
 def test_peak_time_ms():
     result = peak([0.0, 0.0125, 0.02], [0.0, 9.0, 1.0])
     assert result.time_ms == pytest.approx(12.5)
+
+
+# --- exceedance_check ---------------------------------------------------------
+
+
+def _plateau(level, start_ms, end_ms):
+    t = np.arange(1001) * 1e-4  # 0 to 100 ms in 0.1 ms steps
+    ms = np.round(t * 1000.0, 6)
+    return t, np.where((ms >= start_ms) & (ms <= end_ms), level, 0.0)
+
+
+LIMIT = ((0.0, 3000.0), (20.0, 2000.0))
+
+
+def test_exceedance_check_plateau():
+    # 2.5 kN for 10 ms; limit at 10 ms = 2500 N, so utilisation 1.
+    t, s = _plateau(2500.0, 10.0, 20.0)
+    result = exceedance_check(t, s, LIMIT)
+    assert result.peak == 2500.0 and result.peak_time == pytest.approx(0.01)
+    assert result.utilisation == pytest.approx(1.0)
+    assert result.critical_duration_ms == pytest.approx(10.0)
+    assert np.all(np.diff(result.levels) < 0)  # highest first
+
+
+def test_exceedance_check_directions():
+    t, s = _plateau(2500.0, 10.0, 20.0)
+    negative = exceedance_check(t, -s, LIMIT, direction="negative")
+    assert negative.utilisation == pytest.approx(1.0)
+    assert exceedance_check(t, -s, LIMIT).utilisation == 0.0
+
+    # +2.5 kN and -2.5 kN for 10 ms each: 20 ms in absolute terms.
+    _, later = _plateau(-2500.0, 40.0, 50.0)
+    both = exceedance_check(t, s + later, LIMIT, direction="absolute")
+    assert both.critical_duration_ms == pytest.approx(20.0)
+    assert both.utilisation == pytest.approx(2500.0 / 2000.0)
+    continuous = exceedance_check(t, s + later, LIMIT, mode="continuous",
+                                  direction="absolute")
+    assert continuous.utilisation == pytest.approx(1.0, rel=1e-3)
+
+
+def test_exceedance_check_without_load():
+    t = np.linspace(0.0, 0.01, 11)
+    result = exceedance_check(t, np.full_like(t, -10.0), LIMIT)
+    assert result.passed and result.utilisation == 0.0 and result.peak == 0.0
+    assert result.levels.size == 0 and result.durations_ms.size == 0
+
+
+def test_exceedance_check_rejects_bad_input():
+    t, s = _plateau(2500.0, 10.0, 20.0)
+    with pytest.raises(ValueError, match="mode"):
+        exceedance_check(t, s, LIMIT, mode="peak")
+    with pytest.raises(ValueError, match="direction"):
+        exceedance_check(t, s, LIMIT, direction="both")
+    with pytest.raises(ValueError, match="start at 0"):
+        exceedance_check(t, s, ((5.0, 3000.0),))
+    with pytest.raises(ValueError, match="positive"):
+        exceedance_check(t, s, ((0.0, 0.0),))
+    with pytest.raises(ValueError, match="not increase"):
+        exceedance_check(t, s, ((0.0, 1000.0), (5.0, 2000.0)))
+    with pytest.raises(ValueError, match="at least one"):
+        exceedance_check(t, s, ())
