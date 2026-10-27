@@ -26,6 +26,8 @@ crashmetrics.pelvis
     THOR acetabulum force and iliac force drop.
 crashmetrics.lower_extremity
     Tibia Index, tibia compression, knee slider and femur force.
+crashmetrics.frontal_scoring
+    Euro NCAP MPDB and full width test scoring.
 """
 
 # Single source of the package version; pyproject.toml reads it.
