@@ -5,7 +5,8 @@ Modules
 crashmetrics.signals
     CFC filtering, resultants, unit conversion and resampling.
 crashmetrics.pedestrian
-    HIC and Euro NCAP pedestrian scoring (headform, legforms, total).
+    HIC, Euro NCAP pedestrian scoring (headform, legforms, total),
+    Flex-PLI criteria and scoring, and AIS-100 compliance checks.
 crashmetrics.acceleration
     Peak acceleration and the 3 ms clip.
 crashmetrics.energy
@@ -35,4 +36,4 @@ crashmetrics.bncap
 """
 
 # Single source of the package version; pyproject.toml reads it.
-__version__ = "0.8.0"
+__version__ = "0.9.0"

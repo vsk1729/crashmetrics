@@ -4,7 +4,20 @@ All notable changes to this project are listed here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions
 follow [Semantic Versioning](https://semver.org/).
 
-## [0.8.0] - Unreleased
+## [0.9.0] - Unreleased
+
+### Added
+
+- AIS-100 pedestrian compliance checks (`crashmetrics.pedestrian`):
+  Flex-PLI to bumper (Rev.1, 2024) and legacy legform (original
+  edition) limits, upper legform to bumper, `bumper_legform` (which test
+  applies by lower bumper height), the 264 mm relaxation width, and the
+  HIC1000 / HIC1700 zone area and test rules.
+- Flex-PLI: `assessment_interval` (AIS-100 Rev.1 3.2 / UN GTR 9),
+  `flexpli_peaks`, and Euro NCAP (v10.0.5, 2014-2022) Flex-PLI point and
+  grid scores (`flexpli_point_score`, `flexpli_score`).
+
+## [0.8.0] - 2026-10-27
 
 ### Added
 

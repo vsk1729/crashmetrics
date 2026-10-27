@@ -1,5 +1,24 @@
 """Pedestrian and cyclist (vulnerable road user) protection metrics."""
 
+from crashmetrics.pedestrian.ais100 import (
+    Check,
+    bumper_legform,
+    check_flexpli,
+    check_headform_tests,
+    check_headform_zones,
+    check_legacy_legform,
+    check_relaxation_width,
+    check_upper_legform_bumper,
+)
+from crashmetrics.pedestrian.flexpli import (
+    FLEXPLI_LIMITS,
+    FlexPliPeaks,
+    FlexPliPointScore,
+    assessment_interval,
+    flexpli_peaks,
+    flexpli_point_score,
+    flexpli_score,
+)
 from crashmetrics.pedestrian.headform import (
     COLOUR_POINTS,
     PROTOCOLS,
@@ -34,6 +53,21 @@ from crashmetrics.pedestrian.legform import (
 from crashmetrics.pedestrian.vru import VRUScore, vru_score
 
 __all__ = [
+    "FLEXPLI_LIMITS",
+    "Check",
+    "FlexPliPeaks",
+    "FlexPliPointScore",
+    "assessment_interval",
+    "bumper_legform",
+    "check_flexpli",
+    "check_headform_tests",
+    "check_headform_zones",
+    "check_legacy_legform",
+    "check_relaxation_width",
+    "check_upper_legform_bumper",
+    "flexpli_peaks",
+    "flexpli_point_score",
+    "flexpli_score",
     "COLOUR_POINTS",
     "LEGFORM_LIMITS",
     "LEGFORM_PROTOCOLS",

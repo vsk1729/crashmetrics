@@ -18,6 +18,8 @@ Python tools for automotive crash engineering calculations.
   - chest and abdomen (`crashmetrics.thorax`): Hybrid III deflection (`chest_deflection`), VC (`viscous_criterion`), THOR Rmax (`thor_chest_deflection`), THOR abdomen deflection (`thor_abdomen_deflection`) and CTI (`cti`)
   - pelvis (`crashmetrics.pelvis`): THOR acetabulum force (`acetabulum_force`) and iliac force drop (`iliac_force_drop`)
   - legs (`crashmetrics.lower_extremity`): Tibia Index (`tibia_index`), tibia compression (`tibia_compression`), knee slider displacement (`knee_slider_displacement`) and femur compressive force against a force–time limit (`femur_force_criterion`)
+- AIS-100 pedestrian compliance (India) in `crashmetrics.pedestrian`: Flex-PLI (Rev.1) and legacy legform limits, upper legform to bumper, which legform applies by bumper height, the relaxation width and the HIC1000 / HIC1700 zone rules
+- Flex-PLI criteria and scoring in `crashmetrics.pedestrian`: the assessment interval, peaks within it, and Euro NCAP 2014–2022 Flex-PLI point and grid scores
 - Euro NCAP frontal scoring (2026 protocols) in `crashmetrics.frontal_scoring`: colour bands from HPL/LPL, body region and dummy scores with modifiers, and the MPDB (`score_mpdb`, 20 points) and full width (`score_fwdb`, 10 points) test scores
 - Bharat NCAP adult occupant scoring (AIS-197) in `crashmetrics.bncap`: 4-point sliding scales, neck and femur exceedance-curve scoring, ODB frontal (`score_frontal`) and MDB side (`score_side`) test scores with modifiers and capping, pole test check and the star rating (`aop_rating`, `cop_stars`)
 - ES-2 side impact criteria in `crashmetrics.side`: worst rib deflection and VC, total abdominal force and pubic symphysis force
@@ -300,6 +302,47 @@ tests reproduce the worked examples of both protocols (2023: 10.554 of
 How the A-pillar rewards add to the grid total is this package's
 reading of the 2026 protocol (added to the grid score, maximum still
 the number of grid points); confirm it before relying on it.
+
+### AIS-100 compliance and Flex-PLI
+
+```python
+from crashmetrics.pedestrian import (
+    bumper_legform, check_flexpli, check_headform_tests, check_headform_zones,
+    flexpli_peaks, flexpli_score,
+)
+
+bumper_legform(410.0)            # 'lower_legform' (< 425 mm), 'either', 'upper_legform' (>= 500)
+
+# Flex-PLI peaks inside the assessment interval (AIS-100 Rev.1 3.2 / GTR 9)
+peaks = flexpli_peaks(t, [tibia1, tibia2, tibia3, tibia4], mcl, acl, pcl,
+                      femur_moments=[femur1, femur2, femur3])
+check = check_flexpli(peaks.tibia_moment, peaks.mcl, peaks.acl, peaks.pcl)
+print(check.passed, check.worst, check.utilisation)
+
+# Headform: HIC1000 zone share of the projected test areas, and test results
+check_headform_zones(child_area=0.6, adult_area=0.4,
+                     hic1000_child_area=0.35, hic1000_adult_area=0.32)
+check_headform_tests([("hic1000", 850.0), ("hic1700", 1500.0)])
+
+# Euro NCAP (2014-2022) Flex-PLI grid: {point: (tibia N m, MCL, ACL, PCL mm)}
+flexpli_score(["L+1", "L0", "L-1"], {"L0": (300.0, 20.0, 5.0, 4.0)}).points
+```
+
+- **AIS-100 Rev.1 (2024)**: Flex-PLI MCL ≤ 22 mm, ACL and PCL ≤ 13 mm,
+  tibia moment ≤ 340 N m (380 N m inside up to 264 mm of nominated
+  width). **Original AIS-100**: legacy legform knee bending ≤ 19°, knee
+  shear ≤ 6 mm, tibia acceleration ≤ 170 g (250 g in the nominated
+  width). **Both**: upper legform to bumper sum of forces ≤ 7.5 kN and
+  moment ≤ 510 N m; the HIC1000 zone must cover half the child test area
+  and two thirds of the child + adult areas (two thirds if there is only
+  a child area), with HIC ≤ 1700 elsewhere.
+- **Assessment interval**: from first contact to the last zero crossing
+  of the femur and tibia moments after their first maximum above 15 N m,
+  shifting all curves down if a segment never crosses zero.
+- **Euro NCAP Flex-PLI score** (v10.0.5): per point, tibia 0.5 × the
+  282–340 N m scale plus knee 0.5 × the 19–22 mm MCL scale (0 if ACL or
+  PCL reaches 10 mm); the grid is filled by symmetry and worst adjacent
+  results and scaled to 6 points.
 
 ### Euro NCAP legform scoring and total VRU score
 
