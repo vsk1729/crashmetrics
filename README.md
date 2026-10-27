@@ -493,7 +493,9 @@ Protection Frontal Impact Protocol v1.1 (2026–2028) and CP 007
 Assessment Modifiers v1.1:
 
 ```python
-from crashmetrics.frontal_scoring import Occupant, damage_modifier, score_mpdb
+from crashmetrics.frontal_scoring import (
+    Occupant, compatibility_penalty, damage_modifier, score_mpdb,
+)
 
 driver = Occupant(  # THOR 50th; worst of left and right where relevant
     values={"head_peak": 60.0, "neck_shear": 1500.0, "neck_tension": 2800.0,
@@ -506,7 +508,8 @@ driver = Occupant(  # THOR 50th; worst of left and right where relevant
 result = score_mpdb(
     {"driver": driver, "front_passenger": ..., "rear_q6": ..., "rear_q10": ...},
     full_scale_modifiers=[2.5],    # e.g. A-pillar, % of 10 points
-    compatibility_penalty=1.5,     # points
+    compatibility_penalty=compatibility_penalty(sd=119.0, olc=34.9,
+                                                bottoming_out=False),  # 2.826
 )
 print(result.points, result.occupants["driver"].regions["head_neck"])
 ```
@@ -517,23 +520,33 @@ print(result.points, result.occupants["driver"].regions["head_neck"])
   or red. Each body region takes its lowest-scoring criterion; green,
   yellow, orange, brown and red earn 100, 80, 60, 40 and 0 % of the
   region points (1.25 / 1.0 / 0.75 / 0.5 / 0 of 1.25).
-- **Points**: MPDB 20 (THOR 50th driver, Hybrid III 5th passenger, Q6 and
-  Q10 rear, 5 each); full width 10 (Hybrid III 5th driver 5, THOR 50th
-  passenger 2.5, Hybrid III 5th rear 2.5).
+- **Points**: MPDB at 50 km/h, 20 points (THOR 50th driver, Hybrid III
+  5th passenger, Q6 and Q10 rear, 5 each); full width at 35 km/h, 10
+  points (Hybrid III 5th driver 5, THOR 50th passenger 2.5, Hybrid III
+  5th rear 2.5). The chest compression limits follow the test speed.
 - **Head**: without hard contact (head peak above 80 g, or `hard_contact`)
   HIC15 and the 3 ms acceleration are not applied to adults; the Q
   dummies' head is then scored on the 3 ms acceleration only.
-- **Modifiers**: occupant modifiers in % of the region points, full-scale
-  modifiers in % of 10 points, compatibility penalty in points; no score
-  goes below zero. `damage_modifier` gives the THOR DAMAGE modifier and
-  `compatibility_percentages` the CP 007 SD and OLC percentages.
+- **Modifiers**: occupant modifiers in % of the region points (Q dummy
+  score modifiers in % of the dummy score), full-scale modifiers in % of
+  10 points; no score goes below zero. `OCCUPANT_MODIFIERS` and
+  `FULL_SCALE_MODIFIERS` list the protocol's values, and
+  `damage_modifier` gives the THOR DAMAGE modifier.
+- **Compatibility** (CP 007 Appendix A): `compatibility_penalty(sd, olc,
+  bottoming_out)` = `1.25 (s + o + 2 s o)` points, plus 1.25 for
+  bottoming out, at most 5, where s and o are the SD (50–150 mm) and OLC
+  (25–40 g) sliding scales. It reproduces CP 007's three worked examples.
 - **Capping**: values at or above a capping limit are listed in
-  `capping_exceeded`; the consequence is left to you.
+  `capping_exceeded` (the Hybrid III 5th neck capping only for the
+  driver); the protocol does not state the consequence.
+- **Band points**: the protocol text (Section 3.5) gives 1.25 / 1.0 /
+  0.75 / 0.5 / 0 points, its colour band tables (Section 3.4) 100 / 80 /
+  40 / 20 / 0 %. The text values are the default; use
+  `band_fractions=BAND_FRACTIONS_TABLE` for the table values.
 - Limits are in `DUMMY_LIMITS` and `CHEST_COMPRESSION_LIMITS` (by test
   speed), in N, N m, mm, g and m/s.
 
-Check the limits and rules against your copy of the protocol: they were
-read from the published PDF, whose tables do not extract cleanly.
+The limit tables are tested against Section 3.5 of the protocol.
 
 ### Tibia Index and femur force
 

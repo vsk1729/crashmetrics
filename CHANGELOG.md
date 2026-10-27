@@ -32,8 +32,10 @@ follow [Semantic Versioning](https://semver.org/).
   Hybrid III 5th / 50th / 95th, THOR 50th, Q6 and Q10, body region and
   dummy scores with occupant modifiers (`score_dummy`), and the MPDB
   (`score_mpdb`) and full width (`score_fwdb`) test scores with
-  full-scale modifiers and the compatibility penalty;
-  `damage_modifier` and `compatibility_percentages`.
+  full-scale modifiers; the CP 007 compatibility penalty
+  (`compatibility_penalty`, checked against its worked examples),
+  `damage_modifier`, and the protocol's modifier tables. The full width
+  test uses the 35 km/h chest limits.
 - `crashmetrics.acceleration.exceedance_check`: checks any signal
   against a force-duration (exceedance) limit, for positive, negative or
   absolute values.

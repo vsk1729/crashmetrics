@@ -21,9 +21,11 @@ criterion and earns that band's share of the region's points (Section
 3.5: green 1.25, yellow 1.0, orange 0.75, brown 0.5, red 0 of 1.25,
 i.e. 100, 80, 60, 40 and 0 %; see :data:`BAND_FRACTIONS`).
 
-Occupant modifiers are percentages of the region's maximum points and
-full-scale modifiers percentages of 10 points per load case. Scores do
-not go below zero (CP 007). Without hard head contact (peak resultant
+Occupant modifiers are percentages of the region's maximum points (Q
+dummy score modifiers of the whole dummy score) and full-scale modifiers
+percentages of 10 points per load case. Scores do not go below zero
+(CP 007, Section 1). The MPDB compatibility penalty follows CP 007
+Appendix A (:func:`compatibility_penalty`). Without hard head contact (peak resultant
 head acceleration above 80 g or other evidence), HIC15 and the head
 3 ms acceleration are not applied to adult dummies; Q dummies are then
 assessed on the head 3 ms acceleration only.
@@ -41,12 +43,17 @@ from dataclasses import dataclass, field
 __all__ = [
     "ADULT_REGIONS",
     "BAND_FRACTIONS",
+    "BAND_FRACTIONS_TABLE",
     "CHEST_COMPRESSION_LIMITS",
     "CHILD_REGIONS",
+    "COMPATIBILITY_MAX_PENALTY",
     "DUMMY_LIMITS",
+    "FULL_SCALE_MODIFIERS",
     "FULL_SCALE_MODIFIER_BASE",
     "FWDB_OCCUPANTS",
+    "FWDB_SPEED",
     "MPDB_OCCUPANTS",
+    "OCCUPANT_MODIFIERS",
     "CriterionResult",
     "DummyScore",
     "Limit",
@@ -54,6 +61,7 @@ __all__ = [
     "RegionScore",
     "TestScore",
     "colour_band",
+    "compatibility_penalty",
     "compatibility_percentages",
     "damage_modifier",
     "score_dummy",
@@ -73,6 +81,8 @@ class Limit:
     """Lower performance limit."""
     capping: float | None = None
     """Capping limit, if the protocol gives one."""
+    capping_driver_only: bool = False
+    """True if the capping limit applies to the driver only."""
 
 
 BAND_FRACTIONS: dict[str, float] = {
@@ -83,9 +93,14 @@ BAND_FRACTIONS: dict[str, float] = {
     "red": 0.0,
 }
 """Share of the region points per band, from the protocol's Section 3.5
-(1.25 / 1.0 / 0.75 / 0.5 / 0 points). Note: the colour band tables of
-the same protocol print 100 / 80 / 40 / 20 / 0 %; pass ``band_fractions``
-to use those instead."""
+text (1.25 / 1.0 / 0.75 / 0.5 / 0 points). The colour band tables of the
+same protocol (Section 3.4) print 100 / 80 / 40 / 20 / 0 % instead; pass
+``band_fractions=BAND_FRACTIONS_TABLE`` to use those."""
+
+BAND_FRACTIONS_TABLE: dict[str, float] = {
+    "green": 1.0, "yellow": 0.8, "orange": 0.4, "brown": 0.2, "red": 0.0,
+}
+"""Band shares as printed in the Section 3.4 colour band tables."""
 
 ADULT_REGIONS: dict[str, tuple[str, ...]] = {
     "head_neck": ("hic15", "head_a3ms", "neck_shear", "neck_tension",
@@ -120,8 +135,9 @@ def _head_neck(
 
 DUMMY_LIMITS: dict[str, dict[str, Limit]] = {
     "hybrid3_05": {
-        **_head_neck(Limit(1200.0, 2000.0, 2700.0), Limit(1700.0, 2600.0, 2900.0),
-                     Limit(36.0, 49.0, 57.0)),
+        **_head_neck(Limit(1200.0, 2000.0, 2700.0, True),
+                     Limit(1700.0, 2600.0, 2900.0, True),
+                     Limit(36.0, 49.0, 57.0, True)),
         "viscous_criterion": Limit(0.5, 1.0, 1.0),
         "femur_force": Limit(2600.0, 6200.0),
         "knee_displacement": Limit(6.0, 15.0),
@@ -176,7 +192,9 @@ DUMMY_LIMITS: dict[str, dict[str, Limit]] = {
 Chest compression of adult dummies depends on the test speed; see
 :data:`CHEST_COMPRESSION_LIMITS`. The THOR chest compression is Rmax.
 Hybrid III 95th tibia HPLs are bracketed in the protocol (to apply once
-a lower leg certification procedure exists)."""
+a lower leg certification procedure exists). Hybrid III 5th neck capping
+applies to the driver only. Q6 / Q10 neck extension and Q10 chest
+compression are printed as single values and used as LPLs."""
 
 CHEST_COMPRESSION_LIMITS: dict[str, dict[int, Limit]] = {
     "hybrid3_05": {35: Limit(18.0, 34.0, 34.0), 50: Limit(18.0, 34.0, 34.0),
@@ -201,8 +219,54 @@ FWDB_OCCUPANTS: dict[str, tuple[str, dict[str, float]]] = {
     "rear_passenger": ("hybrid3_05", {"head_neck": 0.625, "chest_abdomen": 1.25,
                                       "knee_femur_pelvis": 0.625}),
 }
-"""Full width test: dummy and region points per position (10 points);
-the rear passenger's lower leg is not scored."""
+"""Full width test (35 km/h): dummy and region points per position
+(10 points); the rear passenger's lower leg is not scored."""
+
+FWDB_SPEED = 35
+"""Full width test speed, km/h (protocol Section 3.2)."""
+
+OCCUPANT_MODIFIERS: dict[str, tuple[str, float]] = {
+    "head_bottoming_out": ("head_neck", 20.0),
+    "unstable_airbag_contact": ("head_neck", 20.0),
+    "hazardous_airbag_deployment": ("head_neck", 20.0),
+    "excursion_450mm": ("head_neck", 50.0),
+    "excursion_550mm": ("head_neck", 100.0),
+    "steering_wheel_contact": ("chest_abdomen", 20.0),
+    "shoulder_belt_load": ("chest_abdomen", 40.0),
+    "submarining": ("knee_femur_pelvis", 100.0),
+    "knee_load_variable": ("knee_femur_pelvis", 20.0),
+    "knee_load_concentrated": ("knee_femur_pelvis", 20.0),
+    "pedal_rearward_100mm": ("lower_leg", 50.0),
+    "pedal_rearward_200mm": ("lower_leg", 100.0),
+    "pedal_vertical_72mm": ("lower_leg", 20.0),
+    "pedal_blocking": ("lower_leg", 20.0),
+    "incorrect_airbag_deployment": ("per region", 20.0),
+    "q6_excursion_550mm": ("head", 100.0),
+    "q10_excursion_450mm": ("head", 50.0),
+    "q10_excursion_550mm": ("head", 100.0),
+    "q_full_belt_slippage": ("dummy", 100.0),
+    "q_partial_belt_slippage": ("dummy", 50.0),
+    "q_restraint": ("dummy", 100.0),
+    "q_submarining": ("dummy", 100.0),
+    "q_ejection": ("dummy", 100.0),
+    "q_crs_attachment": ("dummy", 100.0),
+}
+"""Occupant modifiers (protocol Section 4.3.1): body region and penalty in
+% of that region's points (``"dummy"``: of the Q dummy score). DAMAGE:
+see :func:`damage_modifier`. Reference data for building the inputs."""
+
+FULL_SCALE_MODIFIERS: dict[str, float] = {
+    "a_pillar_100mm": 2.5,
+    "steering_column": 1.25,
+    "bodyshell_integrity": 1.25,
+    "footwell_rupture": 1.25,
+    "door_opening": 5.0,
+    "door_detachment": 100.0,
+    "restraint_failure": 100.0,
+}
+"""Full-scale test modifiers (Section 4.3.2), % of 10 points. Door opening
+applies per door; steering column uses the worst of rearward (>= 90 mm),
+vertical (>= 72 mm) and lateral (>= 90 mm)."""
 
 FULL_SCALE_MODIFIER_BASE = 10.0
 """Full-scale modifiers are percentages of 10 points per load case."""
@@ -278,6 +342,9 @@ class Occupant:
     modifiers: Mapping[str, Sequence[float]] = field(default_factory=dict)
     """Occupant modifiers per region, in % of the region points, e.g.
     ``{"head_neck": [20.0]}``."""
+    dummy_modifiers: Sequence[float] = ()
+    """Modifiers of the whole dummy score in % (Q dummy score modifiers,
+    e.g. 50 for partial belt slippage)."""
 
 
 def damage_modifier(damage: float) -> float:
@@ -310,6 +377,7 @@ def score_dummy(
     region_points: Mapping[str, float],
     speed: int = 50,
     band_fractions: Mapping[str, float] = BAND_FRACTIONS,
+    driver: bool = False,
 ) -> DummyScore:
     """Score one dummy.
 
@@ -326,6 +394,8 @@ def score_dummy(
         Test speed for the adult chest compression limits, km/h.
     band_fractions:
         Share of the region points per band.
+    driver:
+        True for the driver (driver-only capping limits).
 
     Raises
     ------
@@ -369,7 +439,8 @@ def score_dummy(
                 raise ValueError(f"Missing value for {crit!r} ({dummy}).")
             limit = limits[crit]
             value = float(values[crit])
-            exceeded = limit.capping is not None and value >= limit.capping
+            exceeded = (limit.capping is not None and value >= limit.capping
+                        and (driver or not limit.capping_driver_only))
             if exceeded:
                 capped.append(crit)
             results.append(CriterionResult(crit, value, limit,
@@ -385,10 +456,14 @@ def score_dummy(
         regions[region] = RegionScore(region, points, float(max_points), band,
                                       governing, percent, tuple(results))
 
+    max_points = float(sum(region_points.values()))
+    dummy_percent = float(sum(occupant.dummy_modifiers))
+    points = max(0.0, sum(r.points for r in regions.values())
+                 - dummy_percent / 100.0 * max_points)
     return DummyScore(
         dummy=dummy,
-        points=sum(r.points for r in regions.values()),
-        max_points=float(sum(region_points.values())),
+        points=points,
+        max_points=max_points,
         regions=regions,
         hard_contact=bool(hard_contact),
         capping_exceeded=tuple(capped),
@@ -447,7 +522,7 @@ def _score_layout(
                          f"{sorted(missing)}, unexpected {sorted(extra)}.")
     scores = {
         position: score_dummy(dummy, occupants[position], points, speed,
-                              band_fractions)
+                              band_fractions, driver=position == "driver")
         for position, (dummy, points) in layout.items()
     }
     return score_test(scores, full_scale_modifiers, compatibility_penalty)
@@ -463,7 +538,7 @@ def score_mpdb(
 
     ``occupants`` has keys ``"driver"`` (THOR 50th), ``"front_passenger"``
     (Hybrid III 5th), ``"rear_q6"`` and ``"rear_q10"``. Give the
-    compatibility penalty in points (see :func:`compatibility_percentages`).
+    compatibility penalty in points (see :func:`compatibility_penalty`).
     """
     return _score_layout(MPDB_OCCUPANTS, occupants, 50, band_fractions,
                          full_scale_modifiers, compatibility_penalty)
@@ -472,27 +547,26 @@ def score_mpdb(
 def score_fwdb(
     occupants: Mapping[str, Occupant],
     full_scale_modifiers: Sequence[float] = (),
-    speed: int = 50,
+    speed: int = FWDB_SPEED,
     band_fractions: Mapping[str, float] = BAND_FRACTIONS,
 ) -> TestScore:
     """Full width test score, 10 points.
 
     ``occupants`` has keys ``"driver"`` (Hybrid III 5th),
     ``"front_passenger"`` (THOR 50th) and ``"rear_passenger"`` (Hybrid III
-    5th). ``speed`` selects the chest compression limits (km/h).
+    5th). The test runs at 35 km/h, which selects the chest compression
+    limits; ``speed`` overrides it.
     """
     return _score_layout(FWDB_OCCUPANTS, occupants, speed, band_fractions,
                          full_scale_modifiers, 0.0)
 
 
 def compatibility_percentages(sd: float, olc: float) -> tuple[float, float]:
-    """MPDB compatibility inputs as % of their penalty (CP 007, Section 3).
+    """MPDB compatibility sliding scales, % (CP 007 Appendix A.3).
 
     The barrier deformation standard deviation ``sd`` (mm) scales linearly
-    from 50 mm (0 %) to 150 mm (100 %), the OLC (g) from 25 g (0 %) to
-    40 g (100 %). How CP 007 combines them with bottoming out into points
-    is not reproduced here; pass the resulting penalty to
-    :func:`score_mpdb`.
+    from 50 mm (0 %) to 150 mm (100 %), the trolley OLC (g) from 25 g
+    (0 %) to 40 g (100 %); both are clamped to 0-100 %.
     """
     for name, v in (("sd", sd), ("olc", olc)):
         if not math.isfinite(v):
@@ -502,3 +576,27 @@ def compatibility_percentages(sd: float, olc: float) -> tuple[float, float]:
         return 100.0 * min(1.0, max(0.0, (v - lo) / (hi - lo)))
 
     return scale(sd, 50.0, 150.0), scale(olc, 25.0, 40.0)
+
+
+COMPATIBILITY_MAX_PENALTY = 5.0
+"""Largest compatibility penalty, points (25 % of the 20-point MPDB score,
+or 50 % of 10 points)."""
+
+
+def compatibility_penalty(sd: float, olc: float, bottoming_out: bool) -> float:
+    """MPDB compatibility penalty in points (CP 007, Appendix A).
+
+    With ``s`` and ``o`` the SD and OLC sliding scales (0 to 1, see
+    :func:`compatibility_percentages`)::
+
+        penalty = 1.25 (s + o + 2 s o) + 1.25 if bottoming out, <= 5 points
+
+    This is the scoring rationale of CP 007 Figure 2 (1.25 points for the
+    SD alone, 1.25 for the OLC alone, 5 for both at 100 %, 1.25 points =
+    6.25 % of the MPDB score added for bottoming out) and reproduces its
+    three worked examples (2.826, 5.0 and 2.242 points).
+    """
+    sd_pct, olc_pct = compatibility_percentages(sd, olc)
+    s_, o_ = sd_pct / 100.0, olc_pct / 100.0
+    penalty = 1.25 * (s_ + o_ + 2.0 * s_ * o_) + (1.25 if bottoming_out else 0.0)
+    return min(COMPATIBILITY_MAX_PENALTY, penalty)
