@@ -89,9 +89,10 @@ VC_CONSTANTS: dict[str, tuple[float, float]] = {
     "hybrid3_05": (1.3, 0.187),
     "hybrid3_95": (1.3, 0.254),
     "worldsid_50": (1.0, 0.170),
+    "es2": (1.0, 0.140),
 }
 """Viscous criterion (scale factor sf, Dconstant in m) from Euro NCAP
-CP 005, Section 3.4.6."""
+CP 005, Section 3.4.6; ES-2 rib VC from AIS-197 Annexure IV, 4.1.2."""
 
 
 @dataclass(frozen=True)
