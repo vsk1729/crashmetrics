@@ -18,6 +18,7 @@ Python tools for automotive crash engineering calculations.
   - chest and abdomen (`crashmetrics.thorax`): Hybrid III deflection (`chest_deflection`), VC (`viscous_criterion`), THOR Rmax (`thor_chest_deflection`), THOR abdomen deflection (`thor_abdomen_deflection`) and CTI (`cti`)
   - pelvis (`crashmetrics.pelvis`): THOR acetabulum force (`acetabulum_force`) and iliac force drop (`iliac_force_drop`)
   - legs (`crashmetrics.lower_extremity`): Tibia Index (`tibia_index`), tibia compression (`tibia_compression`), knee slider displacement (`knee_slider_displacement`) and femur compressive force against a force–time limit (`femur_force_criterion`)
+- Euro NCAP frontal scoring (2026 protocols) in `crashmetrics.frontal_scoring`: colour bands from HPL/LPL, body region and dummy scores with modifiers, and the MPDB (`score_mpdb`, 20 points) and full width (`score_fwdb`, 10 points) test scores
 - Generic exceedance helpers in `crashmetrics.acceleration`: `exceedance_level`, `exceedance_duration` and the force–duration limit check `exceedance_check`
 - Simulation energy checks for any load case in `crashmetrics.energy_check` (energy ratio, hourglass, negative contact, damping, added mass, eroded energy, per-part hourglass and negative internal energy), LS-DYNA glstat/matsum readers in `crashmetrics.lsdyna`, and the `crashmetrics-energy` command
 - LS-DYNA d3hsp reader (`read_d3hsp`): run information, termination status, warnings and errors, model size and settings, keyword counts, part masses, smallest time steps, timing and memory
@@ -484,6 +485,55 @@ taken from CP 005 (DAMAGE, VC), FMVSS 208 (Nij intercepts in position:
 Hybrid III 50th male and 5th female), Takhounts et al. 2013, Table 3
 (BrIC: the average of the MPS- and CSDM-based values by default) and
 Eppinger et al. 1999 (CTI).
+
+### Euro NCAP frontal scoring (MPDB and full width)
+
+Scores the MPDB (offset) and full width tests to the Euro NCAP Crash
+Protection Frontal Impact Protocol v1.1 (2026–2028) and CP 007
+Assessment Modifiers v1.1:
+
+```python
+from crashmetrics.frontal_scoring import Occupant, damage_modifier, score_mpdb
+
+driver = Occupant(  # THOR 50th; worst of left and right where relevant
+    values={"head_peak": 60.0, "neck_shear": 1500.0, "neck_tension": 2800.0,
+            "neck_extension": 30.0, "chest_compression": 50.0,  # Rmax, mm
+            "abdomen_compression": 70.0, "acetabulum_force": 3000.0,
+            "femur_force": 4000.0, "knee_displacement": 5.0,
+            "tibia_index": 0.3, "tibia_force": 1500.0},
+    modifiers={"head_neck": [damage_modifier(0.44)]},  # % of region points
+)
+result = score_mpdb(
+    {"driver": driver, "front_passenger": ..., "rear_q6": ..., "rear_q10": ...},
+    full_scale_modifiers=[2.5],    # e.g. A-pillar, % of 10 points
+    compatibility_penalty=1.5,     # points
+)
+print(result.points, result.occupants["driver"].regions["head_neck"])
+```
+
+- **Colour bands**: green below the HPL, red at or above the LPL, and
+  yellow / orange / brown in three equal bands of width
+  `(LPL - HPL) / 3` between them. A criterion with an LPL only is green
+  or red. Each body region takes its lowest-scoring criterion; green,
+  yellow, orange, brown and red earn 100, 80, 60, 40 and 0 % of the
+  region points (1.25 / 1.0 / 0.75 / 0.5 / 0 of 1.25).
+- **Points**: MPDB 20 (THOR 50th driver, Hybrid III 5th passenger, Q6 and
+  Q10 rear, 5 each); full width 10 (Hybrid III 5th driver 5, THOR 50th
+  passenger 2.5, Hybrid III 5th rear 2.5).
+- **Head**: without hard contact (head peak above 80 g, or `hard_contact`)
+  HIC15 and the 3 ms acceleration are not applied to adults; the Q
+  dummies' head is then scored on the 3 ms acceleration only.
+- **Modifiers**: occupant modifiers in % of the region points, full-scale
+  modifiers in % of 10 points, compatibility penalty in points; no score
+  goes below zero. `damage_modifier` gives the THOR DAMAGE modifier and
+  `compatibility_percentages` the CP 007 SD and OLC percentages.
+- **Capping**: values at or above a capping limit are listed in
+  `capping_exceeded`; the consequence is left to you.
+- Limits are in `DUMMY_LIMITS` and `CHEST_COMPRESSION_LIMITS` (by test
+  speed), in N, N m, mm, g and m/s.
+
+Check the limits and rules against your copy of the protocol: they were
+read from the published PDF, whose tables do not extract cleanly.
 
 ### Tibia Index and femur force
 

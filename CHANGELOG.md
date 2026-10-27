@@ -26,6 +26,14 @@ follow [Semantic Versioning](https://semver.org/).
     `iliac_force_drop`.
   - `crashmetrics.lower_extremity`: `tibia_compression` (with the R94
     limit) and `knee_slider_displacement`.
+- `crashmetrics.frontal_scoring`: Euro NCAP frontal scoring to the
+  Crash Protection Frontal Impact Protocol v1.1 (2026-2028) and CP 007
+  v1.1: colour bands from HPL / LPL (`colour_band`), limits for the
+  Hybrid III 5th / 50th / 95th, THOR 50th, Q6 and Q10, body region and
+  dummy scores with occupant modifiers (`score_dummy`), and the MPDB
+  (`score_mpdb`) and full width (`score_fwdb`) test scores with
+  full-scale modifiers and the compatibility penalty;
+  `damage_modifier` and `compatibility_percentages`.
 - `crashmetrics.acceleration.exceedance_check`: checks any signal
   against a force-duration (exceedance) limit, for positive, negative or
   absolute values.
