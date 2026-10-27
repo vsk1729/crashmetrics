@@ -4,8 +4,11 @@ import pytest
 from crashmetrics.acceleration import exceedance_duration, exceedance_level
 from crashmetrics.lower_extremity import (
     FEMUR_FORCE_LIMITS,
+    R94_TIBIA_COMPRESSION_LIMIT,
     TIBIA_INDEX_CRITICAL_VALUES,
     femur_force_criterion,
+    knee_slider_displacement,
+    tibia_compression,
     tibia_index,
 )
 
@@ -206,3 +209,25 @@ def test_femur_limit_table_and_validation():
         femur_force_criterion(t, fz, limit=((1.0, 9000.0),))
     with pytest.raises(ValueError, match="not increase"):
         femur_force_criterion(t, fz, limit=((0.0, 5000.0), (5.0, 6000.0)))
+
+
+# --- Tibia compression and knee slider ----------------------------------------
+
+
+def test_tibia_compression_peak():
+    t = np.array([0.0, 0.01, 0.02, 0.03])
+    fz = np.array([0.0, -5000.0, -8500.0, 1000.0])
+    result = tibia_compression(t, fz)
+    assert result.value == 8500.0 and result.time == 0.02
+    assert result.value > R94_TIBIA_COMPRESSION_LIMIT == 8000.0
+    assert tibia_compression(t, -fz, compression_negative=False).value == 8500.0
+    assert tibia_compression(t, fz, t_end=0.015).value == 5000.0
+    assert tibia_compression(t, np.abs(fz)).value == 0.0  # never compressed
+
+
+def test_knee_slider_displacement_is_abs_of_minimum():
+    t = np.array([0.0, 0.01, 0.02, 0.03])
+    d = np.array([0.0, -5.0, -12.3, 2.0])
+    result = knee_slider_displacement(t, d)
+    assert result.value == pytest.approx(12.3) and result.time == 0.02
+    assert knee_slider_displacement(t, d, t_end=0.015).value == pytest.approx(5.0)

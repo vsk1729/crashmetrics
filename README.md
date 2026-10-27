@@ -12,8 +12,13 @@ Python tools for automotive crash engineering calculations.
 - Signal processing in `crashmetrics.signals`: SAE J211 CFC filtering (`cfc_filter`), resultants (`resultant`), unit conversion (`to_g`, `to_seconds`) and uniform resampling (`resample_uniform`)
 - Acceleration metrics in `crashmetrics.acceleration`: peak value and time (`peak`) and the 3 ms clip, cumulative or continuous (`clip_3ms`)
 - Vehicle pulse metrics in `crashmetrics.pulse`: Occupant Load Criterion (`olc`) and a pulse summary with delta-V, time to zero velocity, maximum displacement, rebound and deceleration (`pulse_summary`)
-- Lower-extremity criteria in `crashmetrics.lower_extremity`: Tibia Index (`tibia_index`) and femur compressive force against a force–time limit (`femur_force_criterion`)
-- Generic exceedance helpers in `crashmetrics.acceleration`: `exceedance_level` and `exceedance_duration`
+- Frontal impact dummy criteria (Euro NCAP CP 005 and UN-ECE R94) for the Hybrid III and THOR:
+  - head (`crashmetrics.head`): DAMAGE (`damage`), BrIC (`bric`) and the end of the loading phase (`loading_phase_end`)
+  - neck (`crashmetrics.neck`): occipital condyle moment, peak shear, tension, compression and moments (`neck_loads`), force–duration limits such as R94 (`neck_force_criterion`) and Nij (`nij`)
+  - chest and abdomen (`crashmetrics.thorax`): Hybrid III deflection (`chest_deflection`), VC (`viscous_criterion`), THOR Rmax (`thor_chest_deflection`), THOR abdomen deflection (`thor_abdomen_deflection`) and CTI (`cti`)
+  - pelvis (`crashmetrics.pelvis`): THOR acetabulum force (`acetabulum_force`) and iliac force drop (`iliac_force_drop`)
+  - legs (`crashmetrics.lower_extremity`): Tibia Index (`tibia_index`), tibia compression (`tibia_compression`), knee slider displacement (`knee_slider_displacement`) and femur compressive force against a force–time limit (`femur_force_criterion`)
+- Generic exceedance helpers in `crashmetrics.acceleration`: `exceedance_level`, `exceedance_duration` and the force–duration limit check `exceedance_check`
 - Simulation energy checks for any load case in `crashmetrics.energy_check` (energy ratio, hourglass, negative contact, damping, added mass, eroded energy, per-part hourglass and negative internal energy), LS-DYNA glstat/matsum readers in `crashmetrics.lsdyna`, and the `crashmetrics-energy` command
 - LS-DYNA d3hsp reader (`read_d3hsp`): run information, termination status, warnings and errors, model size and settings, keyword counts, part masses, smallest time steps, timing and memory
 - Energy and force–displacement metrics in `crashmetrics.energy`: velocity and displacement from acceleration (`integrate_acceleration`), cumulative absorbed energy (`absorbed_energy`), crush summary with peak and mean force, crush force efficiency and specific energy absorption (`crush_metrics`), and `kinetic_energy`
@@ -393,6 +398,92 @@ vehicle velocity. The OLC is that deceleration, expressed in g using
 9.81 m/s² as Euro NCAP does (change with `gravity`). The tests check it
 against the closed-form solution for constant deceleration and against
 an independent numerical formulation.
+
+### Frontal impact dummy criteria
+
+The dummy criteria shared by the Euro NCAP frontal tests (MPDB, full
+width) and UN-ECE R94. They follow the Euro NCAP Data Acquisition and
+Injury Calculation protocol (CP 005 v1.4.1) unless another source is
+named. Inputs are SI (s, N, N m, rad/s) with deflections in mm; filter
+each channel first with the CFC that CP 005 gives (`cfc_filter`).
+
+| Region | Criterion | Function | Source |
+| --- | --- | --- | --- |
+| Head | DAMAGE (THOR) | `head.damage`, `head.damage_from_acceleration` | CP 005 3.1.3 |
+| Head | BrIC | `head.bric` | Takhounts et al. 2013 |
+| Head | End of the loading phase | `head.loading_phase_end` | CP 005 |
+| Neck | Occipital condyle moment, shear, tension, compression, extension and flexion | `neck.occipital_condyle_moment`, `neck.neck_loads` | CP 005 3.2 |
+| Neck | Force–duration (exceedance) limits | `neck.neck_force_criterion` | UN-ECE R94 |
+| Neck | Nij | `neck.nij` | FMVSS 208 |
+| Chest | Hybrid III chest deflection | `thorax.chest_deflection` | CP 005 3.4.1 |
+| Chest | THOR Rmax | `thorax.thor_rib_displacement`, `thorax.thor_chest_deflection` | CP 005 3.4.2 |
+| Chest | Viscous criterion VC | `thorax.viscous_criterion` | CP 005 3.4.6 |
+| Chest | CTI | `thorax.cti`, `thorax.cti_from_signals` | Eppinger et al. 1999 |
+| Abdomen | THOR abdomen deflection | `thorax.thor_abdomen_deflection` | CP 005 3.5.2 |
+| Pelvis | Iliac force drop | `pelvis.iliac_force_drop` | CP 005 3.6.1 |
+| Pelvis | THOR acetabulum force | `pelvis.acetabulum_force` | CP 005 3.6.2 |
+| Legs | Knee slider displacement | `lower_extremity.knee_slider_displacement` | CP 005 3.6.3 |
+| Legs | Tibia compression | `lower_extremity.tibia_compression` | UN-ECE R94 |
+
+BrIC, Nij and CTI are not Euro NCAP criteria; they are included with
+the values of their original sources.
+
+```python
+from crashmetrics.head import damage, loading_phase_end
+from crashmetrics.neck import neck_force_criterion, neck_loads
+from crashmetrics.signals import cfc_filter
+from crashmetrics.thorax import thor_chest_deflection
+
+# THOR head: DAMAGE from the CFC 60 angular velocity (rad/s). The window
+# runs from T0 for up to 200 ms, or until the external head force drops
+# below -500 N when the head x acceleration (g) and neck Fx (N) are given.
+w = [cfc_filter(t, w_i, cfc=60) for w_i in (wx, wy, wz)]
+result = damage(t, *w, t0=0.0, head_ax_g=head_ax, neck_fx=neck_fx)
+print(f"DAMAGE {result.value:.3f} ({result.end_reason})")
+
+# Hybrid III upper neck over the loading phase.
+t_end = loading_phase_end(t, head_ax)
+loads = neck_loads(t, neck_fx, neck_fz, neck_my, dummy="hybrid3", t_end=t_end)
+print(loads.tension.value, loads.shear.value, loads.extension_moment.value)
+print(neck_force_criterion(t, neck_fz, "r94_tension").utilisation)
+
+# THOR chest: each IR-TRACC as (R in mm, phi_y and phi_z in degrees).
+chest = thor_chest_deflection(t, upper_left, upper_right, lower_left, lower_right)
+print(f"Rmax {chest.rmax:.1f} mm ({chest.location})")
+```
+
+Sign conventions (check them against your channels):
+
+- Neck: SAE J211, tension and flexion positive. The Hybrid III moment
+  is moved to the occipital condyle, `M_OCy = My - Fx * 0.01778 m`; the
+  THOR uses the upper neck My directly, as in CP 005. The extension
+  moment is `abs(min(M))`.
+- Chest deflection and VC: compression positive by default
+  (`compression_negative=True` otherwise).
+- THOR abdomen: CP 005 writes `max(Dx(t))` with
+  `Dx = R cos(phi_z) cos(phi_y) - Dx(0)`. The IR-TRACC length R
+  shortens in compression, so `value` is the compression `max(-Dx)`;
+  `max_dx` keeps the literal `max(Dx)`.
+- Acetabulum: CP 005 takes the resultant force while Fx is
+  compressive but does not give the sign; negative Fx is taken as
+  compression by default (`compression_negative`).
+- Iliac force drop: `IFD = max(F(t + 1 ms) - F(t))` as written in
+  CP 005, which assumes the iliac force is negative under load. Pass
+  `loaded_negative=False` if yours is positive.
+- Tibia compression and knee slider: `abs(min(Fz))` and
+  `abs(min(D))`.
+
+How they are verified: DAMAGE matches the model developers' reference
+implementation (UVA-CAB/DAMAGE 2.0) to machine precision on a 3-axis
+pulse and the closed-form step response of the 3-degree-of-freedom
+model (solved mode by mode) to 1e-7; VC is exact for a cubic deflection
+and matches the closed-form maximum for a sinusoid; the THOR rib
+displacement matches the rotation-matrix geometry of the IR-TRACC; the
+other criteria are checked by hand calculations. The constants are
+taken from CP 005 (DAMAGE, VC), FMVSS 208 (Nij intercepts in position:
+Hybrid III 50th male and 5th female), Takhounts et al. 2013, Table 3
+(BrIC: the average of the MPS- and CSDM-based values by default) and
+Eppinger et al. 1999 (CTI).
 
 ### Tibia Index and femur force
 

@@ -6,6 +6,11 @@ tibia_index
     Tibia Index (TI) from tibia bending moments and axial force.
 femur_force_criterion
     Femur compressive force exceedance against a force-time limit.
+tibia_compression
+    Peak tibia compressive force (UN-ECE R94 tibia compression force
+    criterion; Euro NCAP uses the Tibia Index).
+knee_slider_displacement
+    Knee slider displacement (Euro NCAP CP 005, Section 3.6.3).
 
 Units are SI: forces in N, moments in N m, time in s. Filter the
 channels first; Euro NCAP uses CFC 600 for tibia and femur loads.
@@ -17,20 +22,25 @@ force and the Tibia Index is zero whenever Fz >= 0. Set
 """
 
 import math
+from collections.abc import Sequence
 from dataclasses import dataclass
 from typing import Literal
 
 import numpy as np
 from numpy.typing import ArrayLike, NDArray
 
-from crashmetrics.acceleration import exceedance_duration, exceedance_level
+from crashmetrics._channels import as_channels, window
+from crashmetrics.acceleration import PeakResult, exceedance_check
 
 __all__ = [
     "FEMUR_FORCE_LIMITS",
+    "R94_TIBIA_COMPRESSION_LIMIT",
     "TIBIA_INDEX_CRITICAL_VALUES",
     "FemurForceResult",
     "TibiaIndexResult",
     "femur_force_criterion",
+    "knee_slider_displacement",
+    "tibia_compression",
     "tibia_index",
 ]
 
@@ -58,25 +68,6 @@ Hybrid III 50th male: 9.07 kN at 0 ms falling to 7.58 kN at 10 ms and
 longer. Check the values, and whether durations are cumulative or
 continuous, against the regulation you assess to.
 """
-
-
-def _as_channels(time, *channels):
-    t = np.asarray(time, dtype=float)
-    arrays = [np.asarray(c, dtype=float) for c in channels]
-    if t.ndim != 1 or any(a.ndim != 1 for a in arrays):
-        raise ValueError("time and channels must be 1D arrays.")
-    if len(t) < 2 or any(len(a) != len(t) for a in arrays):
-        raise ValueError(
-            "time and channels must have equal lengths and contain at "
-            "least two samples."
-        )
-    if not np.all(np.isfinite(t)) or not all(
-        np.all(np.isfinite(a)) for a in arrays
-    ):
-        raise ValueError("Inputs must contain only finite values.")
-    if np.any(np.diff(t) <= 0):
-        raise ValueError("Time values must be strictly increasing.")
-    return t, arrays
 
 
 @dataclass(frozen=True)
@@ -159,7 +150,7 @@ def tibia_index(
         if not math.isfinite(value) or value <= 0:
             raise ValueError(f"{name} must be positive and finite.")
 
-    t, (mx_a, my_a, fz_a) = _as_channels(time, mx, my, fz)
+    t, (mx_a, my_a, fz_a) = as_channels(time, mx, my, fz)
 
     resultant_moment = np.hypot(mx_a, my_a)
     in_compression = fz_a < 0 if compression_negative else fz_a > 0
@@ -204,13 +195,6 @@ class FemurForceResult:
 
     durations_ms: NDArray[np.float64]
     """Time (ms) the compression is at or above each level."""
-
-
-def _limit_at(points, durations_ms):
-    d = np.array([p[0] for p in points], dtype=float)
-    f = np.array([p[1] for p in points], dtype=float)
-    # np.interp holds the end values constant outside the range.
-    return np.interp(durations_ms, d, f)
 
 
 def femur_force_criterion(
@@ -260,68 +244,64 @@ def femur_force_criterion(
         if limit not in FEMUR_FORCE_LIMITS:
             known = ", ".join(sorted(FEMUR_FORCE_LIMITS))
             raise ValueError(f"Unknown limit {limit!r}. Known: {known}.")
-        points = FEMUR_FORCE_LIMITS[limit]
+        points: Sequence[tuple[float, float]] = FEMUR_FORCE_LIMITS[limit]
     else:
-        points = tuple((float(d), float(f)) for d, f in limit)
-        if len(points) < 1:
-            raise ValueError("limit needs at least one point.")
-    durations = [p[0] for p in points]
-    forces = [p[1] for p in points]
-    if durations[0] != 0.0 or any(b <= a for a, b in zip(durations, durations[1:])):
-        raise ValueError("limit durations must start at 0 ms and increase.")
-    if any(not math.isfinite(f) or f <= 0 for f in forces):
-        raise ValueError("limit forces must be positive and finite.")
-    if any(b > a for a, b in zip(forces, forces[1:])):
-        raise ValueError("limit forces must not increase with duration.")
-    if mode not in ("cumulative", "continuous"):
-        raise ValueError("mode must be 'cumulative' or 'continuous'.")
+        points = limit
 
-    t, (fz_a,) = _as_channels(time, fz)
-    compression = np.maximum(-fz_a if compression_negative else fz_a, 0.0)
-
-    peak_index = int(np.argmax(compression))
-    peak = float(compression[peak_index])
-
-    if peak <= 0.0:
-        empty = np.zeros(0)
-        return FemurForceResult(
-            peak_compression=0.0,
-            peak_time=float(t[peak_index]),
-            utilisation=0.0,
-            critical_duration_ms=0.0,
-            passed=True,
-            durations_ms=empty,
-            levels=empty,
-        )
-
-    span_ms = (t[-1] - t[0]) * 1000.0
-    candidates = [compression[compression > 0.0]]
-    candidates.append(
-        np.array(
-            [
-                exceedance_level(t, compression, d, mode)
-                for d in durations
-                if d <= span_ms
-            ]
-        )
+    t, (fz_a,) = as_channels(time, fz)
+    result = exceedance_check(
+        t, fz_a, points, mode,
+        direction="negative" if compression_negative else "positive",
     )
-    if mode == "continuous":
-        candidates.append(np.linspace(0.0, peak, 2001)[1:])
-    levels = np.unique(np.concatenate(candidates))
-    levels = levels[levels > 0.0][::-1]  # highest force first
-
-    durations_ms = np.array(
-        [exceedance_duration(t, compression, level, mode) for level in levels]
-    )
-    ratios = levels / _limit_at(points, durations_ms)
-    worst = int(np.argmax(ratios))
-
     return FemurForceResult(
-        peak_compression=peak,
-        peak_time=float(t[peak_index]),
-        utilisation=float(ratios[worst]),
-        critical_duration_ms=float(durations_ms[worst]),
-        passed=bool(ratios[worst] <= 1.0),
-        durations_ms=durations_ms,
-        levels=levels,
+        peak_compression=result.peak,
+        peak_time=result.peak_time,
+        utilisation=result.utilisation,
+        critical_duration_ms=result.critical_duration_ms,
+        passed=result.passed,
+        durations_ms=result.durations_ms,
+        levels=result.levels,
     )
+
+
+R94_TIBIA_COMPRESSION_LIMIT = 8000.0
+"""UN-ECE R94 tibia compression force criterion (TCFC) limit, N."""
+
+
+def tibia_compression(
+    time: ArrayLike,
+    fz: ArrayLike,
+    compression_negative: bool = True,
+    t_start: float | None = None,
+    t_end: float | None = None,
+) -> PeakResult:
+    """Peak tibia compressive axial force ``|min(Fz)|``, N (positive).
+
+    The UN-ECE R94 tibia compression force criterion (TCFC) is the
+    compressive Fz transmitted axially on each tibia, limited to 8 kN
+    (:data:`R94_TIBIA_COMPRESSION_LIMIT`). Euro NCAP has scored it in
+    frontal tests alongside the Tibia Index (2 kN higher and 8 kN lower
+    performance limit in the ODB, Assessment Protocol - Adult Occupant
+    Protection v8.0, Section 3.1.5).
+    """
+    t, (f,) = as_channels(time, fz)
+    t, (f,) = window(t, [f], t_start, t_end)
+    compression = np.maximum(-f if compression_negative else f, 0.0)
+    i = int(np.argmax(compression))
+    return PeakResult(value=float(compression[i]), time=float(t[i]))
+
+
+def knee_slider_displacement(
+    time: ArrayLike,
+    displacement: ArrayLike,
+    t_start: float | None = None,
+    t_end: float | None = None,
+) -> PeakResult:
+    """Knee slider displacement ``Dknee = |min(Dknee(t))|``, mm.
+
+    Euro NCAP CP 005, Section 3.6.3 (filter CFC 180).
+    """
+    t, (d,) = as_channels(time, displacement)
+    t, (d,) = window(t, [d], t_start, t_end)
+    i = int(np.argmin(d))
+    return PeakResult(value=float(abs(d[i])), time=float(t[i]))

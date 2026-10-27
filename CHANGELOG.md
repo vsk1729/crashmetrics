@@ -4,7 +4,38 @@ All notable changes to this project are listed here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions
 follow [Semantic Versioning](https://semver.org/).
 
-## [0.6.0] - Unreleased
+## [0.7.0] - Unreleased
+
+### Added
+
+- Frontal impact dummy criteria for the Hybrid III and THOR, following
+  Euro NCAP CP 005 v1.4.1 unless noted:
+  - `crashmetrics.head`: DAMAGE from angular velocity or acceleration
+    (`damage`, `damage_from_acceleration`) with the Euro NCAP window
+    (T0, 200 ms, external force below -500 N), BrIC (`bric`; Takhounts
+    et al. 2013) and `loading_phase_end`.
+  - `crashmetrics.neck`: `occipital_condyle_moment`, `neck_loads`
+    (shear, tension, compression, extension and flexion moments),
+    `neck_force_criterion` with the UN-ECE R94 tension and shear
+    force-duration limits, and Nij (`nij`; FMVSS 208 intercepts).
+  - `crashmetrics.thorax`: `chest_deflection`, `viscous_criterion`,
+    THOR `thor_rib_displacement` / `thor_chest_deflection` (Rmax),
+    `thor_abdomen_deflection`, and CTI (`cti`, `cti_from_signals`;
+    Eppinger et al. 1999).
+  - `crashmetrics.pelvis`: THOR `acetabulum_force` and
+    `iliac_force_drop`.
+  - `crashmetrics.lower_extremity`: `tibia_compression` (with the R94
+    limit) and `knee_slider_displacement`.
+- `crashmetrics.acceleration.exceedance_check`: checks any signal
+  against a force-duration (exceedance) limit, for positive, negative or
+  absolute values.
+
+### Changed
+
+- `femur_force_criterion` uses `exceedance_check`; results are
+  unchanged.
+
+## [0.6.0] - 2026-10-26
 
 ### Added
 

@@ -11,6 +11,9 @@ exceedance_level
     The highest level reached or exceeded for any given duration.
 exceedance_duration
     How long a signal is at or above a given level.
+exceedance_check
+    Compare a signal's exceedance curve with a level-duration limit
+    (e.g. UN-ECE R94 femur and neck force criteria).
 
 Inputs are normally a filtered resultant in g (see
 ``crashmetrics.signals``), with time in seconds. The signal is
@@ -18,15 +21,18 @@ treated as piecewise linear between samples.
 """
 
 import math
+from collections.abc import Sequence
 from dataclasses import dataclass
 from typing import Literal
 
 import numpy as np
-from numpy.typing import ArrayLike
+from numpy.typing import ArrayLike, NDArray
 
 __all__ = [
+    "ExceedanceCheckResult",
     "PeakResult",
     "clip_3ms",
+    "exceedance_check",
     "exceedance_duration",
     "exceedance_level",
     "peak",
@@ -325,3 +331,136 @@ def exceedance_duration(
     if mode == "continuous":
         return 1000.0 * _longest_run_at_or_above(t, a, level)
     raise ValueError("mode must be 'cumulative' or 'continuous'.")
+
+
+@dataclass(frozen=True)
+class ExceedanceCheckResult:
+    """Result of :func:`exceedance_check`."""
+
+    peak: float
+    """Peak of the assessed signal (after ``direction`` is applied)."""
+
+    peak_time: float
+    """Time of the peak, in seconds."""
+
+    utilisation: float
+    """Largest ratio of the exceedance curve to the limit; above 1 the
+    limit is exceeded."""
+
+    critical_duration_ms: float
+    """Duration (ms) at which the utilisation is largest."""
+
+    passed: bool
+    """True if ``utilisation <= 1``."""
+
+    levels: NDArray[np.float64]
+    """Levels of the exceedance curve, highest first."""
+
+    durations_ms: NDArray[np.float64]
+    """Time (ms) the signal is at or above each level."""
+
+
+def _limit_points(
+    limit: Sequence[tuple[float, float]],
+) -> tuple[tuple[float, float], ...]:
+    points = tuple((float(d), float(v)) for d, v in limit)
+    if len(points) < 1:
+        raise ValueError("limit needs at least one point.")
+    durations = [p[0] for p in points]
+    values = [p[1] for p in points]
+    if durations[0] != 0.0 or any(b <= a for a, b in zip(durations, durations[1:])):
+        raise ValueError("limit durations must start at 0 ms and increase.")
+    if any(not math.isfinite(v) or v <= 0 for v in values):
+        raise ValueError("limit values must be positive and finite.")
+    if any(b > a for a, b in zip(values, values[1:])):
+        raise ValueError("limit values must not increase with duration.")
+    return points
+
+
+def exceedance_check(
+    time: ArrayLike,
+    signal: ArrayLike,
+    limit: Sequence[tuple[float, float]],
+    mode: Literal["cumulative", "continuous"] = "cumulative",
+    direction: Literal["positive", "negative", "absolute"] = "positive",
+) -> ExceedanceCheckResult:
+    """Check a signal against a level-duration (exceedance) limit.
+
+    Parameters
+    ----------
+    time:
+        1D time array in s.
+    signal:
+        1D signal, e.g. a force in N.
+    limit:
+        (duration in ms, level) points starting at 0 ms, with increasing
+        duration and non-increasing level. The limit is linear between
+        points and constant after the last one.
+    mode:
+        ``"cumulative"`` (total time above a level, possibly over several
+        intervals) or ``"continuous"`` (a single interval).
+    direction:
+        Which part of the signal is assessed: ``"positive"`` values,
+        ``"negative"`` values (as magnitudes, e.g. compression stored as
+        negative force) or ``"absolute"`` values.
+
+    Notes
+    -----
+    For each level ``L``, let ``D(L)`` be the time the assessed signal is
+    at or above ``L``. The limit is exceeded if ``L > limit(D(L))`` for
+    some ``L``; the utilisation is the largest ``L / limit(D(L))``.
+
+    In cumulative mode ``D`` is linear in ``L`` between sample values, so
+    checking every sample value and every level where ``D`` meets a
+    limit breakpoint is exact for the linearly interpolated signal. In
+    continuous mode 2000 evenly spaced levels are added as well.
+    """
+    points = _limit_points(limit)
+    if mode not in ("cumulative", "continuous"):
+        raise ValueError("mode must be 'cumulative' or 'continuous'.")
+    if direction not in ("positive", "negative", "absolute"):
+        raise ValueError("direction must be 'positive', 'negative' or 'absolute'.")
+
+    t, s = _validate(time, signal)
+    if direction == "positive":
+        assessed = np.maximum(s, 0.0)
+    elif direction == "negative":
+        assessed = np.maximum(-s, 0.0)
+    else:
+        assessed = np.abs(s)
+
+    peak_index = int(np.argmax(assessed))
+    peak_value = float(assessed[peak_index])
+    if peak_value <= 0.0:
+        empty = np.zeros(0)
+        return ExceedanceCheckResult(
+            peak=0.0, peak_time=float(t[peak_index]), utilisation=0.0,
+            critical_duration_ms=0.0, passed=True, levels=empty,
+            durations_ms=empty,
+        )
+
+    span_ms = (t[-1] - t[0]) * 1000.0
+    candidates = [assessed[assessed > 0.0]]
+    candidates.append(np.array([
+        exceedance_level(t, assessed, d, mode) for d, _ in points if d <= span_ms
+    ]))
+    if mode == "continuous":
+        candidates.append(np.linspace(0.0, peak_value, 2001)[1:])
+    levels = np.unique(np.concatenate(candidates))
+    levels = levels[levels > 0.0][::-1]  # highest first
+
+    durations_ms = np.array(
+        [exceedance_duration(t, assessed, level, mode) for level in levels]
+    )
+    allowed = np.interp(durations_ms, [p[0] for p in points], [p[1] for p in points])
+    ratios = levels / allowed
+    worst = int(np.argmax(ratios))
+    return ExceedanceCheckResult(
+        peak=peak_value,
+        peak_time=float(t[peak_index]),
+        utilisation=float(ratios[worst]),
+        critical_duration_ms=float(durations_ms[worst]),
+        passed=bool(ratios[worst] <= 1.0),
+        levels=levels,
+        durations_ms=durations_ms,
+    )
