@@ -1,17 +1,16 @@
 """LS-DYNA output readers and the ``crashmetrics-energy`` command.
 
-Functions
----------
-read_glstat, parse_glstat
-    Global statistics (``glstat``) ASCII file -> GlobalEnergies.
-read_matsum, parse_matsum
-    Material/part energy summary (``matsum``) ASCII file -> PartEnergies.
-read_d3hsp, parse_d3hsp
-    d3hsp file -> D3hsp (see :mod:`crashmetrics.d3hsp`).
-check_run
-    Read a run directory's glstat (and matsum) and check its energies.
-main
-    Command-line entry point: ``crashmetrics-energy RUN_DIR``.
+Functions:
+
+- `read_glstat`, `parse_glstat`: Global statistics (``glstat``) ASCII
+  file -> GlobalEnergies.
+- `read_matsum`, `parse_matsum`: Material/part energy summary
+  (``matsum``) ASCII file -> PartEnergies.
+- `read_d3hsp`, `parse_d3hsp`: d3hsp file -> D3hsp (see
+  `crashmetrics.d3hsp`).
+- `check_run`: Read a run directory's glstat (and matsum) and check its
+  energies.
+- `main`: Command-line entry point: ``crashmetrics-energy RUN_DIR``.
 
 The parsers read values by their labels, not by position, so they do
 not depend on the line order or on which optional channels a given
@@ -28,7 +27,7 @@ LS-DYNA version writes:
 Fortran numbers such as ``1.23456-100`` (no ``E``) and ``1.0D+03`` are
 read correctly. For binout output, read the variables with a binout
 reader (for example lasso-python) and pass them to
-:meth:`GlobalEnergies.from_mapping` / :meth:`PartEnergies.from_mapping`.
+`GlobalEnergies.from_mapping` / `PartEnergies.from_mapping`.
 """
 
 import argparse

@@ -1,0 +1,14 @@
+DAMAGE      : 0.257 (window 0-104.3 ms, ends by external force)
+BrIC        : 0.644
+Loading end : 90.0 ms
+Neck        : tension 1900 N, shear 700 N, extension 14.6 N m (at the occipital condyle)
+R94 tension : utilisation 0.58, passed True
+Nij         : 0.363 (NTE)
+Chest (H3)  : 31.0 mm, VC 0.186 m/s
+CTI         : 0.721
+THOR Rmax   : 36.0 mm at upper_right
+THOR abdomen: 55.0 mm (right)
+Acetabulum  : 2839 N, iliac force drop 1383 N
+Femur       : 6500 N, R94 utilisation 0.75
+Knee slider : 4.2 mm
+Tibia       : TI 0.570, compression 3200 N

@@ -1,16 +1,14 @@
 """Energy and force-displacement metrics.
 
-Functions
----------
-integrate_acceleration
-    Velocity and displacement from an acceleration time history.
-absorbed_energy
-    Cumulative energy absorbed along a force-displacement curve.
-crush_metrics
-    Peak force, mean force, energy, crush force efficiency and
-    specific energy absorption of a crush response.
-kinetic_energy
-    Kinetic energy of a mass.
+Functions:
+
+- `integrate_acceleration`: Velocity and displacement from an
+  acceleration time history.
+- `absorbed_energy`: Cumulative energy absorbed along a
+  force-displacement curve.
+- `crush_metrics`: Peak force, mean force, energy, crush force
+  efficiency and specific energy absorption of a crush response.
+- `kinetic_energy`: Kinetic energy of a mass.
 
 Units
 -----

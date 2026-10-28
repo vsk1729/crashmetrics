@@ -1,0 +1,3 @@
+# crashmetrics.side
+
+::: crashmetrics.side

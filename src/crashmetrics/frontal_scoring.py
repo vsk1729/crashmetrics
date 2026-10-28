@@ -19,13 +19,13 @@ A criterion with an LPL only (no HPL) is green below the LPL and red at
 or above it. A body region takes the band of its lowest-scoring
 criterion and earns that band's share of the region's points (Section
 3.5: green 1.25, yellow 1.0, orange 0.75, brown 0.5, red 0 of 1.25,
-i.e. 100, 80, 60, 40 and 0 %; see :data:`BAND_FRACTIONS`).
+i.e. 100, 80, 60, 40 and 0 %; see `BAND_FRACTIONS`).
 
 Occupant modifiers are percentages of the region's maximum points (Q
 dummy score modifiers of the whole dummy score) and full-scale modifiers
 percentages of 10 points per load case. Scores do not go below zero
 (CP 007, Section 1). The MPDB compatibility penalty follows CP 007
-Appendix A (:func:`compatibility_penalty`). Without hard head contact (peak resultant
+Appendix A (`compatibility_penalty`). Without hard head contact (peak resultant
 head acceleration above 80 g or other evidence), HIC15 and the head
 3 ms acceleration are not applied to adult dummies; Q dummies are then
 assessed on the head 3 ms acceleration only.
@@ -190,7 +190,7 @@ DUMMY_LIMITS: dict[str, dict[str, Limit]] = {
 }
 """Limits per dummy from the protocol's Section 3.5 (kN converted to N).
 Chest compression of adult dummies depends on the test speed; see
-:data:`CHEST_COMPRESSION_LIMITS`. The THOR chest compression is Rmax.
+`CHEST_COMPRESSION_LIMITS`. The THOR chest compression is Rmax.
 Hybrid III 95th tibia HPLs are bracketed in the protocol (to apply once
 a lower leg certification procedure exists). Hybrid III 5th neck capping
 applies to the driver only. Q6 / Q10 neck extension and Q10 chest
@@ -253,7 +253,7 @@ OCCUPANT_MODIFIERS: dict[str, tuple[str, float]] = {
 }
 """Occupant modifiers (protocol Section 4.3.1): body region and penalty in
 % of that region's points (``"dummy"``: of the Q dummy score). DAMAGE:
-see :func:`damage_modifier`. Reference data for building the inputs."""
+see `damage_modifier`. Reference data for building the inputs."""
 
 FULL_SCALE_MODIFIERS: dict[str, float] = {
     "a_pillar_100mm": 2.5,
@@ -334,8 +334,8 @@ class Occupant:
     """Measured values and assessment inputs of one occupant."""
 
     values: Mapping[str, float]
-    """Criterion values (keys of :data:`ADULT_REGIONS` /
-    :data:`CHILD_REGIONS`, plus optional ``"head_peak"`` in g)."""
+    """Criterion values (keys of `ADULT_REGIONS` /
+    `CHILD_REGIONS`, plus optional ``"head_peak"`` in g)."""
     hard_contact: bool | None = None
     """Head hard contact; inferred from ``values["head_peak"] > 80`` g if
     None."""
@@ -384,11 +384,11 @@ def score_dummy(
     Parameters
     ----------
     dummy:
-        Key of :data:`DUMMY_LIMITS`.
+        Key of `DUMMY_LIMITS`.
     occupant:
         Values, hard contact and modifiers.
     region_points:
-        Maximum points per body region (e.g. from :data:`MPDB_OCCUPANTS`).
+        Maximum points per body region (e.g. from `MPDB_OCCUPANTS`).
         Regions not listed are not scored.
     speed:
         Test speed for the adult chest compression limits, km/h.
@@ -490,7 +490,7 @@ def score_test(
     """Combine dummy scores into a test score.
 
     ``full_scale_modifiers`` are percentages of
-    :data:`FULL_SCALE_MODIFIER_BASE` (10 points), e.g. 2.5 for A-pillar
+    `FULL_SCALE_MODIFIER_BASE` (10 points), e.g. 2.5 for A-pillar
     displacement; ``compatibility_penalty`` is in points.
     """
     if not math.isfinite(compatibility_penalty) or compatibility_penalty < 0:
@@ -538,7 +538,7 @@ def score_mpdb(
 
     ``occupants`` has keys ``"driver"`` (THOR 50th), ``"front_passenger"``
     (Hybrid III 5th), ``"rear_q6"`` and ``"rear_q10"``. Give the
-    compatibility penalty in points (see :func:`compatibility_penalty`).
+    compatibility penalty in points (see `compatibility_penalty`).
     """
     return _score_layout(MPDB_OCCUPANTS, occupants, 50, band_fractions,
                          full_scale_modifiers, compatibility_penalty)
@@ -587,7 +587,7 @@ def compatibility_penalty(sd: float, olc: float, bottoming_out: bool) -> float:
     """MPDB compatibility penalty in points (CP 007, Appendix A).
 
     With ``s`` and ``o`` the SD and OLC sliding scales (0 to 1, see
-    :func:`compatibility_percentages`)::
+    `compatibility_percentages`)::
 
         penalty = 1.25 (s + o + 2 s o) + 1.25 if bottoming out, <= 5 points
 

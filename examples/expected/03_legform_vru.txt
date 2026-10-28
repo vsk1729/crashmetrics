@@ -1,0 +1,9 @@
+aPLI point   : femur 0.600, knee/tibia 0.422 (tibia 0.422, MCL 0.700) -> brown
+aPLI femur   : 1.227 / 2.5
+aPLI knee    : 3.282 / 5
+  L+3: 0.444 (worst adjacent 'L+4')
+  L-1: 1.000 (worst adjacent 'L0')
+  L+5: 0.444 (worst adjacent 'L+4')
+Upper legform: alpha 35.2 deg, energy 250 J, test velocity 6.90 m/s, test required True
+Pelvis       : 0.761 / 2.5
+VRU total    : 11.389 / 20 (56.9 %)

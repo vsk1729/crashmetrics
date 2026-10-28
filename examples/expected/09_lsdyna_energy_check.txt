@@ -1,0 +1,38 @@
+Energy check: PASSED
+Reference energy: 2009.89
+
+Check                   Value  Limit         Status   Where
+----------------------  -----  ------------  -------  ------
+energy_ratio            1      0.95 to 1.05  PASS     t=0
+hourglass               0      <= 0.05       PASS     t=0
+negative_contact        0      <= 0.05       PASS
+damping                 0      <= 0.05       PASS
+added_mass              -      <= 5 %        SKIPPED
+eroded_energy           0      -             INFO
+part_hourglass          0      <= 0.1        PASS     part 1
+part_negative_internal  0      <= 0.01       PASS
+
+- energy_ratio: min 1.0000, max 1.0000 (solver ratio); added mass raises the ratio
+- added_mass: no added mass percentage in the output
+- part_hourglass: 1 of 2 parts checked (peak internal energy >= 1% of the model's)
+
+glstat: 3 states up to t = 2.943e-05; matsum parts [1, 2]
+  energy_ratio           pass    value 1        limit 0.98 to 1.02
+  hourglass              pass    value 0        limit <= 0.02
+  negative_contact       pass    value 0        limit <= 0.05
+  damping                pass    value 0        limit <= 0.05
+  added_mass             skipped value -        limit <= 5 %
+  eroded_energy          info    value 0        limit -
+  part_hourglass         pass    value 0        limit <= 0.1
+  part_negative_internal pass    value 0        limit <= 0.01
+Passed: True
+
+Termination: NORMAL (10/23/26 14:41:58)
+LS-DYNA smp s R14, revision R14.1.1-4-gaf1eb871e8, WINDOWS X64 SSE2
+Input: ball_drop.k
+Model: nodes 988, solid_elements 8, shell_elements 900, beam_elements 0, thick_shell_elements 0, materials 2, contacts 1, parts_with_added_mass 0
+Total mass: 0.000134069 (2 parts, 1 rigid)
+Smallest time step: 8.409e-07 (shell 100099, part 1)
+Problem time 0.0030004 in 3568 cycles
+Elapsed: 1 s using 4 SMP threads, CPU 2 s
+Warnings: 0, errors: 0

@@ -1,0 +1,12 @@
+Lower bumper height 390 mm -> lower_legform
+Lower bumper height 460 mm -> either
+Lower bumper height 520 mm -> upper_legform
+Assessment interval: 0.0 to 34.1 ms
+Peaks: tibia T1 305 N m, MCL 19.8 mm, ACL 6.1 mm, PCL 3.4 mm
+AIS-100 Flex-PLI: PASS, worst mcl at 90% of its limit
+In a nominated relaxation zone (355 N m <= 380 N m): PASS; total width 2 x 132 mm PASS
+Legacy legform: FAIL (worst tibia_acceleration 182 vs 170)
+Upper legform to bumper: PASS
+HIC1000 zone: 65% of child area, 68% of total -> PASS
+Headform tests: PASS {'hic1000': 955.0, 'hic1700': 1420.0}
+Euro NCAP Flex-PLI: 2.807 / 6 points

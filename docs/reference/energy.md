@@ -1,0 +1,3 @@
+# crashmetrics.energy
+
+::: crashmetrics.energy

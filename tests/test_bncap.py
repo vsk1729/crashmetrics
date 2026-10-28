@@ -230,3 +230,10 @@ def test_cop_stars():
     assert cop_stars(4.99, two_seater=True) == 0
     with pytest.raises(ValueError):
         cop_stars(math.nan)
+
+
+def test_curve_points_full_score_reports_peak_duration():
+    result = curve_points(*plateau(1000.0, 10.0, 50.0), NECK_TENSION_CURVES)
+    assert result.points == 4.0
+    assert result.level == 1000.0
+    assert result.duration_ms == pytest.approx(40.0)

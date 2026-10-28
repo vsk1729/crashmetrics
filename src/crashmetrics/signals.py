@@ -1,17 +1,13 @@
 """Signal processing for crash time histories.
 
-Functions
----------
-cfc_filter
-    SAE J211 channel frequency class (CFC) filter.
-resultant
-    Resultant magnitude of axis components.
-to_g
-    Convert acceleration from common unit systems to g.
-to_seconds
-    Convert time to seconds.
-resample_uniform
-    Linearly interpolate a signal onto a uniform time grid.
+Functions:
+
+- `cfc_filter`: SAE J211 channel frequency class (CFC) filter.
+- `resultant`: Resultant magnitude of axis components.
+- `to_g`: Convert acceleration from common unit systems to g.
+- `to_seconds`: Convert time to seconds.
+- `resample_uniform`: Linearly interpolate a signal onto a uniform time
+  grid.
 
 Typical head-impact workflow: convert units, filter each axis
 component with CFC 1000, compute the resultant, then calculate HIC.

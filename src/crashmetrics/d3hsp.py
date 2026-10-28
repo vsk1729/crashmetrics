@@ -1,9 +1,9 @@
 """LS-DYNA d3hsp reader.
 
-Functions
----------
-read_d3hsp, parse_d3hsp
-    Read a d3hsp file into a :class:`D3hsp` summary.
+Functions:
+
+- `read_d3hsp`, `parse_d3hsp`: Read a d3hsp file into a `D3hsp`
+  summary.
 
 What is read
 ------------

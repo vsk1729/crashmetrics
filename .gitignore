@@ -9,4 +9,5 @@ dist/
 .coverage
 htmlcov/
 .env
-.env.*
+.env.*site/
+crashmetrics_doe_results.csv

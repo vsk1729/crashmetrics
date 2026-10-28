@@ -1,16 +1,15 @@
 """Lower-extremity injury criteria for crash test dummies.
 
-Functions
----------
-tibia_index
-    Tibia Index (TI) from tibia bending moments and axial force.
-femur_force_criterion
-    Femur compressive force exceedance against a force-time limit.
-tibia_compression
-    Peak tibia compressive force (UN-ECE R94 tibia compression force
-    criterion; Euro NCAP uses the Tibia Index).
-knee_slider_displacement
-    Knee slider displacement (Euro NCAP CP 005, Section 3.6.3).
+Functions:
+
+- `tibia_index`: Tibia Index (TI) from tibia bending moments and axial
+  force.
+- `femur_force_criterion`: Femur compressive force exceedance against a
+  force-time limit.
+- `tibia_compression`: Peak tibia compressive force (UN-ECE R94 tibia
+  compression force criterion; Euro NCAP uses the Tibia Index).
+- `knee_slider_displacement`: Knee slider displacement (Euro NCAP CP
+  005, Section 3.6.3).
 
 Units are SI: forces in N, moments in N m, time in s. Filter the
 channels first; Euro NCAP uses CFC 600 for tibia and femur loads.
@@ -105,7 +104,7 @@ def tibia_index(
     fz:
         Tibia axial force in N.
     dummy:
-        Key of :data:`TIBIA_INDEX_CRITICAL_VALUES`, for example
+        Key of `TIBIA_INDEX_CRITICAL_VALUES`, for example
         ``"hybrid3_50"``. Give either this or both critical values.
     critical_moment:
         Critical resultant bending moment in N m.
@@ -213,13 +212,13 @@ def femur_force_criterion(
     fz:
         Femur axial force in N.
     limit:
-        Key of :data:`FEMUR_FORCE_LIMITS`, or a sequence of
+        Key of `FEMUR_FORCE_LIMITS`, or a sequence of
         (duration in ms, force in N) points starting at 0 ms, with
         increasing duration and non-increasing force. The limit is
         linear between points and constant afterwards.
     mode:
         ``"cumulative"`` or ``"continuous"`` exceedance duration; see
-        :func:`crashmetrics.acceleration.exceedance_duration`. Check
+        `crashmetrics.acceleration.exceedance_duration`. Check
         which your regulation requires.
     compression_negative:
         True if compression is negative in ``fz`` (Euro NCAP).
@@ -279,7 +278,7 @@ def tibia_compression(
 
     The UN-ECE R94 tibia compression force criterion (TCFC) is the
     compressive Fz transmitted axially on each tibia, limited to 8 kN
-    (:data:`R94_TIBIA_COMPRESSION_LIMIT`). Euro NCAP has scored it in
+    (`R94_TIBIA_COMPRESSION_LIMIT`). Euro NCAP has scored it in
     frontal tests alongside the Tibia Index (2 kN higher and 8 kN lower
     performance limit in the ODB, Assessment Protocol - Adult Occupant
     Protection v8.0, Section 3.1.5).

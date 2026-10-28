@@ -1,0 +1,5 @@
+HIC15        : 700 (2.95 to 9.05 ms) -> Euro NCAP colour yellow
+Peak         : 130.3 g at 5.92 ms
+3 ms clip    : 110.8 g (cumulative)
+3 ms clip    : 110.8 g (continuous)
+Resampled    : 663 irregular samples -> 600 samples at 20 kHz
