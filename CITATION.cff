@@ -1,0 +1,26 @@
+cff-version: 1.2.0
+message: "If you use crashmetrics in your work, please cite it as below."
+title: "crashmetrics: Python tools for automotive crash engineering metrics"
+type: software
+authors:
+  - family-names: "Voonna"
+    given-names: "Satish Kumar"
+version: "0.9.1"
+date-released: "2026-10-28"
+license: MIT
+repository-code: "https://github.com/vsk1729/crashmetrics"
+url: "https://vsk1729.github.io/crashmetrics/"
+abstract: >-
+  Open-source Python package for automotive crash safety calculations:
+  injury criteria (HIC, Nij, BrIC, DAMAGE, chest and leg criteria),
+  Euro NCAP and Bharat NCAP scoring, pedestrian protection, AIS-100
+  compliance checks and LS-DYNA energy checks.
+keywords:
+  - crashworthiness
+  - crash safety
+  - injury criteria
+  - Euro NCAP
+  - Bharat NCAP
+  - pedestrian protection
+  - LS-DYNA
+  - CAE

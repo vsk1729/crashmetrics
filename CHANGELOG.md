@@ -4,7 +4,23 @@ All notable changes to this project are listed here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions
 follow [Semantic Versioning](https://semver.org/).
 
-## [0.9.1] - Unreleased
+## [Unreleased]
+
+### Added
+
+- `CITATION.cff`, so GitHub shows "Cite this repository" and papers can
+  cite the package; a test keeps its version in step with the package.
+
+### Changed
+
+- The Euro NCAP legform and Flex-PLI scores and the Bharat NCAP region
+  scores share one sliding-scale implementation. `bncap.sliding_points`
+  now gives the same, more detailed error messages as
+  `pedestrian.sliding_scale`; results are unchanged.
+- Test and release workflows use the current GitHub Actions versions
+  (Node 24).
+
+## [0.9.1] - 2026-10-28
 
 ### Added
 
@@ -219,7 +235,12 @@ follow [Semantic Versioning](https://semver.org/).
 - `crashmetrics.pedestrian.calculate_hic` for HIC on a refined,
   linearly interpolated time grid.
 
-[0.6.0]: https://github.com/vsk1729/crashmetrics/compare/v0.5.0...main
+[Unreleased]: https://github.com/vsk1729/crashmetrics/compare/v0.9.1...main
+[0.9.1]: https://github.com/vsk1729/crashmetrics/compare/v0.9.0...v0.9.1
+[0.9.0]: https://github.com/vsk1729/crashmetrics/compare/v0.8.0...v0.9.0
+[0.8.0]: https://github.com/vsk1729/crashmetrics/compare/v0.7.0...v0.8.0
+[0.7.0]: https://github.com/vsk1729/crashmetrics/compare/v0.6.0...v0.7.0
+[0.6.0]: https://github.com/vsk1729/crashmetrics/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/vsk1729/crashmetrics/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/vsk1729/crashmetrics/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/vsk1729/crashmetrics/compare/03d71b7...v0.3.0
