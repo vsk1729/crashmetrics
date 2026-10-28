@@ -1,4 +1,4 @@
-"""Test-versus-CAE correlation: ISO/TS 18571, CORA and error measures.
+"""Test-versus-CAE correlation: ISO/TS 18571, CC rating and error measures.
 
 Rate how well a computed signal (usually CAE) matches a reference signal
 (usually a physical test) with one number between 0 and 1, and its
@@ -8,8 +8,8 @@ Functions:
 
 - `iso18571`: ISO/TS 18571:2024 objective rating (corridor, phase,
   magnitude, slope) and its grade (excellent, good, fair, poor).
-- `cora`: CORA-style rating (corridor and cross-correlation: phase,
-  size, shape).
+- `cc_rating`: Corridor and cross-correlation (CC) rating: a corridor
+  score plus phase, size and shape from the cross-correlation.
 - `error_measures`: RMSE, normalised RMSE, peak and peak-time errors,
   correlation coefficient, Sprague & Geers and Russell errors.
 - `compare`: All three at once; `flatten` turns the result into
@@ -40,14 +40,14 @@ import numpy as np
 from numpy.typing import ArrayLike, NDArray
 
 __all__ = [
-    "CORAParameters",
-    "CORAResult",
+    "CCParameters",
+    "CCResult",
     "Comparison",
     "ErrorMeasures",
     "ISO18571Parameters",
     "ISO18571Result",
+    "cc_rating",
     "compare",
-    "cora",
     "error_measures",
     "iso18571",
     "iso18571_grade",
@@ -457,16 +457,18 @@ def iso18571(
     )
 
 
-# --- CORA --------------------------------------------------------------------
+# --- Corridor and cross-correlation (CC) rating ---------------------------
 
 
 @dataclass(frozen=True)
-class CORAParameters:
-    """Parameters of the CORA rating.
+class CCParameters:
+    """Parameters of the corridor and cross-correlation rating.
 
-    The names follow the CORA parameter file. The defaults are those
-    commonly cited for CORA 3.6; check them against the manual of the
-    CORA version your project uses.
+    The defaults are the values commonly cited for the published method
+    (Gehre, Gades and Wernicke, ESV 2009). If your project compares
+    results with another implementation, check its settings and set
+    these to match. Names in parentheses are the parameter names
+    commonly used for this method.
     """
 
     a0: float = 0.05
@@ -506,8 +508,9 @@ class CORAParameters:
 
 
 @dataclass(frozen=True)
-class CORAResult:
-    """CORA rating of a comparison signal against a reference."""
+class CCResult:
+    """Corridor and cross-correlation rating of a comparison signal
+    against a reference."""
 
     rating: float
     """Total rating, 0 to 1."""
@@ -533,7 +536,7 @@ class CORAResult:
     """End of the interval of evaluation, s."""
 
 
-def cora(
+def cc_rating(
     time: ArrayLike,
     reference: ArrayLike,
     comparison: ArrayLike,
@@ -541,24 +544,25 @@ def cora(
     t_start: float | None = None,
     t_end: float | None = None,
     dt: float = 1e-4,
-    parameters: CORAParameters | None = None,
-) -> CORAResult:
-    """Return the CORA rating of two signals.
+    parameters: CCParameters | None = None,
+) -> CCResult:
+    """Return the corridor and cross-correlation (CC) rating of two
+    signals.
 
     Parameters
     ----------
     time, reference, comparison, comparison_time, t_start, t_end, dt:
         As for `iso18571`.
     parameters:
-        `CORAParameters`.
+        `CCParameters`.
 
     Returns
     -------
-    CORAResult
+    CCResult
 
     Notes
     -----
-    1. **Corridor**: as in ISO/TS 18571 (which took it from CORA), sized
+    1. **Corridor**: the same corridor method as ISO/TS 18571, sized
        from ``norm`` (default the reference's absolute maximum).
     2. **Cross-correlation**: the comparison is shifted by up to
        ``1 - int_min`` of the interval; the shift with the highest
@@ -573,10 +577,11 @@ def cora(
        - Cross-correlation rating: their weighted sum.
     3. **Total**: ``w_corridor * corridor + w_cross * cross``.
 
-    CORA's automatic interval of evaluation and standard-deviation
-    corridors are not implemented: give ``t_start`` and ``t_end``.
+    An automatic interval of evaluation and standard-deviation corridors
+    (offered by some tools) are not implemented: give ``t_start`` and
+    ``t_end``.
     """
-    p = parameters or CORAParameters()
+    p = parameters or CCParameters()
     if not math.isclose(p.w_phase + p.w_size + p.w_shape, 1.0, abs_tol=1e-9):
         raise ValueError("The phase, size and shape weights must add up to 1.")
     if not math.isclose(p.w_corridor + p.w_cross, 1.0, abs_tol=1e-9):
@@ -611,7 +616,7 @@ def cora(
     shape = max(k, 0.0) ** p.k_p
 
     cross = p.w_phase * phase + p.w_size * size + p.w_shape * shape
-    return CORAResult(
+    return CCResult(
         rating=p.w_corridor * corridor + p.w_cross * cross,
         corridor=corridor,
         cross_correlation=cross,
@@ -729,10 +734,10 @@ def error_measures(
 
 @dataclass(frozen=True)
 class Comparison:
-    """`iso18571`, `cora` and `error_measures` of one signal pair."""
+    """`iso18571`, `cc_rating` and `error_measures` of one signal pair."""
 
     iso: ISO18571Result
-    cora: CORAResult
+    cc: CCResult
     errors: ErrorMeasures
     channel: str = field(default="")
     """Optional channel name."""
@@ -740,13 +745,13 @@ class Comparison:
     def summary(self) -> str:
         """One line per method, for reports and logs."""
         name = f"{self.channel}: " if self.channel else ""
-        iso, c, e = self.iso, self.cora, self.errors
+        iso, c, e = self.iso, self.cc, self.errors
         return (
             f"{name}ISO 18571 {iso.rating:.3f} ({iso.grade}; corridor "
             f"{iso.corridor:.3f}, phase {iso.phase:.3f}, magnitude "
             f"{iso.magnitude:.3f}, slope {iso.slope:.3f}, shift "
             f"{iso.time_shift_ms:+.1f} ms)\n"
-            f"{name}CORA {c.rating:.3f} (corridor {c.corridor:.3f}, phase "
+            f"{name}CC rating {c.rating:.3f} (corridor {c.corridor:.3f}, phase "
             f"{c.phase:.3f}, size {c.size:.3f}, shape {c.shape:.3f})\n"
             f"{name}Errors: peak {e.peak_error:+.1%} at "
             f"{e.peak_time_error_ms:+.1f} ms, NRMSE {e.nrmse:.3f}, "
@@ -764,9 +769,9 @@ def compare(
     dt: float = 1e-4,
     channel: str = "",
     iso_parameters: ISO18571Parameters | None = None,
-    cora_parameters: CORAParameters | None = None,
+    cc_parameters: CCParameters | None = None,
 ) -> Comparison:
-    """Return the ISO/TS 18571 rating, the CORA rating and the error
+    """Return the ISO/TS 18571 rating, the CC rating and the error
     measures of one signal pair, over the same interval.
 
     ``flatten(compare(...), prefix="head_")`` gives columns such as
@@ -776,7 +781,7 @@ def compare(
     args = (time, reference, comparison, comparison_time, t_start, t_end, dt)
     return Comparison(
         iso=iso18571(*args, parameters=iso_parameters),
-        cora=cora(*args, parameters=cora_parameters),
+        cc=cc_rating(*args, parameters=cc_parameters),
         errors=error_measures(*args),
         channel=channel,
     )

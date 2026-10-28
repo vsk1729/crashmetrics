@@ -1,10 +1,11 @@
-"""Example 12: test-versus-CAE correlation with ISO/TS 18571 and CORA.
+"""Example 12: test-versus-CAE correlation with ISO/TS 18571 and the CC rating.
 
 A sled test measured head, chest and pelvis accelerations at 20 kHz.
 Three CAE model versions wrote the same channels at 10 kHz, starting
-2 ms later. Each channel is rated with ISO/TS 18571, CORA and classic
-error measures, the model versions are ranked, and the ratings go into a
-feature table (synthetic data).
+2 ms later. Each channel is rated with ISO/TS 18571, the corridor and
+cross-correlation (CC) rating and classic error measures, the model
+versions are ranked, and the ratings go into a feature table (synthetic
+data).
 """
 
 import numpy as np
@@ -55,7 +56,7 @@ print(c.summary())
 
 # --- 3. Every channel and model version --------------------------------------
 print(f"\n{'model':13} {'channel':7} {'ISO':>6} {'grade':10} {'Z':>5} {'E_P':>5} "
-      f"{'E_M':>5} {'E_S':>5} {'shift':>6} {'CORA':>6} {'peak':>7}")
+      f"{'E_M':>5} {'E_S':>5} {'shift':>6} {'CC':>6} {'peak':>7}")
 for version, cae in models.items():
     ratings = []
     for name in ("head", "chest", "pelvis"):
@@ -64,7 +65,7 @@ for version, cae in models.items():
         ratings.append(i.rating)
         print(f"{version:13} {name:7} {i.rating:6.3f} {i.grade:10} {i.corridor:5.2f} "
               f"{i.phase:5.2f} {i.magnitude:5.2f} {i.slope:5.2f} "
-              f"{i.time_shift_ms:+5.1f}ms {r.cora.rating:6.3f} "
+              f"{i.time_shift_ms:+5.1f}ms {r.cc.rating:6.3f} "
               f"{r.errors.peak_error:+7.1%}")
     print(f"{version:13} {'mean':7} {np.mean(ratings):6.3f}\n")
 
@@ -75,7 +76,7 @@ def extract(cae):
 
 
 rows = feature_table(models, extract, id_column="model")
-ratings = [k for k in rows[0] if k.endswith(("iso.rating", "cora.rating"))]
+ratings = [k for k in rows[0] if k.endswith(("iso.rating", "cc.rating"))]
 print(f"Feature table: {len(rows)} rows x {len(rows[0])} columns, e.g.",
       ", ".join(ratings[:3]), "...")
 best = max(rows, key=lambda r: r["head.iso.rating"] + r["chest.iso.rating"]

@@ -10,8 +10,9 @@ number between 0 (no match) and 1 (identical), using:
 - **ISO/TS 18571:2024**: the ISO objective rating for vehicle safety
   signals (corridor, phase, magnitude, slope), with a grade from
   *excellent* to *poor*.
-- **CORA**: corridor plus cross-correlation (phase, size, shape), widely
-  used for dummy and human body model validation.
+- **CC rating**: corridor plus cross-correlation (phase, size, shape),
+  the method of Gehre et al. (2009) that is widely used for dummy and
+  human body model validation.
 - **Classic error measures**: peak and peak-time errors, RMSE, the
   correlation coefficient, Sprague & Geers and Russell errors.
 
@@ -84,34 +85,36 @@ score to the shape of the loading.
     including time-warping ties on flat signals. The test suite checks
     five of these cases.
 
-## Step 4: CORA and the error measures
+## Step 4: the CC rating and the error measures
 
 ```python
-from crashmetrics.correlation import cora, error_measures
+from crashmetrics.correlation import cc_rating, error_measures
 
-c = cora(t_test, test, cae, comparison_time=t_cae, t_end=0.13)
+c = cc_rating(t_test, test, cae, comparison_time=t_cae, t_end=0.13)
 c.rating, c.corridor, c.phase, c.size, c.shape
 
 e = error_measures(t_test, test, cae, comparison_time=t_cae, t_end=0.13)
 e.peak_error, e.peak_time_error_ms, e.nrmse, e.sprague_geers_comprehensive
 ```
 
-**CORA** = 0.5 × corridor + 0.5 × cross-correlation, where the
+**CC rating** = 0.5 × corridor + 0.5 × cross-correlation, where the
 cross-correlation rating combines:
 
 - **phase**: 1 for a shift up to 1 % of the interval, 0 from 12 %;
 - **size**: ratio of the smaller to the larger signal energy (∑x²);
 - **shape**: the normalised cross-correlation at the best shift.
 
-!!! warning "CORA defaults: check them against your CORA version"
-    CORA's method is public, but its parameter defaults have changed
-    between versions and are often customised. The defaults here
-    (`CORAParameters`) are the commonly cited CORA 3.6 values. They
-    have not yet been checked against the official manual. If your
-    project uses PDB's CORA tool, compare a few channels with it and set
-    `CORAParameters` to match, and report your project's settings with
-    the scores. CORA's automatic interval and standard-deviation
-    corridors are not implemented.
+!!! warning "Check the settings against the tool your project uses"
+    The method is published (Gehre, Gades and Wernicke, ESV 2009) and is
+    best known from PDB's CORA tool. `cc_rating` is an independent
+    implementation, not affiliated with PDB. Settings of this method
+    differ between tools and versions and are often customised; the
+    defaults in `CCParameters` are the commonly cited values and have
+    not been checked against PDB's manual. If your project compares
+    with another tool, rate a few channels with both, set
+    `CCParameters` to match, and report the settings with the scores.
+    Automatic intervals and standard-deviation corridors (offered by
+    some tools) are not implemented.
 
 **Error measures** (0 is perfect for the errors, 1 for the correlation):
 
@@ -135,7 +138,7 @@ print(c.summary())
 
 ```text
 head (v1): ISO 18571 0.897 (good; corridor 0.901, phase 0.930, magnitude 0.951, slope 0.800, shift +1.8 ms)
-head (v1): CORA 0.922 (corridor 0.901, phase 0.963, size 0.870, shape 0.996)
+head (v1): CC rating 0.922 (corridor 0.901, phase 0.963, size 0.870, shape 0.996)
 head (v1): Errors: peak +11.8% at +0.9 ms, NRMSE 0.075, Sprague & Geers C 0.084
 ```
 
@@ -158,7 +161,7 @@ def extract(cae):
                     prefix=f"{ch}.") for ch in test]
 
 rows = feature_table(model_versions, extract, id_column="model")
-# columns: head.iso.rating, head.iso.phase, head.cora.size, head.errors.peak_error, ...
+# columns: head.iso.rating, head.iso.phase, head.cc.size, head.errors.peak_error, ...
 ```
 
 ## Complete example
@@ -181,7 +184,8 @@ Output:
 - ISO/TS 18571:2024, *Road vehicles — Objective rating metric for
   non-ambiguous signals* (and the 2014 first edition).
 - C. Gehre, H. Gades, P. Wernicke: *Objective rating of signals using
-  test and simulation responses*, ESV 2009, paper 09-0407 (CORA).
+  test and simulation responses*, ESV 2009, paper 09-0407 (the corridor
+  and cross-correlation method).
 - L. E. Schwer: *Validation metrics for response histories:
   perspectives and case studies*, Engineering with Computers 23 (2007),
   covering the Sprague & Geers and Russell measures.

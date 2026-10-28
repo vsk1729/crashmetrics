@@ -22,10 +22,19 @@ section numbers and limit values.
 
 crashmetrics is an independent open-source project. It is not affiliated
 with, endorsed by or sponsored by Ansys, Euro NCAP, Bharat NCAP, ARAI,
-UNECE or any other organisation whose software, file formats, protocols or
+UNECE, ISO, PDB or any other organisation whose software, file formats, protocols or
 regulations it refers to. LS-DYNA, Ansys and Euro NCAP are trademarks or
 registered trademarks of their respective owners and are used here only
 to describe compatibility.
+
+The test-versus-CAE ratings are independent implementations of
+published methods: ISO/TS 18571 from the standard's published
+description and parameters (no text of the standard is reproduced), and
+the corridor and cross-correlation (CC) rating from Gehre, Gades and
+Wernicke (ESV 2009), the method used in PDB's CORA tool. No code or
+documentation of those tools is included. The ISO/TS 18571 results were
+compared with TU Graz's MIT-licensed `objective-rating-metrics`; only
+computed numbers from it are used in the tests.
 
 The LS-DYNA readers were written from the text layout of output files;
 no LS-DYNA code or documentation is included. The LS-DYNA sample output

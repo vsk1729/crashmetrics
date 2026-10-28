@@ -4,10 +4,10 @@ import numpy as np
 import pytest
 
 from crashmetrics.correlation import (
-    CORAParameters,
+    CCParameters,
     ISO18571Parameters,
+    cc_rating,
     compare,
-    cora,
     error_measures,
     iso18571,
     iso18571_grade,
@@ -127,46 +127,46 @@ def test_iso18571_grades(rating, grade):
     assert iso18571_grade(rating) == grade
 
 
-# --- CORA ---------------------------------------------------------------------
+# --- Corridor and cross-correlation (CC) rating ----------------------------
 
 
-def test_cora_identical_signals_score_one():
+def test_cc_rating_identical_signals_score_one():
     ref = pulse(50, 0.01, 0.05)
-    r = cora(T, ref, ref)
+    r = cc_rating(T, ref, ref)
     assert r.rating == pytest.approx(1.0)
     assert (r.phase, r.size, r.shape) == pytest.approx((1, 1, 1))
 
 
-def test_cora_size_and_shape_of_a_scaled_signal():
+def test_cc_rating_size_and_shape_of_a_scaled_signal():
     ref = pulse(100, 0.01, 0.05)
-    r = cora(T, ref, 1.25 * ref)
+    r = cc_rating(T, ref, 1.25 * ref)
     assert r.size == pytest.approx(1 / 1.25**2)
     assert r.shape == pytest.approx(1.0) and r.phase == 1.0
     assert r.cross_correlation == pytest.approx((1 + 1 / 1.25**2 + 1) / 3)
     assert r.rating == pytest.approx(0.5 * r.corridor + 0.5 * r.cross_correlation)
 
 
-def test_cora_phase_between_d_min_and_d_max():
+def test_cc_rating_phase_between_d_min_and_d_max():
     # interval 119.9 ms: full points up to 1.2 ms, zero from 14.4 ms
     ref = pulse(50, 0.02, 0.04)
     duration = (len(T) - 1) * 1e-4
-    r = cora(T, ref, pulse(50, 0.026, 0.04))
+    r = cc_rating(T, ref, pulse(50, 0.026, 0.04))
     assert r.time_shift_ms == pytest.approx(6.0)
     expected = (0.12 * duration - 0.006) / ((0.12 - 0.01) * duration)
     assert r.phase == pytest.approx(expected)
     assert r.shape == pytest.approx(1.0) and r.size == pytest.approx(1.0)
-    assert cora(T, ref, pulse(50, 0.0205, 0.04)).phase == 1.0
-    assert cora(T, ref, pulse(50, 0.036, 0.04)).phase == 0.0
+    assert cc_rating(T, ref, pulse(50, 0.0205, 0.04)).phase == 1.0
+    assert cc_rating(T, ref, pulse(50, 0.036, 0.04)).phase == 0.0
 
 
-def test_cora_parameters():
+def test_cc_rating_parameters():
     ref, comp = pulse(10, 0.01, 0.04), pulse(9, 0.012, 0.04)
-    wide = cora(T, ref, comp, parameters=CORAParameters(norm=100.0))
+    wide = cc_rating(T, ref, comp, parameters=CCParameters(norm=100.0))
     assert wide.corridor == pytest.approx(1.0)      # small signal, large norm
     with pytest.raises(ValueError, match="add up to 1"):
-        cora(T, ref, comp, parameters=CORAParameters(w_phase=0.5))
+        cc_rating(T, ref, comp, parameters=CCParameters(w_phase=0.5))
     with pytest.raises(ValueError, match="d_min"):
-        cora(T, ref, comp, parameters=CORAParameters(d_min=0.2))
+        cc_rating(T, ref, comp, parameters=CCParameters(d_min=0.2))
 
 
 # --- Error measures ---------------------------------------------------------
@@ -235,11 +235,11 @@ def test_compare_and_feature_table():
     ref, comp = pulse(80, 0.01, 0.04), pulse(92, 0.013, 0.04)
     c = compare(T, ref, comp, channel="head_ax")
     assert c.iso == iso18571(T, ref, comp)
-    assert c.cora == cora(T, ref, comp)
+    assert c.cc == cc_rating(T, ref, comp)
     assert "head_ax: ISO 18571 0.881 (good" in c.summary()
     flat = flatten(c, prefix="head_")
     assert flat["head_iso.rating"] == pytest.approx(0.881412478103)
-    assert flat["head_cora.size"] == c.cora.size
+    assert flat["head_cc.size"] == c.cc.size
     assert flat["head_errors.peak_error"] == pytest.approx(0.15, rel=1e-3)
 
     runs = {"v1": (ref, comp), "v2": (ref, ref), "bad": (ref, np.zeros(3))}

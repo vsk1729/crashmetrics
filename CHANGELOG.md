@@ -4,6 +4,19 @@ All notable changes to this project are listed here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions
 follow [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Changed
+
+- **Renamed** `cora`, `CORAParameters` and `CORAResult` to `cc_rating`,
+  `CCParameters` and `CCResult` (corridor and cross-correlation
+  rating), `Comparison.cora` to `Comparison.cc` and the
+  `cora_parameters` argument of `compare` to `cc_parameters`. The
+  results are unchanged. The method is the published one of Gehre et
+  al. (2009); the new names avoid implying a link to PDB's CORA tool.
+- Disclaimer: ISO and PDB added to the organisations crashmetrics is not
+  affiliated with, and the sources of the correlation methods stated.
+
 ## [0.10.0] - 2026-10-28
 
 ### Added
