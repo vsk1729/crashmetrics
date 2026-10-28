@@ -1,0 +1,18 @@
+17 runs x 30 columns -> crashmetrics_features.csv
+Columns: run, stiffness, clearance_mm, speed_kph, head_hic15, head_hic15_t1_ms, head_hic15_t2_ms ... head_dominant_hz, head_spectral_centroid_hz, error
+Failed  : [('run17', 'ValueError: signal must contain only finite values.')]
+
+run    stiff clear  kph  HIC15 rise ms width ms centroid  colour
+run01    0.8    50   35    274    7.63     1.69     7.80  green
+run04    0.8    80   40    281    4.47     8.93     6.72  green
+run07    1.0    80   35    224    4.01     8.00     6.01  green
+run10    1.2    50   40   1067    6.48     4.23     6.25  orange
+run13    1.4    50   35    714    6.05     4.60     5.76  yellow
+run16    1.4    80   40    856    3.36     6.72     5.08  yellow
+Colour counts: {'brown': 1, 'green': 11, 'orange': 1, 'yellow': 3}
+
+Strongest shape features vs HIC15: head_width50_ms -0.31, head_active_ms -0.30, head_end_ms -0.30, head_centroid_ms -0.29
+Surrogate log(HIC15) ~ log(stiffness) + clearance + log(speed): exponents 1.90 (stiffness), 5.02 (speed)
+Checked on 4 held-out runs: R^2 = 0.99, mean error 16 HIC
+
+flatten(features of run01) has 29 columns; nested scores give keys like 'occupants.driver.regions.head_neck.points'

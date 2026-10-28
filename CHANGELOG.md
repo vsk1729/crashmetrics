@@ -8,6 +8,15 @@ follow [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- `crashmetrics.features` for analytics and machine learning:
+  `signal_features` (peaks, timing, rise time, pulse width, impulse,
+  energy centroid, number of impacts, frequency content of any channel),
+  `head_features` and `pulse_features` (criteria plus shape),
+  `flatten` (any result object, however nested, as flat columns),
+  `feature_table` (one row per run with design parameters; failing runs
+  recorded in an `error` column), and `write_csv`, `to_dataframe` and
+  `to_matrix` for CSV, pandas and NumPy. Guide "Features for machine
+  learning" and example `11_ml_features.py`.
 - `CITATION.cff`, so GitHub shows "Cite this repository" and papers can
   cite the package; a test keeps its version in step with the package.
 

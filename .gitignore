@@ -11,3 +11,4 @@ htmlcov/
 .env
 .env.*site/
 crashmetrics_doe_results.csv
+crashmetrics_features.csv

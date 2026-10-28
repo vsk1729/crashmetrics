@@ -16,6 +16,7 @@ its real output (the test suite checks that output on every change).
 | [Vehicle pulse and crush energy](pulse-energy.md) | Compute OLC, delta-V, crush, absorbed energy, CFE and SEA | `08_pulse_olc_crush.py` |
 | [LS-DYNA energy checks](lsdyna-energy.md) | Check energy balance and read d3hsp run information | `09_lsdyna_energy_check.py` |
 | [Batch runs, analytics and ML](batch-analytics.md) | Process many runs into a table for dashboards, DOE and ML | `10_batch_analytics.py` |
+| [Features for machine learning](ml-features.md) | Turn runs into a feature table of criteria, signal shape and design parameters for ML models | `11_ml_features.py` |
 
 ## The general workflow
 
