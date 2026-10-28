@@ -1,15 +1,15 @@
 """Side impact criteria for the ES-2 dummy (AIS-197 / Bharat NCAP, UN R95).
 
-Functions
----------
-es2_rib_deflection
-    Largest deflection of the three ribs (upper, middle, lower).
-es2_rib_vc
-    Largest viscous criterion of the three ribs (sf 1.0, D 0.140 m).
-es2_abdominal_force
-    Peak of the sum of the front, middle and rear abdominal forces.
-pubic_symphysis_force
-    Peak lateral pubic symphysis force (magnitude).
+Functions:
+
+- `es2_rib_deflection`: Largest deflection of the three ribs (upper,
+  middle, lower).
+- `es2_rib_vc`: Largest viscous criterion of the three ribs (sf 1.0, D
+  0.140 m).
+- `es2_abdominal_force`: Peak of the sum of the front, middle and rear
+  abdominal forces.
+- `pubic_symphysis_force`: Peak lateral pubic symphysis force
+  (magnitude).
 
 Units: time in s, deflection in mm, force in N, VC in m/s. Filter rib
 deflections with CFC 180 and forces with CFC 600 (AIS-197 Annexure IV,

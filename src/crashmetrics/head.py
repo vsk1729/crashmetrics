@@ -1,18 +1,18 @@
 """Head injury criteria: DAMAGE, BrIC and the frontal loading phase.
 
-Functions
----------
-damage, damage_from_acceleration
-    DAMAGE brain strain criterion (Euro NCAP THOR head assessment).
-external_force
-    Euro NCAP external head force used to end the DAMAGE window.
-bric
-    Brain Injury Criterion (Takhounts et al. 2013; US NCAP research).
-loading_phase_end
-    End of the loading phase in frontal tests (Euro NCAP CP 005).
+Functions:
 
-HIC and the 3 ms clip are in :mod:`crashmetrics.pedestrian` and
-:mod:`crashmetrics.acceleration`.
+- `damage`, `damage_from_acceleration`: DAMAGE brain strain criterion
+  (Euro NCAP THOR head assessment).
+- `external_force`: Euro NCAP external head force used to end the DAMAGE
+  window.
+- `bric`: Brain Injury Criterion (Takhounts et al. 2013; US NCAP
+  research).
+- `loading_phase_end`: End of the loading phase in frontal tests (Euro
+  NCAP CP 005).
+
+HIC and the 3 ms clip are in `crashmetrics.pedestrian` and
+`crashmetrics.acceleration`.
 
 Units: time in s, angular velocity in rad/s, angular acceleration in
 rad/s^2, head linear acceleration in g, force in N. Angular quantities
@@ -194,7 +194,7 @@ def damage_from_acceleration(
         The model starts from rest at T0.
     head_ax_g, neck_fx:
         Optional head x acceleration (g) and upper neck Fx (N). If both
-        are given, the window ends when :func:`external_force` first
+        are given, the window ends when `external_force` first
         drops below -500 N after T0 (Euro NCAP frontal impacts).
     params:
         Model parameters; the Euro NCAP values by default.
@@ -256,9 +256,9 @@ def damage(
     """DAMAGE from head angular velocity (rad/s, SAE J211 axes).
 
     This is the Euro NCAP input: filter the angular velocity with CFC 60
-    first (:func:`crashmetrics.signals.cfc_filter`). It is differentiated
+    first (`crashmetrics.signals.cfc_filter`). It is differentiated
     with second-order central differences over the whole record; see
-    :func:`damage_from_acceleration` for the other parameters.
+    `damage_from_acceleration` for the other parameters.
     """
     t, (wx, wy, wz) = as_channels(time, omega_x, omega_y, omega_z, min_samples=3)
     return damage_from_acceleration(
@@ -311,7 +311,7 @@ def bric(
     omega_x, omega_y, omega_z:
         Head angular velocity in rad/s.
     critical:
-        Key of :data:`BRIC_CRITICAL_VELOCITIES` or (wxC, wyC, wzC).
+        Key of `BRIC_CRITICAL_VELOCITIES` or (wxC, wyC, wzC).
     t_start, t_end:
         Optional evaluation window, s.
     """

@@ -1,16 +1,15 @@
 """Neck injury criteria for frontal impact dummies.
 
-Functions
----------
-occipital_condyle_moment
-    Upper neck moment transferred to the occipital condyle.
-neck_loads
-    Peak shear, tension, compression and extension / flexion moments
-    (Euro NCAP CP 005, Sections 3.2.1, 3.2.3 and 3.2.5).
-nij
-    Neck injury criterion Nij (FMVSS 208; not a Euro NCAP criterion).
-neck_force_criterion
-    Neck force against a force-duration limit (UN-ECE R94).
+Functions:
+
+- `occipital_condyle_moment`: Upper neck moment transferred to the
+  occipital condyle.
+- `neck_loads`: Peak shear, tension, compression and extension / flexion
+  moments (Euro NCAP CP 005, Sections 3.2.1, 3.2.3 and 3.2.5).
+- `nij`: Neck injury criterion Nij (FMVSS 208; not a Euro NCAP
+  criterion).
+- `neck_force_criterion`: Neck force against a force-duration limit
+  (UN-ECE R94).
 
 Units: time in s, force in N, moment in N m, distance in m.
 
@@ -138,7 +137,7 @@ def neck_loads(
         Override of d for the Hybrid III, m (default 0.01778 m).
     t_start, t_end:
         Evaluation window, s; for frontal impacts Euro NCAP considers the
-        loading phase (see :func:`crashmetrics.head.loading_phase_end`).
+        loading phase (see `crashmetrics.head.loading_phase_end`).
 
     Notes
     -----
@@ -246,7 +245,7 @@ def nij(
         occipital condyle (``My - Fx * oc_distance``); if None, ``my``
         is taken as already at the occipital condyle.
     dummy:
-        Key of :data:`NIJ_INTERCEPTS`, used if ``intercepts`` is None.
+        Key of `NIJ_INTERCEPTS`, used if ``intercepts`` is None.
     intercepts:
         Custom intercepts.
     oc_distance:
@@ -333,7 +332,7 @@ def neck_force_criterion(
     force:
         Upper neck Fz for tension, Fx for shear, N.
     limit:
-        Key of :data:`NECK_FORCE_LIMITS` or (duration ms, force N) points.
+        Key of `NECK_FORCE_LIMITS` or (duration ms, force N) points.
     mode:
         ``"cumulative"`` or ``"continuous"`` duration; check which your
         regulation requires.

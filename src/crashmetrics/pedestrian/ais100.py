@@ -4,22 +4,21 @@ AIS-100 Rev.1 (April 2024) follows UN GTR 9 / UN R127 with the Flex-PLI;
 the original AIS-100 (with Amendments) uses the legacy (TRL) lower
 legform. Both use the same upper legform and headform requirements.
 
-Functions
----------
-bumper_legform
-    Which legform test applies for a lower bumper height (Section 4.1).
-check_flexpli
-    Flex-PLI to bumper (Rev.1, 5.1.1).
-check_legacy_legform
-    Legacy lower legform to bumper (original AIS-100, 5.1.1).
-check_upper_legform_bumper
-    Upper legform to bumper (5.1.2 in both editions).
-check_relaxation_width
-    Total bumper width nominated for the relaxed tibia limit (264 mm).
-check_headform_zones, check_headform_tests
-    HIC1000 / HIC1700 zone areas and test results (5.2.3-5.2.4).
+Functions:
 
-Each check returns :class:`Check` with the measured values, limits,
+- `bumper_legform`: Which legform test applies for a lower bumper height
+  (Section 4.1).
+- `check_flexpli`: Flex-PLI to bumper (Rev.1, 5.1.1).
+- `check_legacy_legform`: Legacy lower legform to bumper (original
+  AIS-100, 5.1.1).
+- `check_upper_legform_bumper`: Upper legform to bumper (5.1.2 in both
+  editions).
+- `check_relaxation_width`: Total bumper width nominated for the relaxed
+  tibia limit (264 mm).
+- `check_headform_zones`, `check_headform_tests`: HIC1000 / HIC1700 zone
+  areas and test results (5.2.3-5.2.4).
+
+Each check returns `Check` with the measured values, limits,
 utilisation (value / limit, worst first) and ``passed``.
 
 Units: moments in N m, elongations and displacements in mm, angles in
@@ -124,7 +123,7 @@ def check_flexpli(
     """Flex-PLI to bumper (AIS-100 Rev.1, 5.1.1).
 
     Peaks within the assessment interval (see
-    :func:`crashmetrics.pedestrian.flexpli.flexpli_peaks`): MCL <= 22 mm,
+    `crashmetrics.pedestrian.flexpli.flexpli_peaks`): MCL <= 22 mm,
     ACL and PCL <= 13 mm, tibia bending moment <= 340 N m, or 380 N m at
     a point inside the nominated relaxation width (``relaxed_zone``).
     """

@@ -1,0 +1,10 @@
+MPDB: 12.924 / 20 points (occupants 16.000, full-scale -0.250, compatibility -2.826)
+  driver          thor_50    3.75/5: head_neck 0.75 (yellow, neck_tension), chest_abdomen 0.75 (orange, chest_compression), knee_femur_pelvis 1.00 (yellow, femur_force), lower_leg 1.25 (green, tibia_index)
+  front_passenger hybrid3_05 4.25/5: head_neck 0.75 (orange, hic15), chest_abdomen 1.00 (yellow, chest_compression), knee_femur_pelvis 1.25 (green, femur_force), lower_leg 1.25 (green, tibia_index)
+  rear_q6         q6         4.00/5: head 2.00 (yellow, head_a3ms), neck 1.25 (green, neck_tension), chest 0.75 (orange, chest_compression)
+  rear_q10        q10        4.00/5: head 2.50 (green, hic15), neck 0.75 (orange, neck_tension), chest 0.75 (orange, chest_a3ms)
+Full width: 7.750 / 10 points (occupants 7.750, full-scale -0.000, compatibility -0.000)
+  driver          hybrid3_05 3.50/5: head_neck 0.75 (orange, hic15), chest_abdomen 0.25 (orange, chest_compression), knee_femur_pelvis 1.25 (green, femur_force), lower_leg 1.25 (green, tibia_index)
+  front_passenger thor_50    2.12/2.5: head_neck 0.50 (yellow, neck_tension), chest_abdomen 0.50 (yellow, chest_compression), knee_femur_pelvis 0.50 (yellow, femur_force), lower_leg 0.62 (green, tibia_index)
+  rear_passenger  hybrid3_05 2.12/2.5: head_neck 0.50 (yellow, neck_tension), chest_abdomen 1.00 (yellow, chest_compression), knee_femur_pelvis 0.62 (green, femur_force)
+Frontal offset + full width: 20.674 / 30 points

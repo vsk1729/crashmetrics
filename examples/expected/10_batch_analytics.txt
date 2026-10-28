@@ -1,0 +1,18 @@
+Wrote 12 runs to crashmetrics_doe_results.csv
+stiffness clearance   HIC15  peak g  3 ms g  colour
+      0.8        50     533   185.0    75.4  green
+      0.8        70     280    76.0    71.4  green
+      0.8        90     280    76.0    71.4  green
+      1.0        50     779   200.0    94.0  yellow
+      1.0        70     438    95.0    87.8  green
+      1.0        90     438    95.0    87.8  green
+      1.2        50    1067   214.6   112.4  orange
+      1.2        70     630   114.0   103.6  green
+      1.2        90     630   114.0   103.6  green
+      1.4        50    1396   228.9   130.6  brown
+      1.4        70     858   133.0   118.9  yellow
+      1.4        90     858   133.0   118.9  yellow
+Correlation of HIC15 with stiffness   : +0.79
+Correlation of HIC15 with clearance_mm: -0.51
+Linear surrogate: HIC15 = 135 +1121 x stiffness -9.8 x clearance_mm
+{'value': 437.74055, 'start_time': 0.00198, 'end_time': 0.01002}

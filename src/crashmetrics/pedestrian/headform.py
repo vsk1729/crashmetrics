@@ -1,17 +1,14 @@
 """Euro NCAP headform grid scoring for pedestrian and cyclist protection.
 
-Functions
----------
-hic_colour
-    Colour band of a HIC15 value.
-verification_colour
-    Colour assigned to a verification test, with the 10 % HIC tolerance.
-correction_factor
-    Correction factor from verification tests.
-headform_score
-    Head score of a full impact-point grid.
+Functions:
 
-The rules follow the Euro NCAP protocols named in :data:`PROTOCOLS`:
+- `hic_colour`: Colour band of a HIC15 value.
+- `verification_colour`: Colour assigned to a verification test, with
+  the 10 % HIC tolerance.
+- `correction_factor`: Correction factor from verification tests.
+- `headform_score`: Head score of a full impact-point grid.
+
+The rules follow the Euro NCAP protocols named in `PROTOCOLS`:
 
 - ``"euroncap_2026"``: Crash Protection - Vulnerable Road User Impacts,
   v1.1, September 2025 (head maximum 10 points, A-pillar rewards).
@@ -207,7 +204,7 @@ def correction_factor(
         predicted colour or predicted HIC15. Do not include blue or
         default red points.
     protocol:
-        Key of :data:`PROTOCOLS`, used for the accepted range.
+        Key of `PROTOCOLS`, used for the accepted range.
     round_to:
         Decimal places to round the factor to before it is applied.
         The protocols' worked examples use three (for example
@@ -220,7 +217,7 @@ def correction_factor(
     Notes
     -----
     ``factor = actual score / predicted score`` of the verification
-    points, each scored with :data:`COLOUR_POINTS`.
+    points, each scored with `COLOUR_POINTS`.
     """
     if protocol not in PROTOCOLS:
         raise ValueError(f"Unknown protocol {protocol!r}.")
@@ -348,10 +345,10 @@ def headform_score(
         ``{point: [(speed_kmh, HIC15), ...]}`` for tested A-pillar
         points (2026 protocol only). Untested A-pillar points score 0.
     protocol:
-        Key of :data:`PROTOCOLS`.
+        Key of `PROTOCOLS`.
     round_correction_factor:
         Decimal places of the correction factor; see
-        :func:`correction_factor`.
+        `correction_factor`.
 
     Returns
     -------

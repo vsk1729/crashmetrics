@@ -1,9 +1,9 @@
 """Energy checks for explicit crash simulations, for any load case.
 
-Functions
----------
-check_energies
-    Run the global and per-part energy checks and return a report.
+Functions:
+
+- `check_energies`: Run the global and per-part energy checks and return
+  a report.
 
 Classes
 -------
@@ -14,27 +14,25 @@ PartEnergies
 EnergyLimits
     Acceptance limits; every one can be changed or switched off.
 
-The checks are solver-agnostic: fill :class:`GlobalEnergies` and
-:class:`PartEnergies` from any source, or read LS-DYNA output with
-:mod:`crashmetrics.lsdyna`. All energies must use one consistent unit.
+The checks are solver-agnostic: fill `GlobalEnergies` and
+`PartEnergies` from any source, or read LS-DYNA output with
+`crashmetrics.lsdyna`. All energies must use one consistent unit.
 
-Checks
-------
-=========================  ==================================================
-Check                      Value compared with its limit
-=========================  ==================================================
-energy_ratio               total / (initial total + external work), min and
-                           max over time (glstat's own ratio if given)
-hourglass                  peak hourglass / peak internal energy
-negative_contact           most negative sliding (contact) energy / reference
-damping                    peak system damping energy / reference
-added_mass                 peak added mass, % of the model mass
-eroded_energy              peak eroded energy / reference (reported only)
-part_hourglass             per part: peak hourglass / peak internal energy
-part_negative_internal     per part: most negative / peak internal energy
-=========================  ==================================================
+Checks:
 
-The reference energy is the largest value of initial total energy plus
+| Check | Value compared with its limit |
+| --- | --- |
+| energy_ratio | total / (initial total + external work), min and max |
+| hourglass | peak hourglass / peak internal energy |
+| negative_contact | most negative sliding (contact) energy / reference |
+| damping | peak system damping energy / reference |
+| added_mass | peak added mass, % of the model mass |
+| eroded_energy | peak eroded energy / reference (reported only) |
+| part_hourglass | per part: peak hourglass / peak internal energy |
+| part_negative_internal | per part: most negative / peak internal energy |
+
+The energy ratio uses glstat's own ratio if given. The reference
+energy is the largest value of initial total energy plus
 external work, so the checks work for impacts (initial kinetic energy)
 and for prescribed-motion or quasi-static cases (external work) alike.
 Part checks cover parts whose peak internal energy is at least
@@ -43,7 +41,7 @@ Part checks cover parts whose peak internal energy is at least
 Default limits: hourglass energy below 10 % of internal energy, globally
 and per part, is LS-DYNA's published rule of thumb. The other defaults
 are common rules of thumb, not a standard. Set your own guideline values
-in :class:`EnergyLimits`.
+in `EnergyLimits`.
 """
 
 import math
@@ -374,7 +372,7 @@ class PartResult:
 
 @dataclass(frozen=True)
 class EnergyReport:
-    """Results of :func:`check_energies`."""
+    """Results of `check_energies`."""
 
     checks: tuple[EnergyCheck, ...]
     parts: tuple[PartResult, ...]
@@ -650,12 +648,12 @@ def check_energies(
     ----------
     global_energies:
         Global energies, for example from
-        :func:`crashmetrics.lsdyna.read_glstat`.
+        `crashmetrics.lsdyna.read_glstat`.
     part_energies:
         Optional per-part energies, for example from
-        :func:`crashmetrics.lsdyna.read_matsum`, for the part checks.
+        `crashmetrics.lsdyna.read_matsum`, for the part checks.
     limits:
-        Acceptance limits; :class:`EnergyLimits` defaults if omitted.
+        Acceptance limits; `EnergyLimits` defaults if omitted.
 
     Returns
     -------

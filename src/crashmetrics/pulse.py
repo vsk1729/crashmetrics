@@ -1,12 +1,10 @@
 """Vehicle crash pulse metrics.
 
-Functions
----------
-olc
-    Occupant Load Criterion (OLC).
-pulse_summary
-    Velocity change, time to zero velocity, maximum displacement,
-    rebound and deceleration of a crash pulse.
+Functions:
+
+- `olc`: Occupant Load Criterion (OLC).
+- `pulse_summary`: Velocity change, time to zero velocity, maximum
+  displacement, rebound and deceleration of a crash pulse.
 
 Inputs are in SI units: time in s, acceleration in m/s^2, velocity
 in m/s. The acceleration is the vehicle (or barrier) longitudinal

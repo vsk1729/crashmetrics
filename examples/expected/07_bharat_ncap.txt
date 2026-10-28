@@ -1,0 +1,12 @@
+Neck tension curve: 2.762 / 4 points (lowest at 2600 N held 25.0 ms)
+Frontal: 11.343 / 16
+  head_neck          2.550 (orange)
+  chest              2.200 (orange)
+  knee_femur_pelvis  3.633 (yellow)
+  leg_foot           2.960 (yellow)
+  driver: head 2.55 [hic15], neck 2.76 [neck_tension], chest 2.20 [chest_compression], knee_left 3.63 [femur_force], lower_leg_left 3.02 [tibia_index], knee_right 3.78 [knee_displacement], lower_leg_right 3.64 [tibia_index], foot 2.96 [pedal_rearward]
+  passenger: head 4.00 [no hard contact], neck 4.00 [neck_shear], chest 3.60 [chest_compression], knee_left 4.00 [femur_force], lower_leg_left 3.78 [tibia_index], knee_right 4.00 [femur_force], lower_leg_right 3.93 [tibia_force]
+Side   : 14.133 / 16 {'head': 4.0, 'chest': 2.8, 'abdomen': 3.333, 'pelvis': 4.0}
+Pole test passed: True
+Adult occupant: 25.476 / 32 points -> 4 stars 
+Child occupant: 38.5 / 49 points -> 4 stars

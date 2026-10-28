@@ -43,12 +43,17 @@ dev = [
     "mypy",
     "ruff"
 ]
+docs = [
+    "mkdocs-material>=9.5",
+    "mkdocstrings[python]>=0.26"
+]
 
 [project.scripts]
 crashmetrics-energy = "crashmetrics.lsdyna:main"
 
 [project.urls]
 Homepage = "https://github.com/vsk1729/crashmetrics"
+Documentation = "https://vsk1729.github.io/crashmetrics/"
 Source = "https://github.com/vsk1729/crashmetrics"
 Issues = "https://github.com/vsk1729/crashmetrics/issues"
 Changelog = "https://github.com/vsk1729/crashmetrics/blob/main/CHANGELOG.md"

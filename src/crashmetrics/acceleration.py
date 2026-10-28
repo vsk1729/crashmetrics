@@ -1,19 +1,15 @@
 """Acceleration time-history metrics.
 
-Functions
----------
-peak
-    Peak acceleration and the time at which it occurs.
-clip_3ms
-    The "3 ms clip": the highest acceleration level that is reached
-    or exceeded for 3 ms, cumulatively or continuously.
-exceedance_level
-    The highest level reached or exceeded for any given duration.
-exceedance_duration
-    How long a signal is at or above a given level.
-exceedance_check
-    Compare a signal's exceedance curve with a level-duration limit
-    (e.g. UN-ECE R94 femur and neck force criteria).
+Functions:
+
+- `peak`: Peak acceleration and the time at which it occurs.
+- `clip_3ms`: The "3 ms clip": the highest acceleration level that is
+  reached or exceeded for 3 ms, cumulatively or continuously.
+- `exceedance_level`: The highest level reached or exceeded for any
+  given duration.
+- `exceedance_duration`: How long a signal is at or above a given level.
+- `exceedance_check`: Compare a signal's exceedance curve with a
+  level-duration limit (e.g. UN-ECE R94 femur and neck force criteria).
 
 Inputs are normally a filtered resultant in g (see
 ``crashmetrics.signals``), with time in seconds. The signal is
@@ -257,7 +253,7 @@ def exceedance_level(
 ) -> float:
     """Return the highest level reached or exceeded for ``duration_ms``.
 
-    This generalises :func:`clip_3ms` to any duration and any signal,
+    This generalises `clip_3ms` to any duration and any signal,
     for example a femur force. A duration of 0 returns the maximum.
 
     Parameters
@@ -335,7 +331,7 @@ def exceedance_duration(
 
 @dataclass(frozen=True)
 class ExceedanceCheckResult:
-    """Result of :func:`exceedance_check`."""
+    """Result of `exceedance_check`."""
 
     peak: float
     """Peak of the assessed signal (after ``direction`` is applied)."""

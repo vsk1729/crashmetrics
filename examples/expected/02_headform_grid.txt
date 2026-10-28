@@ -1,0 +1,9 @@
+Grid points  : 143  predicted colours {'brown': 26, 'green': 45, 'orange': 26, 'yellow': 41}
+Correction   : factor 0.818, accepted without review: False
+  point (0, 0): predicted green  measured    760 -> yellow
+  point (3, 4): predicted yellow measured   1180 -> orange
+  point (6, -5): predicted orange measured   1460 -> orange
+  point (8, 2): predicted orange measured   1050 -> orange
+euroncap_2026: head 5.676 / 10 points (56.8 %), A-pillar points 2
+euroncap_2023: head 9.965 / 18 points (55.4 %), A-pillar points 0
+CAE estimate : 6.748 / 10 points (no correction)

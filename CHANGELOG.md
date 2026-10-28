@@ -4,7 +4,31 @@ All notable changes to this project are listed here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions
 follow [Semantic Versioning](https://semver.org/).
 
-## [0.9.0] - Unreleased
+## [0.9.1] - Unreleased
+
+### Added
+
+- Documentation site (<https://vsk1729.github.io/crashmetrics/>): getting
+  started, units and sign conventions, ten step-by-step guides, protocol
+  notes listing every interpretation, and the API reference generated
+  from the docstrings. Built on every pull request and published to
+  GitHub Pages from `main`.
+- Ten runnable examples in `examples/`, one per topic, with their
+  expected output; the test suite checks that output.
+- `docs` optional dependencies (`pip install -e ".[docs]"`).
+
+### Changed
+
+- The README is now a short overview that links to the documentation.
+- Module docstrings use Markdown lists and tables so they render in the
+  API reference.
+
+### Fixed
+
+- `bncap.curve_points` reported a duration of 0 ms when the curve scored
+  full points; it now reports the duration at the peak level.
+
+## [0.9.0] - 2026-10-27
 
 ### Added
 

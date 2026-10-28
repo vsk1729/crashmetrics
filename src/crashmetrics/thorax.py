@@ -1,18 +1,17 @@
 """Chest and abdomen criteria for frontal impact dummies.
 
-Functions
----------
-chest_deflection
-    Hybrid III chest deflection (Euro NCAP CP 005, Section 3.4.1).
-viscous_criterion
-    Viscous criterion VC (CP 005, Section 3.4.6).
-thor_rib_displacement, thor_chest_deflection
-    THOR 3D rib displacement from IR-TRACC length and angles, and Rmax
-    over the four chest locations (CP 005, Section 3.4.2).
-thor_abdomen_deflection
-    THOR abdominal rib displacement (CP 005, Section 3.5.2).
-cti, cti_from_signals
-    Combined Thoracic Index (NHTSA research; not a Euro NCAP criterion).
+Functions:
+
+- `chest_deflection`: Hybrid III chest deflection (Euro NCAP CP 005,
+  Section 3.4.1).
+- `viscous_criterion`: Viscous criterion VC (CP 005, Section 3.4.6).
+- `thor_rib_displacement`, `thor_chest_deflection`: THOR 3D rib
+  displacement from IR-TRACC length and angles, and Rmax over the four
+  chest locations (CP 005, Section 3.4.2).
+- `thor_abdomen_deflection`: THOR abdominal rib displacement (CP 005,
+  Section 3.5.2).
+- `cti`, `cti_from_signals`: Combined Thoracic Index (NHTSA research;
+  not a Euro NCAP criterion).
 
 Units: time in s, deflection and displacement in mm, IR-TRACC angles in
 degrees (or radians with ``degrees=False``), VC in m/s, acceleration in
@@ -133,7 +132,7 @@ def viscous_criterion(
         Chest (or rib) deflection in mm, CFC 180; compression positive
         unless ``compression_negative`` is True.
     dummy:
-        Key of :data:`VC_CONSTANTS`; used unless both ``scale_factor``
+        Key of `VC_CONSTANTS`; used unless both ``scale_factor``
         and ``d_constant`` (m) are given.
     t_start, t_end:
         Optional window for the maximum, s (the velocity is computed on
@@ -391,7 +390,7 @@ def cti(
     deflection:
         Chest deflection in mm.
     dummy:
-        Key of :data:`CTI_INTERCEPTS`, unless ``intercepts`` (A_int g,
+        Key of `CTI_INTERCEPTS`, unless ``intercepts`` (A_int g,
         D_int mm) is given.
     """
     if intercepts is None:
@@ -410,7 +409,7 @@ def cti(
 
 @dataclass(frozen=True)
 class CtiResult:
-    """Result of :func:`cti_from_signals`."""
+    """Result of `cti_from_signals`."""
 
     value: float
     acceleration: float

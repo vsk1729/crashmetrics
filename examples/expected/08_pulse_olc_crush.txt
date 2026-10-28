@@ -1,0 +1,7 @@
+OLC          : 26.0 g (free flight ends 37.6 ms, restraint phase ends 100.0 ms)
+Delta-V      : 15.94 m/s, rebound 2.06 m/s (restitution 0.15)
+Dynamic crush: 624 mm at 76.6 ms
+Deceleration : peak 25.7 g, mean 18.5 g
+Kinetic energy at 50 km/h, 1500 kg: 144.7 kJ
+Crash box    : 9.17 kJ over 150 mm, mean 61.1 kN, peak 147.8 kN at 5.0 mm
+               CFE 0.41, SEA 7.6 kJ/kg, energy at full stroke 10.86 kJ

@@ -6,15 +6,15 @@ Annexure VIII (scoring), with the star thresholds of Table 2A.
 
 Tests: ODB frontal at 64 km/h (Hybrid III 50th driver and passenger,
 16 points), MDB side at 50 km/h (ES-2, 16 points) and the pole side test
-at 29 km/h (pass/fail, :func:`pole_test_passed`).
+at 29 km/h (pass/fail, `pole_test_passed`).
 
 Scoring
 -------
 Each criterion scores 0-4 points on a linear sliding scale between the
 higher (4 points) and lower (0 points) performance limit
-(:func:`sliding_points`). Neck shear and tension and femur compression
+(`sliding_points`). Neck shear and tension and femur compression
 are scored from their exceedance curves against force-duration limits
-(:func:`curve_points`): the lowest point on the curve gives the score.
+(`curve_points`): the lowest point on the curve gives the score.
 A body region takes its lowest-scoring criterion, then point modifiers
 are subtracted (not below zero). Region scores are rounded to 3
 decimals.
@@ -243,7 +243,7 @@ def curve_points(
     levels = np.unique(np.concatenate(candidates))
     levels = levels[levels > 0.0]
 
-    best = (max_points, peak, 0.0)
+    best = (max_points, peak, exceedance_duration(t, a, peak, mode))
     exceeds = False
     for level in levels:
         duration = exceedance_duration(t, a, float(level), mode)
@@ -622,7 +622,7 @@ def aop_rating(
     - ``max_stars_allowed``: the highest rating whose safety assist
       qualifiers (Annexure VI: ESC, side head protection with a side pole
       test, pedestrian protection, seat belt reminders) are met; see
-      :func:`pole_test_passed`.
+      `pole_test_passed`.
     """
     total = round(frontal.points + side.points, 3)
     stars = _stars(total, AOP_STAR_THRESHOLDS)

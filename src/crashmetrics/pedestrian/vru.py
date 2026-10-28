@@ -65,13 +65,13 @@ def vru_score(
     Parameters
     ----------
     head:
-        :func:`~crashmetrics.pedestrian.headform_score` result or points.
+        `crashmetrics.pedestrian.headform_score` result or points.
     pelvis:
-        :func:`~crashmetrics.pedestrian.upper_legform_score` result or
+        `crashmetrics.pedestrian.upper_legform_score` result or
         points.
     femur, knee_tibia:
         The ``femur`` and ``knee_tibia`` of an
-        :func:`~crashmetrics.pedestrian.apli_score` result, or points.
+        `crashmetrics.pedestrian.apli_score` result, or points.
     protocol:
         ``"euroncap_2026"``: head 10 + pelvis 2.5 + femur 2.5 +
         knee/tibia 5 = 20 points. ``"euroncap_2023"``: 18 + 4.5 + 4.5 +

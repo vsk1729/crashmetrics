@@ -1,33 +1,26 @@
 """Euro NCAP legform scoring: aPLI (femur, knee/tibia) and upper legform (pelvis).
 
-Functions
----------
-sliding_scale
-    Score between a higher and a lower performance limit.
-leg_colour
-    Colour of a leg grid-point score.
-apli_point_score
-    Femur and knee/tibia scores of one aPLI test.
-upper_legform_point_score
-    Score of one upper legform test.
-upper_legform_alpha, upper_legform_energy
-    Upper legform impact angle, energy and test velocity, and whether a
-    test is required.
-apli_score, upper_legform_score
-    Femur, knee/tibia and pelvis points of a full grid, filling untested
-    points by symmetry and from the worst adjacent result.
+Functions:
+
+- `sliding_scale`: Score between a higher and a lower performance limit.
+- `leg_colour`: Colour of a leg grid-point score.
+- `apli_point_score`: Femur and knee/tibia scores of one aPLI test.
+- `upper_legform_point_score`: Score of one upper legform test.
+- `upper_legform_alpha`, `upper_legform_energy`: Upper legform impact
+  angle, energy and test velocity, and whether a test is required.
+- `apli_score`, `upper_legform_score`: Femur, knee/tibia and pelvis
+  points of a full grid, filling untested points by symmetry and from
+  the worst adjacent result.
 
 Units: force in N, bending moment in N m, MCL elongation in mm, energy
 in J. The Euro NCAP limits (both protocols):
 
-==============================  ===========  ==========
-Criterion                       Higher limit Lower limit
-==============================  ===========  ==========
-Upper legform sum of forces     5.0 kN       6.0 kN
-aPLI femur bending moment       390 N m      440 N m
-aPLI tibia bending moment       275 N m      320 N m
-aPLI MCL elongation             27 mm        32 mm
-==============================  ===========  ==========
+| Criterion | Higher limit | Lower limit |
+| --- | --- | --- |
+| Upper legform sum of forces | 5.0 kN | 6.0 kN |
+| aPLI femur bending moment | 390 N m | 440 N m |
+| aPLI tibia bending moment | 275 N m | 320 N m |
+| aPLI MCL elongation | 27 mm | 32 mm |
 
 Region maxima: ``"euroncap_2026"`` (Crash Protection - VRU Impacts
 v1.1) pelvis 2.5, femur 2.5, knee/tibia 5; ``"euroncap_2023"`` (VRU
@@ -338,7 +331,7 @@ def upper_legform_energy(alpha: float) -> UpperLegformEnergy:
     Parameters
     ----------
     alpha:
-        Impact angle in degrees, from :func:`upper_legform_alpha`.
+        Impact angle in degrees, from `upper_legform_alpha`.
         Negative angles are treated as 0 (this package's reading of the
         protocol's alignment rule; check it for your case).
 
@@ -547,7 +540,7 @@ def upper_legform_score(
         tested points.
     energies:
         Optional ``{point: nominal impact energy in J}`` for every grid
-        point, from :func:`upper_legform_energy`. Untested points below
+        point, from `upper_legform_energy`. Untested points below
         160 J get ``not_required_score``, and a symmetric or adjacent
         result is used only if the two energies differ by at most
         ``energy_tolerance`` (10 %) of the tested point's energy.
@@ -633,12 +626,12 @@ def apli_score(
     tests:
         ``{point: (femur_moment, tibia_moment, mcl_elongation)}`` in
         N m, N m and mm (peaks, gauge peaks or time histories), or an
-        :class:`ApliPointScore`, for the tested points.
+        `ApliPointScore`, for the tested points.
     protocol:
         ``"euroncap_2026"`` (femur 2.5, knee/tibia 5) or
         ``"euroncap_2023"`` (4.5 and 9).
     symmetric, asymmetric_points:
-        As for :func:`upper_legform_score`.
+        As for `upper_legform_score`.
     round_to:
         Decimal places of each tested point's scores; None keeps them.
 

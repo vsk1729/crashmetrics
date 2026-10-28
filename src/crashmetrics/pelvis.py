@@ -1,13 +1,11 @@
 """Pelvis criteria for frontal impact dummies.
 
-Functions
----------
-acetabulum_force
-    THOR resultant acetabulum force while Fx is compressive (Euro NCAP
-    CP 005, Section 3.6.2).
-iliac_force_drop
-    Iliac force drop, a submarining indicator (CP 005, Section 3.6.1;
-    Hybrid III 5th female and THOR).
+Functions:
+
+- `acetabulum_force`: THOR resultant acetabulum force while Fx is
+  compressive (Euro NCAP CP 005, Section 3.6.2).
+- `iliac_force_drop`: Iliac force drop, a submarining indicator (CP 005,
+  Section 3.6.1; Hybrid III 5th female and THOR).
 
 Units: time in s, force in N. Filter with CFC 600.
 """

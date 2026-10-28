@@ -1,26 +1,25 @@
 """Flex-PLI (flexible pedestrian legform impactor) criteria and scoring.
 
-Functions
----------
-assessment_interval
-    Flex-PLI assessment interval (AIS-100 Rev.1 3.2, UN GTR 9, UN R127).
-flexpli_peaks
-    Peak tibia bending moment and knee ligament elongations within it.
-flexpli_point_score, flexpli_score
-    Euro NCAP Flex-PLI scoring (Pedestrian / VRU Assessment Protocol
-    v10.0.5, used 2014-2022): tibia and knee halves per grid point, the
-    grid scaled to 6 points.
+Functions:
+
+- `assessment_interval`: Flex-PLI assessment interval (AIS-100 Rev.1
+  3.2, UN GTR 9, UN R127).
+- `flexpli_peaks`: Peak tibia bending moment and knee ligament
+  elongations within it.
+- `flexpli_point_score`, `flexpli_score`: Euro NCAP Flex-PLI scoring
+  (Pedestrian / VRU Assessment Protocol v10.0.5, used 2014-2022): tibia
+  and knee halves per grid point, the grid scaled to 6 points.
 
 Units: time in s, bending moment in N m, elongation in mm. Filter all
 channels with CFC 180.
 
 Euro NCAP limits (higher / lower performance):
 
-======================  ===========  ===========
-Tibia bending moment    282 N m      340 N m
-MCL elongation          19 mm        22 mm
-ACL / PCL elongation    10 mm (threshold: knee scores 0 at or above)
-======================  ===========  ===========
+| Criterion | Higher limit | Lower limit |
+| --- | --- | --- |
+| Tibia bending moment | 282 N m | 340 N m |
+| MCL elongation | 19 mm | 22 mm |
+| ACL / PCL elongation | 10 mm | 10 mm (threshold: the knee scores 0 at or above it) |
 """
 
 from collections.abc import Hashable, Iterable, Mapping, Sequence
@@ -155,7 +154,7 @@ def flexpli_peaks(
     """Peak absolute tibia bending moment and ligament elongations.
 
     The peaks are taken within ``interval``; if None, it is computed with
-    :func:`assessment_interval` from the femur and tibia moments.
+    `assessment_interval` from the femur and tibia moments.
     """
     t, chans = as_channels(time, *tibia_moments, mcl, acl, pcl)
     n_tibia = len(tibia_moments)
@@ -221,10 +220,12 @@ def flexpli_score(
         All grid points (``"L+5"`` ... ``"L-5"`` or lateral indices).
     tests:
         ``{point: (tibia_moment, mcl, acl, pcl)}`` peaks (N m, mm), or a
-        :class:`FlexPliPointScore`, for the tested points.
+        `FlexPliPointScore`, for the tested points.
     max_points:
         Region maximum (6 points).
 
+    Notes
+    -----
     Untested points take their mirror point's result (if symmetric), else
     the worst adjacent result. The point scores are summed, divided by
     the number of grid points and multiplied by ``max_points``.
