@@ -48,8 +48,9 @@ to GitHub Pages when `main` changes.
 Releases are published by `.github/workflows/release.yml` with PyPI
 Trusted Publishing, so no API tokens are stored in the repository.
 
-1. Bump `__version__` in `src/crashmetrics/__init__.py` and add the
-   CHANGELOG entry; merge to `main`.
+1. Bump `__version__` in `src/crashmetrics/__init__.py`, the `version`
+   and `date-released` in `CITATION.cff` (a test checks they match), and
+   add the CHANGELOG entry; merge to `main`.
 2. Optional dry run: run the **Release** workflow manually from the
    Actions tab to publish to TestPyPI.
 3. Publish a GitHub release with tag `v<version>` (for example

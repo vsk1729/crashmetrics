@@ -41,6 +41,8 @@ from decimal import ROUND_HALF_UP, Decimal
 import numpy as np
 from numpy.typing import ArrayLike
 
+from .._scoring import linear_fraction
+
 __all__ = [
     "LEGFORM_LIMITS",
     "LEGFORM_PROTOCOLS",
@@ -133,19 +135,7 @@ def sliding_scale(value: float, higher: float, lower: float) -> float:
     1 at or below the higher performance limit, 0 at or above the
     lower performance limit, linear in between.
     """
-    v = float(value)
-    if not math.isfinite(v):
-        raise ValueError(f"value must be finite, got {value!r}.")
-    if not (math.isfinite(higher) and math.isfinite(lower)) or lower <= higher:
-        raise ValueError(
-            "The lower performance limit must be finite and greater than "
-            "the higher performance limit."
-        )
-    if v <= higher:
-        return 1.0
-    if v >= lower:
-        return 0.0
-    return (lower - v) / (lower - higher)
+    return linear_fraction(value, higher, lower)
 
 
 def leg_colour(score: float) -> str:

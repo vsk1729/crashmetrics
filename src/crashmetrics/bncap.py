@@ -44,6 +44,8 @@ from numpy.typing import ArrayLike
 
 from crashmetrics.acceleration import _validate, exceedance_duration, exceedance_level
 
+from ._scoring import linear_fraction
+
 __all__ = [
     "AOP_STAR_THRESHOLDS",
     "COP_STAR_THRESHOLDS",
@@ -147,15 +149,7 @@ def sliding_points(
 ) -> float:
     """Linear sliding scale: ``max_points`` at or below the HPL, 0 at or
     above the LPL."""
-    if not math.isfinite(value):
-        raise ValueError("value must be finite.")
-    if not hpl < lpl:
-        raise ValueError("HPL must be below LPL.")
-    if value <= hpl:
-        return max_points
-    if value >= lpl:
-        return 0.0
-    return max_points * (lpl - value) / (lpl - hpl)
+    return max_points * linear_fraction(value, hpl, lpl)
 
 
 def colour(points: float) -> str:
