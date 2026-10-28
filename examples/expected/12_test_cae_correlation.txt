@@ -1,0 +1,22 @@
+head (v1): ISO 18571 0.897 (good; corridor 0.901, phase 0.930, magnitude 0.951, slope 0.800, shift +1.8 ms)
+head (v1): CORA 0.922 (corridor 0.901, phase 0.963, size 0.870, shape 0.996)
+head (v1): Errors: peak +11.8% at +0.9 ms, NRMSE 0.075, Sprague & Geers C 0.084
+
+model         channel    ISO grade          Z   E_P   E_M   E_S  shift   CORA    peak
+v1 baseline   head     0.897 good        0.90  0.93  0.95  0.80  +1.8ms  0.922  +11.8%
+v1 baseline   chest    0.900 good        0.92  0.95  0.94  0.77  +1.4ms  0.935  +11.8%
+v1 baseline   pelvis   0.869 good        0.87  0.92  0.92  0.75  +2.1ms  0.904  +11.9%
+v1 baseline   mean     0.889
+
+v2 belt       head     0.962 excellent   0.99  0.95  0.99  0.90  +1.2ms  0.986   +3.8%
+v2 belt       chest    0.956 excellent   0.99  0.96  0.98  0.86  +1.0ms  0.987   +3.9%
+v2 belt       pelvis   0.944 excellent   0.98  0.95  0.97  0.84  +1.3ms  0.981   +3.9%
+v2 belt       mean     0.954
+
+v3 belt+seat  head     0.979 excellent   1.00  0.98  0.98  0.93  +0.5ms  0.998   +0.8%
+v3 belt+seat  chest    0.970 excellent   1.00  0.98  0.99  0.88  +0.5ms  0.996   +0.9%
+v3 belt+seat  pelvis   0.970 excellent   1.00  0.98  0.99  0.88  +0.5ms  0.997   +0.9%
+v3 belt+seat  mean     0.973
+
+Feature table: 3 rows x 121 columns, e.g. head.iso.rating, head.cora.rating, chest.iso.rating ...
+Best correlated model version: v3 belt+seat

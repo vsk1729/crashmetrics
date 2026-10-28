@@ -17,6 +17,16 @@ follow [Semantic Versioning](https://semver.org/).
   recorded in an `error` column), and `write_csv`, `to_dataframe` and
   `to_matrix` for CSV, pandas and NumPy. Guide "Features for machine
   learning" and example `11_ml_features.py`.
+- `crashmetrics.correlation` for test-versus-CAE correlation:
+  `iso18571` (ISO/TS 18571:2024 corridor, phase, magnitude and slope
+  scores, overall rating and grade; verified against TU Graz's
+  `objective-rating-metrics` to machine precision), `cora` (corridor
+  and cross-correlation phase, size and shape ratings, configurable
+  `CORAParameters`), `error_measures` (peak and peak-time errors, RMSE,
+  NRMSE, correlation, R², Sprague & Geers, Russell), `compare` (all
+  three, with a text summary) and `resample_pair` (signals with
+  different time bases). Guide "Test-versus-CAE correlation", protocol
+  notes and example `12_test_cae_correlation.py`.
 - `CITATION.cff`, so GitHub shows "Cite this repository" and papers can
   cite the package; a test keeps its version in step with the package.
 

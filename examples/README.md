@@ -22,6 +22,7 @@ python examples/07_bharat_ncap.py
 | `09_lsdyna_energy_check.py` | LS-DYNA glstat/matsum energy checks and the d3hsp run summary |
 | `10_batch_analytics.py` | A DOE batch run into a CSV results table, correlations and a linear surrogate |
 | `11_ml_features.py` | An ML-ready feature table: criteria, signal shape and design parameters per run, failed runs recorded, CSV and matrix output, a surrogate checked on held-out runs |
+| `12_test_cae_correlation.py` | Test-versus-CAE correlation: ISO/TS 18571, CORA and error measures for three channels and three model versions with different time bases, ranked and put in a feature table |
 | `hic_convergence.py` | How HIC changes with the integration resolution (for developers) |
 
 The full step-by-step explanations are in the documentation:
