@@ -1,5 +1,10 @@
 # Batch runs, analytics and ML
 
+!!! tip "Building a training set?"
+    [Features for machine learning](ml-features.md) does the loop below
+    for you: `feature_table` adds signal shape features, design
+    parameters and per-run error handling.
+
 crashmetrics returns plain numbers and small dataclasses, so results
 drop straight into tables. This page shows how to process many runs (a
 DOE, a variant study, a test series) into one results table for

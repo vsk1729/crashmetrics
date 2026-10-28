@@ -105,6 +105,7 @@ nav:
       - Vehicle pulse and crush energy: guides/pulse-energy.md
       - LS-DYNA energy checks: guides/lsdyna-energy.md
       - Batch runs, analytics and ML: guides/batch-analytics.md
+      - Features for machine learning: guides/ml-features.md
   - Protocol notes: protocol-notes.md
   - API reference:
       - reference/index.md
@@ -122,6 +123,7 @@ nav:
       - pulse: reference/pulse.md
       - energy: reference/energy.md
       - energy_check and lsdyna: reference/lsdyna.md
+      - features: reference/features.md
   - About:
       - Changelog: about/changelog.md
       - Development and releases: about/development.md
