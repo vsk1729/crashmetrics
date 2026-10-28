@@ -106,6 +106,7 @@ nav:
       - LS-DYNA energy checks: guides/lsdyna-energy.md
       - Batch runs, analytics and ML: guides/batch-analytics.md
       - Features for machine learning: guides/ml-features.md
+      - Test-versus-CAE correlation: guides/test-cae-correlation.md
   - Protocol notes: protocol-notes.md
   - API reference:
       - reference/index.md
@@ -124,6 +125,7 @@ nav:
       - energy: reference/energy.md
       - energy_check and lsdyna: reference/lsdyna.md
       - features: reference/features.md
+      - correlation: reference/correlation.md
   - About:
       - Changelog: about/changelog.md
       - Development and releases: about/development.md

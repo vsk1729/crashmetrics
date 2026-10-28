@@ -38,6 +38,7 @@ Python 3.10 or later; the only dependency is NumPy 1.24 or later.
 | Bharat NCAP | AIS-197 ODB frontal and MDB side scores, ES-2 criteria, pole test, star rating | [Bharat NCAP](https://vsk1729.github.io/crashmetrics/guides/bharat-ncap/) |
 | Vehicle | OLC, delta-V, rebound, crush, absorbed energy, CFE, SEA | [Pulse and energy](https://vsk1729.github.io/crashmetrics/guides/pulse-energy/) |
 | LS-DYNA | glstat / matsum energy checks, d3hsp run summary, `crashmetrics-energy` command | [LS-DYNA energy](https://vsk1729.github.io/crashmetrics/guides/lsdyna-energy/) |
+| Test vs CAE | ISO/TS 18571 rating (corridor, phase, magnitude, slope) and grade, CORA, peak / timing / RMSE / Sprague & Geers / Russell errors | [Test-versus-CAE correlation](https://vsk1729.github.io/crashmetrics/guides/test-cae-correlation/) |
 | Analytics and ML | Batch runs into tables; signal shape features, criteria and design parameters per run as a training set; CSV, pandas and NumPy output | [Batch and analytics](https://vsk1729.github.io/crashmetrics/guides/batch-analytics/), [ML features](https://vsk1729.github.io/crashmetrics/guides/ml-features/) |
 
 ## Quick examples
@@ -63,8 +64,8 @@ are in the [guides](https://vsk1729.github.io/crashmetrics/guides/).
 ## Runnable examples
 
 The [`examples/`](https://github.com/vsk1729/crashmetrics/tree/main/examples)
-folder has eleven scripts with synthetic data, one per topic, from
-`01_signals_hic.py` to `11_ml_features.py`. The test suite checks that
+folder has twelve scripts with synthetic data, one per topic, from
+`01_signals_hic.py` to `12_test_cae_correlation.py`. The test suite checks that
 each one still prints exactly its documented output.
 
 ```bash

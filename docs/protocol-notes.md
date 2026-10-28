@@ -91,6 +91,21 @@ and how to change it. If your organisation reads a rule differently, the
 | Safety assist qualifiers | ESC, side head protection fitment by year, pedestrian (AIS-100), SBR (AIS-145) | Not evaluated; pass the result as `max_stars_allowed` | `aop_rating(..., max_stars_allowed=)` |
 | Pole test | Required (with side head protection) for 3+ stars | `pole_test_passed` checks it; its effect on stars is set through `max_stars_allowed` | |
 
+## Test-versus-CAE correlation (ISO/TS 18571, CORA)
+
+| Topic | Source | crashmetrics | Change it |
+| --- | --- | --- | --- |
+| ISO/TS 18571 edition | 2014 and 2024 editions; 2024 specifies the time-warping window (10 % of the length) and a nine-point moving average for the slope | 2024 edition; verified against TU Graz's `objective-rating-metrics` (2024) on 40 signal pairs | `ISO18571Parameters(dtw_window=...)` |
+| Sampling | ISO/TS 18571 assumes 10 kHz and equal time bases | Both signals linearly resampled to `dt` = 0.1 ms over the common interval | `dt=` |
+| Interval of evaluation | User's choice | The common interval of both signals | `t_start=`, `t_end=` |
+| Equal correlation at two shifts | ISO: use the smallest shift | Smallest shift; at equal size, the comparison-late shift is found first | |
+| Time-warping ties | Not stated | On equal accumulated cost: vertical, then horizontal, then diagonal step (as in TU Graz's implementation) | |
+| Grade boundaries | Excellent above 0.94, good above 0.80, fair above 0.58 | A rating exactly at a boundary gets the lower grade (0.94 is good) | Use `rating` directly |
+| CORA parameter defaults | Changed between CORA versions and often customised | Commonly cited CORA 3.6 values (D_MIN 0.01, D_MAX 0.12, INT_MIN 0.8, equal phase/size/shape weights, 0.5/0.5 corridor/cross-correlation); not yet checked against the official manual | `CORAParameters(...)` |
+| CORA cross-correlation | Normalised cross-correlation over the shifted overlap | Uncentred `sum(T C) / sqrt(sum T^2 sum C^2)`; size from the signal energies over the same overlap | |
+| CORA interval and corridors | Automatic interval (A_THRES ...) and standard-deviation corridors | Not implemented: give the interval; corridors from the reference curve | |
+| Combining channels | ISO/TS 18571 rates one signal pair | Not combined; the guide suggests the mean and the worst channel | |
+
 ## LS-DYNA energy checks
 
 | Topic | Source | crashmetrics | Change it |
