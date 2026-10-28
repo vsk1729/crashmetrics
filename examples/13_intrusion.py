@@ -31,6 +31,11 @@ def rotation(fraction):
     return r_yaw @ r_pitch
 
 
+def mm(value):
+    """Round for printing; turns -0.0 from round-off noise into 0.0."""
+    return round(value, 6) + 0.0
+
+
 def move(point0, local=None):
     """Rigid vehicle motion plus an optional local deformation (n, 3)."""
     out = np.empty((t.size, 3))
@@ -66,8 +71,8 @@ print("Brake pedal, rearward (direction -x), dynamic / static, mm:")
 for label, ref in [("global (ground)", None), ("one node", reference[0]),
                    ("frame of 4 nodes", reference)]:
     r = intrusion(pedal, ref, time=t, direction="-x")
-    print(f"  {label:17}: {r.along_dynamic:7.1f} / {r.along_static:7.1f}"
-          f"   upward z static {r.z_static:6.1f}")
+    print(f"  {label:17}: {mm(r.along_dynamic):7.1f} / {mm(r.along_static):7.1f}"
+          f"   upward z static {mm(r.z_static):6.1f}")
 true = nodes["brake_pedal"][1]
 print(f"  true deformation : {-true[:, 0].min():7.1f} / {-true[-1, 0]:7.1f}"
       f"   upward z static {true[-1, 2]:6.1f}")
@@ -81,8 +86,8 @@ results = intrusions(tracks, reference, time=t, direction=directions)
 print(f"\n{'point':16} {'rearward dyn':>12} {'static':>7} {'at ms':>6} "
       f"{'up static':>9} {'lat static':>10}")
 for name, r in results.items():
-    print(f"{name:16} {r.along_dynamic:12.1f} {r.along_static:7.1f} "
-          f"{r.t_along_ms:6.1f} {r.z_static:9.1f} {r.y_static:10.1f}")
+    print(f"{name:16} {mm(r.along_dynamic):12.1f} {mm(r.along_static):7.1f} "
+          f"{r.t_along_ms:6.1f} {mm(r.z_static):9.1f} {mm(r.y_static):10.1f}")
 rigid = results["brake_pedal"].reference_fit_error < 1e-6
 print("Reference points stay rigid (fit error below 1e-6 mm):", rigid)
 
@@ -104,7 +109,7 @@ measured = intrusions(
      for i, name in enumerate(nodes)},
     np.stack([ref_before, ref_after], axis=1), direction=directions)
 print("\nStatic test measurement (before/after, best-fit reference):")
-print("  ", ", ".join(f"{n} {r.along_static:.1f}" for n, r in measured.items()))
+print("  ", ", ".join(f"{n} {mm(r.along_static):.1f}" for n, r in measured.items()))
 print(f"   reference fit error {measured['a_pillar'].reference_fit_error:.2f} mm")
 
 # --- 5. Into the Bharat NCAP modifiers (static values here) ----------------
