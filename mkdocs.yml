@@ -103,6 +103,7 @@ nav:
       - Euro NCAP MPDB and full width: guides/euroncap-frontal.md
       - Bharat NCAP star rating: guides/bharat-ncap.md
       - Vehicle pulse and crush energy: guides/pulse-energy.md
+      - Intrusion measurement: guides/intrusion.md
       - LS-DYNA energy checks: guides/lsdyna-energy.md
       - Batch runs, analytics and ML: guides/batch-analytics.md
       - Features for machine learning: guides/ml-features.md
@@ -126,6 +127,7 @@ nav:
       - energy_check and lsdyna: reference/lsdyna.md
       - features: reference/features.md
       - correlation: reference/correlation.md
+      - intrusion: reference/intrusion.md
   - About:
       - Changelog: about/changelog.md
       - Development and releases: about/development.md

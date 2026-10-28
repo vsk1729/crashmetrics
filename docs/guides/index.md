@@ -18,6 +18,7 @@ its real output (the test suite checks that output on every change).
 | [Batch runs, analytics and ML](batch-analytics.md) | Process many runs into a table for dashboards, DOE and ML | `10_batch_analytics.py` |
 | [Features for machine learning](ml-features.md) | Turn runs into a feature table of criteria, signal shape and design parameters for ML models | `11_ml_features.py` |
 | [Test-versus-CAE correlation](test-cae-correlation.md) | Rate CAE against test signals with ISO/TS 18571, the CC rating and error measures | `12_test_cae_correlation.py` |
+| [Intrusion measurement](intrusion.md) | Measure pedal, steering column, A-pillar and footwell intrusion relative to the vehicle, from CAE or before/after test measurements | `13_intrusion.py` |
 
 ## The general workflow
 

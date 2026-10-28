@@ -1,0 +1,23 @@
+Brake pedal, rearward (direction -x), dynamic / static, mm:
+  global (ground)  :     0.0 /  -549.0   upward z static  149.0
+  one node         :   159.9 /   138.5   upward z static  111.9
+  frame of 4 nodes :   140.0 /   119.0   upward z static   47.6
+  true deformation :   140.0 /   119.0   upward z static   47.6
+  (the ground system includes the vehicle's motion; one node misses its pitch and yaw)
+
+point            rearward dyn  static  at ms up static lat static
+brake_pedal             140.0   119.0   90.0      47.6       -6.8
+steering_column          76.0    64.6   90.0      51.0       10.2
+a_pillar                120.0   102.0   90.0       8.5        5.1
+toe_pan_left            190.0   161.5   90.0      59.5        0.0
+toe_pan_right           130.0   110.5   90.0      42.5        0.0
+Reference points stay rigid (fit error below 1e-6 mm): True
+
+Steering column to seat: 559 mm before, closest 525 mm at 90.0 ms, 529 mm after (closed 34 mm dynamic, 30 static)
+
+Static test measurement (before/after, best-fit reference):
+   brake_pedal 118.8, steering_column 64.7, a_pillar 102.1, toe_pan_left 161.5, toe_pan_right 110.1
+   reference fit error 0.46 mm
+
+Bharat NCAP modifiers: steering column (head) -0.00, A-pillar (chest) -0.04, pedal upward (lower leg) -0.00, pedal blocking (foot) -0.55
+Feature row: 70 columns, e.g. brake_pedal.along_static = 119.0

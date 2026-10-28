@@ -106,6 +106,17 @@ and how to change it. If your organisation reads a rule differently, the
 | CC interval and corridors | Some tools offer an automatic interval and standard-deviation corridors | Not implemented: give the interval; corridors from the reference curve | |
 | Combining channels | ISO/TS 18571 rates one signal pair | Not combined; the guide suggests the mean and the worst channel | |
 
+## Intrusion measurement
+
+| Topic | Source | crashmetrics | Change it |
+| --- | --- | --- | --- |
+| Vehicle reference | Protocols measure relative to undeformed body points | Least-squares rigid fit (Kabsch) of three or more reference nodes at every sample; intrusion in the reference's initial axes | Choose the reference nodes; check `reference_fit_error` |
+| One reference node | | Translation removed, rotation not (documented error source) | Use three or more nodes |
+| Dynamic value | Protocols differ (peak during the event or post-test) | Component with the largest magnitude (signed), largest resultant, largest value along `direction` | Use `displacement` for other definitions |
+| Static value | Post-test residual | Last sample, or the mean over the last `static_window_ms` | `static_window_ms=` |
+| Directions | Vehicle axes differ between models | Given by the user in the reference's initial axes | `direction=` |
+| Measurement points | Defined by each protocol (pedal pad centre, steering wheel hub, A-pillar height) | Your nodes | |
+
 ## LS-DYNA energy checks
 
 | Topic | Source | crashmetrics | Change it |
