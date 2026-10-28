@@ -4,7 +4,7 @@ All notable changes to this project are listed here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions
 follow [Semantic Versioning](https://semver.org/).
 
-## [Unreleased]
+## [0.10.0] - 2026-10-28
 
 ### Added
 
@@ -21,8 +21,10 @@ follow [Semantic Versioning](https://semver.org/).
   `iso18571` (ISO/TS 18571:2024 corridor, phase, magnitude and slope
   scores, overall rating and grade; verified against TU Graz's
   `objective-rating-metrics` to machine precision), `cora` (corridor
-  and cross-correlation phase, size and shape ratings, configurable
-  `CORAParameters`), `error_measures` (peak and peak-time errors, RMSE,
+  and cross-correlation phase, size and shape ratings; the defaults are
+  the commonly cited CORA 3.6 values, not yet checked against the
+  official manual, so check them against your CORA version and set
+  `CORAParameters` to match), `error_measures` (peak and peak-time errors, RMSE,
   NRMSE, correlation, R², Sprague & Geers, Russell), `compare` (all
   three, with a text summary) and `resample_pair` (signals with
   different time bases). Guide "Test-versus-CAE correlation", protocol
@@ -254,7 +256,8 @@ follow [Semantic Versioning](https://semver.org/).
 - `crashmetrics.pedestrian.calculate_hic` for HIC on a refined,
   linearly interpolated time grid.
 
-[Unreleased]: https://github.com/vsk1729/crashmetrics/compare/v0.9.1...main
+[Unreleased]: https://github.com/vsk1729/crashmetrics/compare/v0.10.0...main
+[0.10.0]: https://github.com/vsk1729/crashmetrics/compare/v0.9.1...v0.10.0
 [0.9.1]: https://github.com/vsk1729/crashmetrics/compare/v0.9.0...v0.9.1
 [0.9.0]: https://github.com/vsk1729/crashmetrics/compare/v0.8.0...v0.9.0
 [0.8.0]: https://github.com/vsk1729/crashmetrics/compare/v0.7.0...v0.8.0
