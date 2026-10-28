@@ -38,7 +38,7 @@ Python 3.10 or later; the only dependency is NumPy 1.24 or later.
 | Bharat NCAP | AIS-197 ODB frontal and MDB side scores, ES-2 criteria, pole test, star rating | [Bharat NCAP](https://vsk1729.github.io/crashmetrics/guides/bharat-ncap/) |
 | Vehicle | OLC, delta-V, rebound, crush, absorbed energy, CFE, SEA | [Pulse and energy](https://vsk1729.github.io/crashmetrics/guides/pulse-energy/) |
 | LS-DYNA | glstat / matsum energy checks, d3hsp run summary, `crashmetrics-energy` command | [LS-DYNA energy](https://vsk1729.github.io/crashmetrics/guides/lsdyna-energy/) |
-| Test vs CAE | ISO/TS 18571 rating (corridor, phase, magnitude, slope) and grade, CORA, peak / timing / RMSE / Sprague & Geers / Russell errors | [Test-versus-CAE correlation](https://vsk1729.github.io/crashmetrics/guides/test-cae-correlation/) |
+| Test vs CAE | ISO/TS 18571 rating (corridor, phase, magnitude, slope) and grade, corridor and cross-correlation (CC) rating, peak / timing / RMSE / Sprague & Geers / Russell errors | [Test-versus-CAE correlation](https://vsk1729.github.io/crashmetrics/guides/test-cae-correlation/) |
 | Analytics and ML | Batch runs into tables; signal shape features, criteria and design parameters per run as a training set; CSV, pandas and NumPy output | [Batch and analytics](https://vsk1729.github.io/crashmetrics/guides/batch-analytics/), [ML features](https://vsk1729.github.io/crashmetrics/guides/ml-features/) |
 
 ## Quick examples
@@ -93,7 +93,7 @@ for what changed.
 
 crashmetrics is an engineering calculation aid and an independent
 open-source project. It is not affiliated with, endorsed by or sponsored
-by Ansys, Euro NCAP, Bharat NCAP, ARAI, UNECE or any other organisation
+by Ansys, Euro NCAP, Bharat NCAP, ARAI, UNECE, ISO, PDB or any other organisation
 whose software, file formats, protocols or regulations it refers to.
 LS-DYNA, Ansys and Euro NCAP are trademarks or registered trademarks of
 their respective owners, used here only to describe compatibility. The
