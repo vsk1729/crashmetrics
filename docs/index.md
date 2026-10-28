@@ -24,6 +24,7 @@ pip install crashmetrics
 | Frontal dummies | DAMAGE, BrIC, neck loads, Nij, R94 limits, chest deflection, VC, CTI, THOR Rmax and abdomen, acetabulum, iliac force drop, femur, Tibia Index, knee slider | [Frontal criteria](guides/frontal-dummy-criteria.md) |
 | Euro NCAP 2026 | MPDB (20 points) and full width (10 points) scores with modifiers and the compatibility penalty | [MPDB and full width](guides/euroncap-frontal.md) |
 | Bharat NCAP | AIS-197 adult occupant scoring (ODB frontal, MDB side), pole test, star rating | [Bharat NCAP](guides/bharat-ncap.md) |
+| Intrusion | Pedal, steering column, A-pillar and footwell intrusion relative to the vehicle; dynamic and static; survival space | [Intrusion](guides/intrusion.md) |
 | Vehicle | OLC, delta-V, rebound, dynamic crush, crash box energy, CFE, SEA | [Pulse and energy](guides/pulse-energy.md) |
 | LS-DYNA | glstat / matsum energy balance checks, d3hsp run summary, `crashmetrics-energy` command | [LS-DYNA energy](guides/lsdyna-energy.md) |
 | Test vs CAE | ISO/TS 18571 rating and grade, corridor and cross-correlation (CC) rating, peak, timing and RMSE errors | [Test-versus-CAE correlation](guides/test-cae-correlation.md) |

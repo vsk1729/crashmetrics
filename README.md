@@ -36,6 +36,7 @@ Python 3.10 or later; the only dependency is NumPy 1.24 or later.
 | Frontal dummies | DAMAGE, BrIC, neck loads, Nij, R94 limits, chest deflection, VC, CTI, THOR Rmax and abdomen, acetabulum, iliac force drop, femur, Tibia Index, knee slider | [Frontal criteria](https://vsk1729.github.io/crashmetrics/guides/frontal-dummy-criteria/) |
 | Euro NCAP 2026 | MPDB (20 points) and full width (10 points) with modifiers and the compatibility penalty | [MPDB and full width](https://vsk1729.github.io/crashmetrics/guides/euroncap-frontal/) |
 | Bharat NCAP | AIS-197 ODB frontal and MDB side scores, ES-2 criteria, pole test, star rating | [Bharat NCAP](https://vsk1729.github.io/crashmetrics/guides/bharat-ncap/) |
+| Intrusion | Pedal, steering column, A-pillar, footwell intrusion relative to the vehicle (best-fit frame of reference nodes), one node or ground; dynamic and static; survival space between nodes | [Intrusion](https://vsk1729.github.io/crashmetrics/guides/intrusion/) |
 | Vehicle | OLC, delta-V, rebound, crush, absorbed energy, CFE, SEA | [Pulse and energy](https://vsk1729.github.io/crashmetrics/guides/pulse-energy/) |
 | LS-DYNA | glstat / matsum energy checks, d3hsp run summary, `crashmetrics-energy` command | [LS-DYNA energy](https://vsk1729.github.io/crashmetrics/guides/lsdyna-energy/) |
 | Test vs CAE | ISO/TS 18571 rating (corridor, phase, magnitude, slope) and grade, corridor and cross-correlation (CC) rating, peak / timing / RMSE / Sprague & Geers / Russell errors | [Test-versus-CAE correlation](https://vsk1729.github.io/crashmetrics/guides/test-cae-correlation/) |
@@ -64,8 +65,8 @@ are in the [guides](https://vsk1729.github.io/crashmetrics/guides/).
 ## Runnable examples
 
 The [`examples/`](https://github.com/vsk1729/crashmetrics/tree/main/examples)
-folder has twelve scripts with synthetic data, one per topic, from
-`01_signals_hic.py` to `12_test_cae_correlation.py`. The test suite checks that
+folder has thirteen scripts with synthetic data, one per topic, from
+`01_signals_hic.py` to `13_intrusion.py`. The test suite checks that
 each one still prints exactly its documented output.
 
 ```bash

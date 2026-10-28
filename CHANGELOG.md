@@ -6,6 +6,19 @@ follow [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- `crashmetrics.intrusion`: `intrusion` (displacement of a point
+  relative to the global system, one reference node, or a best-fit
+  vehicle frame of three or more nodes that removes translation and
+  rotation; dynamic and static values, overall and along a direction;
+  reference fit error), `intrusions` (many points), `node_distance`
+  (closing, opening and remaining space between two points) and
+  `node_track`. Works on CAE time histories and on before/after test
+  measurements. Guide "Intrusion measurement", protocol notes and
+  example `13_intrusion.py`, which feeds the Bharat NCAP steering
+  column, A-pillar and pedal modifiers.
+
 ### Changed
 
 - **Renamed** `cora`, `CORAParameters` and `CORAResult` to `cc_rating`,
