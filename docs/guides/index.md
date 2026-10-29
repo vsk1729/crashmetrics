@@ -19,6 +19,7 @@ its real output (the test suite checks that output on every change).
 | [Features for machine learning](ml-features.md) | Turn runs into a feature table of criteria, signal shape and design parameters for ML models | `11_ml_features.py` |
 | [Test-versus-CAE correlation](test-cae-correlation.md) | Rate CAE against test signals with ISO/TS 18571, the CC rating and error measures | `12_test_cae_correlation.py` |
 | [Intrusion measurement](intrusion.md) | Measure pedal, steering column, A-pillar and footwell intrusion relative to the vehicle, from CAE or before/after test measurements | `13_intrusion.py` |
+| [Homologation compliance](homologation.md) | Check UN R94 / AIS-098, UN R95 / AIS-099, UN R135 and post-crash electrical safety, requirement by requirement | `14_homologation.py` |
 
 ## The general workflow
 

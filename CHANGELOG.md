@@ -8,6 +8,17 @@ follow [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- `crashmetrics.homologation`: pass/fail compliance checks per
+  requirement, with clause, limit and utilisation, for UN R94 / AIS-098
+  (05 series; occupant and vehicle, neck and femur force-duration
+  curves from time histories), UN R95 / AIS-099 (ES-2) and UN R135
+  (01 series, WorldSID; lower spine from the time history), and
+  post-crash electrical safety (R94 and R137 5.2.8: voltage, energy,
+  physical protection and isolation per high-voltage bus, electrolyte,
+  REESS retention, fire). Unmeasured requirements are reported as not
+  assessed. Guide "Homologation compliance", protocol notes and
+  example `14_homologation.py`.
+
 - `crashmetrics.intrusion`: `intrusion` (displacement of a point
   relative to the global system, one reference node, or a best-fit
   vehicle frame of three or more nodes that removes translation and

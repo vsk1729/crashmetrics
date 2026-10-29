@@ -1,0 +1,67 @@
+UN R94 / AIS-098: FAIL (1 not assessed)
+  driver: hpc                            627.5       <= 1000         63% ok   [5.2.1.1]
+  driver: head_a3ms                      61.72 g     <= 80           77% ok   [5.2.1.1]
+  driver: neck_tension                    1700 N                     52% ok   [5.2.1.2, Fig. 1]  3.3 kN at 0, 2.9 kN at 35, 1.1 kN at 60 ms; peak shown
+  driver: neck_shear                       650 N                     31% ok   [5.2.1.2, Fig. 2]  3.1 kN at 0, 1.5 kN at 25-35, 1.1 kN at 45 ms; peak shown
+  driver: neck_extension                    24 N m   <= 57           42% ok   [5.2.1.3]
+  driver: thcc                            34.2 mm    <= 42           81% ok   [5.2.1.4]
+  driver: vc                              0.38 m/s   <= 1            38% ok   [5.2.1.5]
+  driver: femur_left                      5900 N                     69% ok   [5.2.1.6, Fig. 3]  9.07 kN at 0, 7.58 kN from 10 ms; peak shown
+  driver: femur_right                     4720 N                     55% ok   [5.2.1.6, Fig. 3]  9.07 kN at 0, 7.58 kN from 10 ms; peak shown
+  driver: tibia_compression               2900 N     <= 8000         36% ok   [5.2.1.7]
+  driver: tibia_index                     0.66       <= 1.3          51% ok   [5.2.1.8]
+  driver: knee_slider                      3.1 mm    <= 15           21% ok   [5.2.1.9]
+  passenger: hpc                         465.1       <= 1000         47% ok   [5.2.1.1]
+  passenger: head_a3ms                   54.76 g     <= 80           68% ok   [5.2.1.1]
+  passenger: neck_tension                 1500 N                     46% ok   [5.2.1.2, Fig. 1]  3.3 kN at 0, 2.9 kN at 35, 1.1 kN at 60 ms; peak shown
+  passenger: neck_shear                    650 N                     31% ok   [5.2.1.2, Fig. 2]  3.1 kN at 0, 1.5 kN at 25-35, 1.1 kN at 45 ms; peak shown
+  passenger: neck_extension                 24 N m   <= 57           42% ok   [5.2.1.3]
+  passenger: thcc                         43.1 mm    <= 42          103% FAIL [5.2.1.4]
+  passenger: vc                           0.38 m/s   <= 1            38% ok   [5.2.1.5]
+  passenger: femur_left                   4400 N                     51% ok   [5.2.1.6, Fig. 3]  9.07 kN at 0, 7.58 kN from 10 ms; peak shown
+  passenger: femur_right                  3520 N                     41% ok   [5.2.1.6, Fig. 3]  9.07 kN at 0, 7.58 kN from 10 ms; peak shown
+  passenger: tibia_compression            2900 N     <= 8000         36% ok   [5.2.1.7]
+  passenger: tibia_index                  0.66       <= 1.3          51% ok   [5.2.1.8]
+  passenger: knee_slider                   3.1 mm    <= 15           21% ok   [5.2.1.9]
+  vehicle: steering_upward                  28 mm    <= 80           35% ok   [5.2.2]
+  vehicle: steering_rearward                46 mm    <= 100          46% ok   [5.2.2]
+  vehicle: door_opened                      no       not allowed         ok   [5.2.3]
+  vehicle: doors_unlocked_after            yes       required            ok   [5.2.4]
+  vehicle: doors_open_without_tools        yes       required            ok   [5.2.5.1]
+  vehicle: fuel_leakage_rate                 -  not assessed   [5.2.6.1]
+-> passed: False, failures: ['passenger: thcc'], worst: passenger: thcc
+
+UN R94/R137 5.2.8 (electrical): PASS
+  shock_protection[traction battery DC]        yes       required            ok   [5.2.8.1]  isolation 259.2 ohm/V >= 100 ohm/V
+  shock_protection[drive inverter AC]          yes       required            ok   [5.2.8.1]  voltage 4 V <= 30 V
+  shock_protection[charger DC+AC]              yes       required            ok   [5.2.8.1]  isolation 120 ohm/V >= 100 ohm/V
+  electrolyte_leaked                            no       not allowed         ok   [5.2.8.2.2]
+  reess_retained                               yes       required            ok   [5.2.8.3]
+  reess_entered_cabin                           no       not allowed         ok   [5.2.8.3]
+  fire_or_explosion                             no       not allowed         ok   [5.2.8.4]
+  Note: Electrolyte observed for 60 min after the impact; voltage within 60 s. 
+
+UN R95 / AIS-099: PASS (1 not assessed)
+  driver: hpc                                 -                           ok   [5.2.1.1]  no head contact: satisfied
+  driver: rdc                              35.8 mm    <= 42           85% ok   [5.2.1.2 (a)]
+  driver: vc                               0.52 m/s   <= 1            52% ok   [5.2.1.2 (b)]
+  driver: pspf                             2900 N     <= 6000         48% ok   [5.2.1.3]
+  driver: apf                              1650 N     <= 2500         66% ok   [5.2.1.4]
+  vehicle: door_opened                       no       not allowed         ok   [5.3.1]
+  vehicle: non_struck_doors_unlocked        yes       required            ok   [5.3.2]
+  vehicle: egress_possible                  yes       required            ok   [5.3.3]
+  vehicle: dangerous_detachment              no       not allowed         ok   [5.3.4]
+  vehicle: fuel_leakage_rate                  -  not assessed   [5.3.6] 
+
+UN R135: FAIL (2 not assessed)
+  driver: hic36                              455       <= 1000         46% ok   [5.3.2.1]
+  driver: shoulder_force                    2350 N     <= 3000         78% ok   [5.3.3.1]
+  driver: thorax_rib_deflection             47.5 mm    <= 55           86% ok   [5.3.4.1]
+  driver: abdominal_rib_deflection            58 mm    <= 65           89% ok   [5.3.5.1]
+  driver: lower_spine_3ms                  67.84 g     <= 75           90% ok   [5.3.5.2]
+  driver: pubic_force                       3510 N     <= 3360        104% FAIL [5.3.6.1]
+  vehicle: struck_door_separated              no       not allowed         ok   [5.4.1]
+  vehicle: other_doors_held                  yes       required            ok   [5.4.2]
+  vehicle: fuel_leakage_first_5_min            -  not assessed   [5.5.1.1]
+  vehicle: fuel_leakage_rate_5_30_min          -  not assessed   [5.5.1.2]
+-> passed: False, failures: ['driver: pubic_force'], complete: False (not assessed: ['vehicle: fuel_leakage_first_5_min', 'vehicle: fuel_leakage_rate_5_30_min'])
