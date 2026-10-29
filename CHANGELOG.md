@@ -4,7 +4,7 @@ All notable changes to this project are listed here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions
 follow [Semantic Versioning](https://semver.org/).
 
-## [Unreleased]
+## [0.12.0] - 2026-10-29
 
 ### Added
 
@@ -333,7 +333,8 @@ follow [Semantic Versioning](https://semver.org/).
 - `crashmetrics.pedestrian.calculate_hic` for HIC on a refined,
   linearly interpolated time grid.
 
-[Unreleased]: https://github.com/vsk1729/crashmetrics/compare/v0.11.0...main
+[Unreleased]: https://github.com/vsk1729/crashmetrics/compare/v0.12.0...main
+[0.12.0]: https://github.com/vsk1729/crashmetrics/compare/v0.11.0...v0.12.0
 [0.11.0]: https://github.com/vsk1729/crashmetrics/compare/v0.10.0...v0.11.0
 [0.10.0]: https://github.com/vsk1729/crashmetrics/compare/v0.9.1...v0.10.0
 [0.9.1]: https://github.com/vsk1729/crashmetrics/compare/v0.9.0...v0.9.1
