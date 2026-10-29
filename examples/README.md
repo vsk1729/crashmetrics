@@ -26,6 +26,7 @@ python examples/07_bharat_ncap.py
 | `13_intrusion.py` | Intrusion of pedal, steering column, A-pillar and toe pan: global, one-node and vehicle-frame references, dynamic and static values, survival space, a before/after test measurement and the Bharat NCAP modifiers |
 | `14_homologation.py` | Homologation of an electric car: UN R94 / AIS-098 (both occupants and vehicle), post-crash electrical safety, UN R95 / AIS-099 and UN R135, with failures traced to clauses |
 | `15_euroncap_side.py` | Euro NCAP 2026 side impact: AE-MDB, pole and far side (35 points) for two design variants, head excursion zones, robustness and the 17-point far side rule |
+| `16_bharat_ncap_cop_rating.py` | Bharat NCAP child occupant protection (Q1.5 and Q3 dynamic, CRS installation, vehicle based) and the complete rating with the safety assist qualifiers, for two side head protection fitment rates |
 | `hic_convergence.py` | How HIC changes with the integration resolution (for developers) |
 
 The full step-by-step explanations are in the documentation:

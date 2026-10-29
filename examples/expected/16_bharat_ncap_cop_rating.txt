@@ -1,0 +1,20 @@
+=== Side head protection standard in 95% of production
+Bharat NCAP: adult 5 stars, child 4 stars
+  Adult occupant 29.156 / 32 (frontal 14.556, side 14.600)
+  Safety assist allows up to 5 stars
+
+=== Side head protection standard in 60% of production
+Bharat NCAP: adult 4 stars, child 4 stars
+  Adult occupant 29.156 / 32 (frontal 14.556, side 14.600)
+    rating limited: safety assist qualifiers
+  Safety assist allows up to 4 stars
+    for 5 stars: side head protection standard in 60% of production, 90% required
+  Bharat NCAP child occupant protection: 37.252 / 49 -> 4 stars
+    Dynamic           19.419 / 24
+      frontal q1.5  7.286 / 8  (head 4.000 [no head contact with CRS], neck 2.000, chest 1.286)
+      frontal q3    5.633 / 8  (head 2.769 [head contact with CRS], neck 1.239, chest 1.625)
+      side    q1.5  4.000 / 4  [no head contact with CRS]
+      side    q3    2.500 / 4  [head contact with CRS]
+    CRS installation  10.833 / 12  (list 9.333, recommended 1.500)
+    Vehicle based      7.000 / 13  (gabarit 2, three_simultaneous 0, isofix_usability 1, two_largest_isofix 1, airbag 3, integrated_crs 0)
+

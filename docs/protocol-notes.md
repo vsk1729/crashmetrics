@@ -105,8 +105,19 @@ and how to change it. If your organisation reads a rule differently, the
 | Region floor | Not stated | Region scores do not go below 0 | |
 | Side head assessment | No hard-contact rule stated for the side test | HIC15 and 3 ms limits always applied | |
 | Steering column modifier | Listed under the head (Annex VII §2.1.5) | Applied to the driver's head | Put it under another region in `modifiers` |
-| Safety assist qualifiers | ESC, side head protection fitment by year, pedestrian (AIS-100), SBR (AIS-145) | Not evaluated; pass the result as `max_stars_allowed` | `aop_rating(..., max_stars_allowed=)` |
-| Pole test | Required (with side head protection) for 3+ stars | `pole_test_passed` checks it; its effect on stars is set through `max_stars_allowed` | |
+| Safety assist qualifiers | Annexure VI: ESC, side head protection fitment by year, pedestrian (AIS-100), SBR (AIS-145) | `safety_assist_max_stars`; applied to the adult stars only (Table 2B has no qualifier column) | `aop_rating(..., max_stars_allowed=)` |
+| Pole test | Side head protection functionality shown by a pole test for 3, 4 and 5 stars | A passed pole test (`pole_test_passed`) is required at those levels | |
+| ⚠️ 4-star side head fitment Oct 2027 – Sep 2030 | Annexure VI 3.2 table ends Sept 2027; 100 % "as from October 2030" | The last tabulated share (50 %) until Oct 2030 | Check `side_head_fitment_required` against the current amendment |
+| 3-star side head protection after Oct 2027 | 4.2: "From October 2023 to October 2027 ... optional in at least one variant" | The same rule after Oct 2027 | |
+| 3-star ESC | 4.1: optional to Sept 2025, then as 5 stars | From 1 Oct 2025 the 5-star ESC requirements | |
+| Publication years | Tables run October to September | A date on or after 1 October starts the next period | |
+| COP head contact with the CRS | Direct evidence, or peak head acceleration ≥ 80 g (Q1.5) / ≥ 96 g (Q3) | Either one; the 3 ms scale applies only with contact | |
+| COP head excursion | 4 points ≤ 549 mm, 0 ≥ 550 mm; not estimable: ≤ 549 mm | Linear between 549 and 550 mm (the general sliding scale rule) | |
+| Q1.5 in a forward facing CRS | "reduced by 6 points, 4 for head and 2 for neck" | Frontal head and neck set to 0 (they total 6) | |
+| ⚠️ Gabarit points | 5.2 awards 2 points but also mentions "the 1 point" for the handbook/airbag requirements f–h; Annexure VIII lists 2 | 1 point for a–e on all seats, 1 more for f–h | |
+| Three simultaneous use | Annexure VIII lists 2 points: 5.3.1 (installation list) 1 and 5.3.1.3 (i-Size) 1 | As two separate points | |
+| ⚠️ Two-seater stars | 6.1.2.2: the 22-point score "is scaled to be equivalent" to 49; Annexure VIII 4.3 gives 22-point thresholds 20 / 17 / 13 / 9 / 5 | Annexure VIII thresholds (they differ from scaling 41/49 × 22 = 18.4) | |
+| CRS installation formula | 3.7.2 image: CRSi = (Ti − Fi) / Ti | As written; reproduces Table 1 (9.143) | |
 
 ## Homologation (UN R94, R95, R135, electrical safety)
 
