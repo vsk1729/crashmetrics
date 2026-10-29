@@ -4,6 +4,21 @@ All notable changes to this project are listed here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions
 follow [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+
+- `crashmetrics.side_scoring`: Euro NCAP 2026 side impact (Crash
+  Protection Side Impact Protocol v1.1): AE-MDB (WorldSID 50th, Q10,
+  Q6; 15 points) and pole (10 points) with colour bands, hard-contact
+  rule, automatic shoulder and VC modifiers, airbag and test modifiers
+  (doors, head protection zone, rollover); far side (10 points) with
+  head excursion zones (`far_side_zone`), capping limits, pelvis/lumbar
+  modifier, robustness, occupant-to-occupant and the disqualification
+  rules (17-point near side threshold, structural or restraint
+  failure); `score_side` for the 35-point total. Guide "Euro NCAP side
+  and far side", protocol notes and example `15_euroncap_side.py`.
+
 ## [0.11.0] - 2026-10-29
 
 ### Added
