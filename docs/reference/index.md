@@ -20,3 +20,4 @@ dataclass, so `dataclasses.asdict(result)` turns it into a plain dict.
 | [`pulse`](pulse.md) | OLC and pulse summary |
 | [`energy`](energy.md) | Integration, absorbed energy, crush metrics |
 | [`energy_check` and `lsdyna`](lsdyna.md) | Energy balance checks, glstat / matsum / d3hsp readers |
+| [`lsdyna_ascii`](lsdyna_ascii.md) | nodout, rcforc, sleout, secforc, rwforc, sbtout, deforc, jntforc, abstat, rbdout, spcforc, swforc readers |

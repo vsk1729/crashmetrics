@@ -1,8 +1,10 @@
 # crashmetrics examples
 
-Runnable scripts with synthetic (made-up) data. Each one prints its
-results; the expected output is in `expected/`, and the test suite
-checks that the scripts still produce exactly that output.
+Runnable scripts with synthetic (made-up) data, except examples 09 and
+18, which read real LS-DYNA output from `tests/data/lsdyna` (run them
+from a clone of the repository). Each one prints its results; the
+expected output is in `expected/`, and the test suite checks that the
+scripts still produce exactly that output.
 
 ```bash
 python -m pip install crashmetrics
@@ -28,6 +30,7 @@ python examples/07_bharat_ncap.py
 | `15_euroncap_side.py` | Euro NCAP 2026 side impact: AE-MDB, pole and far side (35 points) for two design variants, head excursion zones, robustness and the 17-point far side rule |
 | `16_bharat_ncap_cop_rating.py` | Bharat NCAP child occupant protection (Q1.5 and Q3 dynamic, CRS installation, vehicle based) and the complete rating with the safety assist qualifiers, for two side head protection fitment rates |
 | `17_whiplash.py` | Rear impact (whiplash): NIC and Nkm from BioRID signals, medium and high pulse scores with capping, front seat geometry, rear seats, for two seat designs |
+| `18_lsdyna_ascii.py` | LS-DYNA ASCII output of a helmeted Hybrid III head (real R16 files): HIC and BrIC from nodout, upper neck load from secforc, a run directory with rcforc and spcforc, features for ML |
 | `hic_convergence.py` | How HIC changes with the integration resolution (for developers) |
 
 The full step-by-step explanations are in the documentation:

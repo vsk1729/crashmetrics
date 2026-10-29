@@ -1,0 +1,19 @@
+ LS-DYNA SIMULERING AF VARME DER BUKKER PLADE - J. G                     
+                    ls-dyna smp d R14 R14.0_515_8a12796 date 12/12/2022
+
+{BEGIN LEGEND}
+ Entity #        Title
+     8008     Right_on_right_action                                                
+     8009     Mortar silent backup for contact       8008                          
+    80085     Left_on_left_action                                                  
+    80086     Mortar silent backup for contact      80085                          
+{END LEGEND}
+
+  SURFA       80085 time 0.00000E+00  x  0.00000E+00  y  0.00000E+00  z  0.00000E+00 mass  0.00000E+00  mx  0.00000E+00  my  0.00000E+00  mz  0.00000E+00
+  SURFB       80085 time 0.00000E+00  x  0.00000E+00  y  0.00000E+00  z  0.00000E+00 mass  0.00000E+00  mx  0.00000E+00  my  0.00000E+00  mz  0.00000E+00
+  SURFA        8008 time 0.00000E+00  x  0.00000E+00  y  0.00000E+00  z  0.00000E+00 mass  0.00000E+00  mx  0.00000E+00  my  0.00000E+00  mz  0.00000E+00
+  SURFB        8008 time 0.00000E+00  x  0.00000E+00  y  0.00000E+00  z  0.00000E+00 mass  0.00000E+00  mx  0.00000E+00  my  0.00000E+00  mz  0.00000E+00
+  SURFA       80086 time 0.00000E+00  x  0.00000E+00  y  0.00000E+00  z  0.00000E+00 mass  0.00000E+00  mx  0.00000E+00  my  0.00000E+00  mz  0.00000E+00
+  SURFB       80086 time 0.00000E+00  x  0.00000E+00  y  0.00000E+00  z  0.00000E+00 mass  0.00000E+00  mx  0.00000E+00  my  0.00000E+00  mz  0.00000E+00
+  SURFA        8009 time 0.00000E+00  x  0.00000E+00  y  0.00000E+00  z  0.00000E+00 mass  0.00000E+00  mx  0.00000E+00  my  0.00000E+00  mz  0.00000E+00
+  SURFB        8009 time 0.00000E+00  x  0.00000E+00  y  0.00000E+00  z  0.00000E+00 mass  0.00000E+00  mx  0.00000E+00  my  0.00000E+00  mz  0.00000E+00

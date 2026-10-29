@@ -1,0 +1,72 @@
+ LS-DYNA SIMULERING AF VARME DER BUKKER PLADE - J. G                     
+                    ls-dyna smp d R14 R14.0_515_8a12796 date 12/12/2022
+ single point constraint forces
+
+ output at time =   0.00000E+00
+ node= 19381 local x,y,z forces =    0.0000E+00    0.0000E+00    0.0000E+00  setid=       0
+ node= 19395 local x,y,z forces =    0.0000E+00    0.0000E+00    0.0000E+00  setid=       0
+ node= 19409 local x,y,z forces =    0.0000E+00    0.0000E+00    0.0000E+00  setid=       0
+ node= 19423 local x,y,z forces =    0.0000E+00    0.0000E+00    0.0000E+00  setid=       0
+ node= 19437 local x,y,z forces =    0.0000E+00    0.0000E+00    0.0000E+00  setid=       0
+ node= 19451 local x,y,z forces =    0.0000E+00    0.0000E+00    0.0000E+00  setid=       0
+ node= 19465 local x,y,z forces =    0.0000E+00    0.0000E+00    0.0000E+00  setid=       0
+ node= 19479 local x,y,z forces =    0.0000E+00    0.0000E+00    0.0000E+00  setid=       0
+ node= 19493 local x,y,z forces =    0.0000E+00    0.0000E+00    0.0000E+00  setid=       0
+ node= 19507 local x,y,z forces =    0.0000E+00    0.0000E+00    0.0000E+00  setid=       0
+ node= 19521 local x,y,z forces =    0.0000E+00    0.0000E+00    0.0000E+00  setid=       0
+ node= 19535 local x,y,z forces =    0.0000E+00    0.0000E+00    0.0000E+00  setid=       0
+ node= 19549 local x,y,z forces =    0.0000E+00    0.0000E+00    0.0000E+00  setid=       0
+ node= 19563 local x,y,z forces =    0.0000E+00    0.0000E+00    0.0000E+00  setid=       0
+ node= 19577 local x,y,z forces =    0.0000E+00    0.0000E+00    0.0000E+00  setid=       0
+ node= 19591 local x,y,z forces =    0.0000E+00    0.0000E+00    0.0000E+00  setid=       0
+ node= 19605 local x,y,z forces =    0.0000E+00    0.0000E+00    0.0000E+00  setid=       0
+ node= 19619 local x,y,z forces =    0.0000E+00    0.0000E+00    0.0000E+00  setid=       0
+ node= 19633 local x,y,z forces =    0.0000E+00    0.0000E+00    0.0000E+00  setid=       0
+ node= 19647 local x,y,z forces =    0.0000E+00    0.0000E+00    0.0000E+00  setid=       0
+ node= 19661 local x,y,z forces =    0.0000E+00    0.0000E+00    0.0000E+00  setid=       0
+ node= 19675 local x,y,z forces =    0.0000E+00    0.0000E+00    0.0000E+00  setid=       0
+ node= 19689 local x,y,z forces =    0.0000E+00    0.0000E+00    0.0000E+00  setid=       0
+ node= 19703 local x,y,z forces =    0.0000E+00    0.0000E+00    0.0000E+00  setid=       0
+ node= 19717 local x,y,z forces =    0.0000E+00    0.0000E+00    0.0000E+00  setid=       0
+ node= 19731 local x,y,z forces =    0.0000E+00    0.0000E+00    0.0000E+00  setid=       0
+ node= 19745 local x,y,z forces =    0.0000E+00    0.0000E+00    0.0000E+00  setid=       0
+ node= 19759 local x,y,z forces =    0.0000E+00    0.0000E+00    0.0000E+00  setid=       0
+ node= 19773 local x,y,z forces =    0.0000E+00    0.0000E+00    0.0000E+00  setid=       0
+ node= 19787 local x,y,z forces =    0.0000E+00    0.0000E+00    0.0000E+00  setid=       0
+ node= 19801 local x,y,z forces =    0.0000E+00    0.0000E+00    0.0000E+00  setid=       0
+ node= 19815 local x,y,z forces =    0.0000E+00    0.0000E+00    0.0000E+00  setid=       0
+             force resultants   =    0.0000E+00    0.0000E+00    0.0000E+00
+ output at time =   1.00000E-01
+ node= 19381 local x,y,z forces =    1.9481E+01    8.5252E-01   -1.3329E+00  setid=       0
+ node= 19395 local x,y,z forces =   -1.9869E+01    9.2477E-01    1.1439E+00  setid=       0
+ node= 19409 local x,y,z forces =    3.5961E+01    4.6309E-01   -3.5262E-01  setid=       0
+ node= 19423 local x,y,z forces =   -3.6096E+01    5.6501E-01    7.6166E-02  setid=       0
+ node= 19437 local x,y,z forces =    3.4111E+01    2.8690E-01   -2.5287E-01  setid=       0
+ node= 19451 local x,y,z forces =   -3.3919E+01    2.2484E-01   -1.5885E-01  setid=       0
+ node= 19465 local x,y,z forces =    3.3659E+01    3.8569E-01   -2.4696E-01  setid=       0
+ node= 19479 local x,y,z forces =   -3.3422E+01    2.9176E-01   -2.1397E-01  setid=       0
+ node= 19493 local x,y,z forces =    3.3424E+01    4.0797E-01   -2.3566E-01  setid=       0
+ node= 19507 local x,y,z forces =   -3.3245E+01    3.1243E-01   -2.1921E-01  setid=       0
+ node= 19521 local x,y,z forces =    3.3274E+01    4.0380E-01   -1.9065E-01  setid=       0
+ node= 19535 local x,y,z forces =   -3.3204E+01    3.3406E-01   -1.8372E-01  setid=       0
+ node= 19549 local x,y,z forces =    3.3188E+01    3.9309E-01   -1.2027E-01  setid=       0
+ node= 19563 local x,y,z forces =   -3.3219E+01    3.5092E-01   -1.1866E-01  setid=       0
+ node= 19577 local x,y,z forces =    3.3162E+01    3.8230E-01   -3.3398E-02  setid=       0
+ node= 19591 local x,y,z forces =   -3.3253E+01    3.5931E-01   -3.5929E-02  setid=       0
+ node= 19605 local x,y,z forces =    3.3200E+01    3.7646E-01    5.6784E-02  setid=       0
+ node= 19619 local x,y,z forces =   -3.3294E+01    3.5713E-01    4.9968E-02  setid=       0
+ node= 19633 local x,y,z forces =    3.3307E+01    3.7611E-01    1.3808E-01  setid=       0
+ node= 19647 local x,y,z forces =   -3.3349E+01    3.4480E-01    1.2588E-01  setid=       0
+ node= 19661 local x,y,z forces =    3.3488E+01    3.7753E-01    2.0016E-01  setid=       0
+ node= 19675 local x,y,z forces =   -3.3442E+01    3.2494E-01    1.8028E-01  setid=       0
+ node= 19689 local x,y,z forces =    3.3759E+01    3.7587E-01    2.3837E-01  setid=       0
+ node= 19703 local x,y,z forces =   -3.3618E+01    3.0116E-01    2.0558E-01  setid=       0
+ node= 19717 local x,y,z forces =    3.4156E+01    3.5341E-01    2.4814E-01  setid=       0
+ node= 19731 local x,y,z forces =   -3.3960E+01    2.7792E-01    1.9443E-01  setid=       0
+ node= 19745 local x,y,z forces =    3.4829E+01    2.6051E-01    2.5864E-01  setid=       0
+ node= 19759 local x,y,z forces =   -3.4662E+01    2.0734E-01    1.3653E-01  setid=       0
+ node= 19773 local x,y,z forces =    3.7030E+01    4.7449E-01    3.7152E-01  setid=       0
+ node= 19787 local x,y,z forces =   -3.7138E+01    5.6303E-01   -1.0392E-01  setid=       0
+ node= 19801 local x,y,z forces =    2.0190E+01    8.9874E-01    1.3796E+00  setid=       0
+ node= 19815 local x,y,z forces =   -2.0530E+01    9.6069E-01   -1.2044E+00  setid=       0
+             force resultants   =    1.5103E-04    1.3769E+01    3.0013E-07
