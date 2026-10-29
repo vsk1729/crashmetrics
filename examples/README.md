@@ -24,6 +24,7 @@ python examples/07_bharat_ncap.py
 | `11_ml_features.py` | An ML-ready feature table: criteria, signal shape and design parameters per run, failed runs recorded, CSV and matrix output, a surrogate checked on held-out runs |
 | `12_test_cae_correlation.py` | Test-versus-CAE correlation: ISO/TS 18571, the CC rating and error measures for three channels and three model versions with different time bases, ranked and put in a feature table |
 | `13_intrusion.py` | Intrusion of pedal, steering column, A-pillar and toe pan: global, one-node and vehicle-frame references, dynamic and static values, survival space, a before/after test measurement and the Bharat NCAP modifiers |
+| `14_homologation.py` | Homologation of an electric car: UN R94 / AIS-098 (both occupants and vehicle), post-crash electrical safety, UN R95 / AIS-099 and UN R135, with failures traced to clauses |
 | `hic_convergence.py` | How HIC changes with the integration resolution (for developers) |
 
 The full step-by-step explanations are in the documentation:

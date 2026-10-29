@@ -23,6 +23,7 @@ pip install crashmetrics
 | Pedestrian (India) | AIS-100 compliance: Flex-PLI and legacy legform limits, upper legform, HIC1000 / HIC1700 zones; Flex-PLI assessment interval and Euro NCAP Flex-PLI score | [Flex-PLI and AIS-100](guides/flexpli-ais100.md) |
 | Frontal dummies | DAMAGE, BrIC, neck loads, Nij, R94 limits, chest deflection, VC, CTI, THOR Rmax and abdomen, acetabulum, iliac force drop, femur, Tibia Index, knee slider | [Frontal criteria](guides/frontal-dummy-criteria.md) |
 | Euro NCAP 2026 | MPDB (20 points) and full width (10 points) scores with modifiers and the compatibility penalty | [MPDB and full width](guides/euroncap-frontal.md) |
+| Homologation | UN R94 / AIS-098, UN R95 / AIS-099, UN R135 and post-crash electrical safety, pass/fail per requirement | [Homologation](guides/homologation.md) |
 | Bharat NCAP | AIS-197 adult occupant scoring (ODB frontal, MDB side), pole test, star rating | [Bharat NCAP](guides/bharat-ncap.md) |
 | Intrusion | Pedal, steering column, A-pillar and footwell intrusion relative to the vehicle; dynamic and static; survival space | [Intrusion](guides/intrusion.md) |
 | Vehicle | OLC, delta-V, rebound, dynamic crush, crash box energy, CFE, SEA | [Pulse and energy](guides/pulse-energy.md) |

@@ -91,6 +91,22 @@ and how to change it. If your organisation reads a rule differently, the
 | Safety assist qualifiers | ESC, side head protection fitment by year, pedestrian (AIS-100), SBR (AIS-145) | Not evaluated; pass the result as `max_stars_allowed` | `aop_rating(..., max_stars_allowed=)` |
 | Pole test | Required (with side head protection) for 3+ stars | `pole_test_passed` checks it; its effect on stars is set through `max_stars_allowed` | |
 
+## Homologation (UN R94, R95, R135, electrical safety)
+
+| Topic | Source | crashmetrics | Change it |
+| --- | --- | --- | --- |
+| R94 series | 04 series (2021) and 05 series (2025) texts give the same occupant and vehicle limits | Those limits | |
+| R94 HPC | Annex 4: maximum over t1..t2, intervals over 36 ms ignored; satisfied without head contact | `calculate_hic(window_ms=36)`; `head_contact=False` passes | |
+| R94 neck and femur curves | Figures 1 to 3; R94 does not say cumulative or continuous | Cumulative exceedance (as elsewhere in crashmetrics) | Pass your own `neck_force_criterion` / `femur_force_criterion` result |
+| Limit boundaries | "shall not exceed" | A value equal to the limit passes | |
+| R95 series | Dummy limits unchanged across the series checked; older texts have 2.0 J and a 30-minute electrolyte period | Dummy limits as in 5.2.1; electrical defaults from R94 05 series | `ElectricalLimits(...)` |
+| R95 VC | Transitional period in which VC is recorded only | Always checked | Ignore `vc` if it does not apply |
+| R135 lower spine | 75 g except intervals with cumulative duration up to 3 ms | Cumulative 3 ms value of the resultant ≤ 75 g | |
+| Electrical: DC+AC buses | 500 Ω/V, or 100 Ω/V if the AC part meets physical protection or ≤ 30 V AC | `ac_part_protected=True` selects 100 Ω/V | |
+| Electrical: physical protection | IPXXB and < 0.1 Ω to chassis (and < 0.2 Ω between parts closer than 2.5 m) | IPXXB and the largest chassis resistance < 0.1 Ω | Give the largest measured resistance |
+| Not assessed | | A requirement without a value is reported as not assessed and does not count as passed | Check `complete` |
+| R137 | Full-width frontal | Dummy limits not included until checked against the regulation text; electrical safety is the same as R94 5.2.8 | |
+
 ## Test-versus-CAE correlation (ISO/TS 18571, CC rating)
 
 | Topic | Source | crashmetrics | Change it |
