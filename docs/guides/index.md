@@ -21,6 +21,7 @@ its real output (the test suite checks that output on every change).
 | [Intrusion measurement](intrusion.md) | Measure pedal, steering column, A-pillar and footwell intrusion relative to the vehicle, from CAE or before/after test measurements | `13_intrusion.py` |
 | [Homologation compliance](homologation.md) | Check UN R94 / AIS-098, UN R95 / AIS-099, UN R135 and post-crash electrical safety, requirement by requirement | `14_homologation.py` |
 | [Euro NCAP side and far side](euroncap-side.md) | Score the 2026 AE-MDB, pole and far side tests (35 points) with modifiers, robustness and the far side rules | `15_euroncap_side.py` |
+| [Bharat NCAP child occupant and complete rating](bharat-ncap-cop.md) | Score child occupant protection (dynamic, CRS installation, vehicle based) and apply the safety assist qualifiers to the stars | `16_bharat_ncap_cop_rating.py` |
 
 ## The general workflow
 

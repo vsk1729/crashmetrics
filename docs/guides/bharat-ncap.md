@@ -5,8 +5,9 @@ criteria).
 
 AIS-197 rates cars sold in India in three areas: Adult Occupant
 Protection (AOP, 32 points), Child Occupant Protection (COP, 49 points)
-and Safety Assist Technologies (qualifiers). crashmetrics scores the
-adult tests and converts both point totals to stars.
+and Safety Assist Technologies (qualifiers). This page scores the adult
+tests; [child occupant protection and the complete rating](bharat-ncap-cop.md)
+covers the child score and the safety assist qualifiers.
 
 | Test | Speed | Dummies | Points |
 | --- | --- | --- | --- |
@@ -149,7 +150,7 @@ cop_stars(38.5)                                       # child occupant points ->
 | A capping limit exceeded (head, neck, chest; side: all four regions) | 0 stars |
 | A critical region at 0 points (red) | at most 1 star |
 | Front and side differ by more than 35 % (unless both > 8.2 and total > 22) | one star less |
-| Safety assist qualifiers (ESC, side head protection + pole test, pedestrian, SBR) | `max_stars_allowed` |
+| Safety assist qualifiers (ESC, side head protection + pole test, pedestrian, SBR) | `max_stars_allowed`; computed from the fitment by `bncap_rating.safety_assist_max_stars` ([guide](bharat-ncap-cop.md)) |
 
 `rating.reasons` explains any reduction.
 

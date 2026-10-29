@@ -103,6 +103,7 @@ nav:
       - Euro NCAP MPDB and full width: guides/euroncap-frontal.md
       - Euro NCAP side and far side: guides/euroncap-side.md
       - Bharat NCAP star rating: guides/bharat-ncap.md
+      - Bharat NCAP child occupant and complete rating: guides/bharat-ncap-cop.md
       - Homologation (R94, R95, R135, EV safety): guides/homologation.md
       - Vehicle pulse and crush energy: guides/pulse-energy.md
       - Intrusion measurement: guides/intrusion.md
@@ -125,6 +126,7 @@ nav:
       - frontal_scoring: reference/frontal_scoring.md
       - side_scoring: reference/side_scoring.md
       - bncap: reference/bncap.md
+      - bncap_cop and bncap_rating: reference/bncap_cop.md
       - pulse: reference/pulse.md
       - energy: reference/energy.md
       - energy_check and lsdyna: reference/lsdyna.md

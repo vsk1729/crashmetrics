@@ -8,6 +8,21 @@ follow [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- `crashmetrics.bncap_cop`: Bharat NCAP child occupant protection
+  (AIS-197 Annexure V, 49 points): Q1.5 and Q3 dynamic scores in the
+  ODB frontal and MDB side tests with all penalties (ejection, forward
+  facing Q1.5, head contact with the vehicle, no recommendation), CRS
+  installation (CRSi, installation list and recommended seats, halving;
+  reproduces the standard's worked example 9.143), vehicle based
+  assessments (13 points; two-seaters 10) and the COP total and stars.
+- `crashmetrics.bncap_rating`: safety assist qualifiers (Annexure VI:
+  pedestrian AIS-100, SBR AIS-145, ESC, side head protection with pole
+  test and fitment share by publication year) as the highest allowed
+  adult star level, and `bncap_rating` for the complete adult and child
+  rating with what is missing for the next star. Guide "Bharat NCAP
+  child occupant and complete rating", protocol notes and example
+  `16_bharat_ncap_cop_rating.py`.
+
 - `crashmetrics.side_scoring`: Euro NCAP 2026 side impact (Crash
   Protection Side Impact Protocol v1.1): AE-MDB (WorldSID 50th, Q10,
   Q6; 15 points) and pole (10 points) with colour bands, hard-contact
