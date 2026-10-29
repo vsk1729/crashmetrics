@@ -5,17 +5,19 @@ type: software
 authors:
   - family-names: "Voonna"
     given-names: "Satish Kumar"
-version: "0.10.0"
-date-released: "2026-10-28"
+version: "0.11.0"
+date-released: "2026-10-29"
 license: MIT
 repository-code: "https://github.com/vsk1729/crashmetrics"
 url: "https://vsk1729.github.io/crashmetrics/"
 abstract: >-
   Open-source Python package for automotive crash safety calculations:
   injury criteria (HIC, Nij, BrIC, DAMAGE, chest and leg criteria),
-  Euro NCAP and Bharat NCAP scoring, pedestrian protection, AIS-100
-  compliance checks, LS-DYNA energy checks, test-versus-CAE correlation
-  (ISO/TS 18571, corridor and cross-correlation) and feature extraction for machine learning.
+  Euro NCAP and Bharat NCAP scoring, pedestrian protection, homologation
+  checks (UN R94, R95, R135, AIS-098, AIS-099, AIS-100, post-crash
+  electrical safety), intrusion measurement, LS-DYNA energy checks,
+  test-versus-CAE correlation (ISO/TS 18571, corridor and
+  cross-correlation) and feature extraction for machine learning.
 keywords:
   - crashworthiness
   - crash safety
