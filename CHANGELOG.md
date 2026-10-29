@@ -6,6 +6,8 @@ follow [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.13.0] - 2026-10-29
+
 ### Added
 
 - `crashmetrics.lsdyna_ascii`: readers for LS-DYNA ASCII time-history
@@ -362,7 +364,8 @@ follow [Semantic Versioning](https://semver.org/).
 - `crashmetrics.pedestrian.calculate_hic` for HIC on a refined,
   linearly interpolated time grid.
 
-[Unreleased]: https://github.com/vsk1729/crashmetrics/compare/v0.12.0...main
+[Unreleased]: https://github.com/vsk1729/crashmetrics/compare/v0.13.0...main
+[0.13.0]: https://github.com/vsk1729/crashmetrics/compare/v0.12.0...v0.13.0
 [0.12.0]: https://github.com/vsk1729/crashmetrics/compare/v0.11.0...v0.12.0
 [0.11.0]: https://github.com/vsk1729/crashmetrics/compare/v0.10.0...v0.11.0
 [0.10.0]: https://github.com/vsk1729/crashmetrics/compare/v0.9.1...v0.10.0
