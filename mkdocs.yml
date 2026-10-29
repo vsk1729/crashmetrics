@@ -102,6 +102,7 @@ nav:
       - Frontal dummy criteria: guides/frontal-dummy-criteria.md
       - Euro NCAP MPDB and full width: guides/euroncap-frontal.md
       - Euro NCAP side and far side: guides/euroncap-side.md
+      - Rear impact (whiplash): guides/whiplash.md
       - Bharat NCAP star rating: guides/bharat-ncap.md
       - Bharat NCAP child occupant and complete rating: guides/bharat-ncap-cop.md
       - Homologation (R94, R95, R135, EV safety): guides/homologation.md
@@ -125,6 +126,7 @@ nav:
       - side: reference/side.md
       - frontal_scoring: reference/frontal_scoring.md
       - side_scoring: reference/side_scoring.md
+      - whiplash: reference/whiplash.md
       - bncap: reference/bncap.md
       - bncap_cop and bncap_rating: reference/bncap_cop.md
       - pulse: reference/pulse.md
