@@ -75,7 +75,7 @@ python -m pip install pandas matplotlib openpyxl
 
 ## Run the examples
 
-The repository has fourteen runnable examples with synthetic data:
+The repository has fifteen runnable examples with synthetic data:
 
 ```bash
 git clone https://github.com/vsk1729/crashmetrics.git

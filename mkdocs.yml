@@ -101,6 +101,7 @@ nav:
       - Flex-PLI and AIS-100 compliance: guides/flexpli-ais100.md
       - Frontal dummy criteria: guides/frontal-dummy-criteria.md
       - Euro NCAP MPDB and full width: guides/euroncap-frontal.md
+      - Euro NCAP side and far side: guides/euroncap-side.md
       - Bharat NCAP star rating: guides/bharat-ncap.md
       - Homologation (R94, R95, R135, EV safety): guides/homologation.md
       - Vehicle pulse and crush energy: guides/pulse-energy.md
@@ -122,6 +123,7 @@ nav:
       - lower_extremity: reference/lower_extremity.md
       - side: reference/side.md
       - frontal_scoring: reference/frontal_scoring.md
+      - side_scoring: reference/side_scoring.md
       - bncap: reference/bncap.md
       - pulse: reference/pulse.md
       - energy: reference/energy.md

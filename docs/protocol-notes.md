@@ -77,6 +77,23 @@ and how to change it. If your organisation reads a rule differently, the
 | Compatibility combination | CP 007 Figure 2 (no formula in the text) | `1.25 (s + o + 2so)` points, read from the figure and checked against the worked examples | |
 | Modifier totals | CP 007: no limit to the number of modifiers; scores not below 0 | Summed per region; regions and tests floored at 0 | |
 
+## Euro NCAP 2026 side impact (AE-MDB, pole, far side)
+
+| Topic | Source | crashmetrics | Change it |
+| --- | --- | --- | --- |
+| ⚠️ Points per colour band | Side Impact Protocol §3.3 text: 1.25 / 1.0 / 0.75 / 0.5 / 0; the band percentages printed alongside: 100 / 80 / 40 / 20 / 0 % | Text values, as for the frontal tests | `band_fractions=BAND_FRACTIONS_TABLE` |
+| WorldSID chest limits | §3.4 table: HPL 28 mm, LPL 50 mm, capping 50 mm (AE-MDB) and 55 mm (pole); the table layout leaves open whether the pole LPL is also 55 mm | LPL 50 mm in both tests; capping 50 / 55 mm | Edit `SIDE_DUMMY_LIMITS` |
+| Q6 / Q10 neck and chest | Printed as single values (neck 2.4 / 2.2 kN, chest 3 ms 67 g) | Used as LPLs: green below, red at or above | |
+| Capping (near side) | Capping limits tabulated; consequence not stated in §3.4 | Reported in `capping_exceeded`, not applied (as for the frontal tests) | Apply your rule to the result |
+| Test modifiers | % of the 10-point maximum per adult load case | Deducted from the test total, so the Q dummies' points remain after −100 % | |
+| Shoulder and VC modifiers | ≥ 3.0 kN, ≥ 1.0 m/s: −100 % of the region | Applied from `shoulder_force`, `chest_vc`, `abdomen_vc` in the values | |
+| ⚠️ Far side zone points | 2026 table garbled in the text extract: with countermeasure 0 / 0.5 / 1 / 1.5 / 2 / 2, without 0 / 0 / 0.5 / 1 / 2 | Mapped to capping / red / brown / orange / yellow / green in the row order of the Far Side Protocol v2.4.1 table (whose dummy scores scale to the same values) | Edit `FAR_SIDE_ZONE_POINTS` |
+| Far side zone geometry | Lines defined; which side of a line a zone lies is shown in a figure | Clearance to the struck-side seat centreline: ≥ 250 green, ≥ 125 yellow, ≥ 0 orange, then red/brown to the red line, beyond it capping; a head on a line is in the better zone | Pass the zone yourself |
+| Far side robustness | AE-MDB: at most one zone worse than the main case and not red; "pole robustness scores 2 points" | The same rule for both pulses | |
+| Far side capping | Any capping limit exceeded caps the load case; a head in the capping zone caps both | As stated; neck moments compared as magnitudes | |
+| 17-point rule | Driver total in AE-MDB and pole below 17.0 of 20 removes far side rewards | All far side points removed | `near_side_driver_points=` |
+| Not implemented | OEM colour prediction and verification, head protection coverage geometry, DAMAGE monitoring | Give the outcome (`curtain_zone_rows_failed`, modifiers) | |
+
 ## Bharat NCAP (AIS-197)
 
 | Topic | Source | crashmetrics | Change it |
