@@ -8,6 +8,16 @@ follow [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- `crashmetrics.whiplash`: BioRID `nic` and `nkm` (CP 005), the 2026
+  rear impact score (Crash Protection Rear Impact Protocol v1.2): pulse
+  scores for the medium and high severity sled tests with all capping
+  limits (`score_whiplash_pulse`), front seat geometry and the 4-point
+  front seat score (`front_geometry_score`, `score_front_seat`), rear
+  seat geometry and non-use position (`rear_seat_score`,
+  `score_rear_seats`) and the 5-point total (`score_whiplash`). Guide
+  "Rear impact (whiplash)", protocol notes and example
+  `17_whiplash.py`.
+
 - `crashmetrics.bncap_cop`: Bharat NCAP child occupant protection
   (AIS-197 Annexure V, 49 points): Q1.5 and Q3 dynamic scores in the
   ODB frontal and MDB side tests with all penalties (ejection, forward

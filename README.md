@@ -36,6 +36,7 @@ Python 3.10 or later; the only dependency is NumPy 1.24 or later.
 | Frontal dummies | DAMAGE, BrIC, neck loads, Nij, R94 limits, chest deflection, VC, CTI, THOR Rmax and abdomen, acetabulum, iliac force drop, femur, Tibia Index, knee slider | [Frontal criteria](https://vsk1729.github.io/crashmetrics/guides/frontal-dummy-criteria/) |
 | Euro NCAP 2026 | MPDB (20 points) and full width (10 points) with modifiers and the compatibility penalty; side impact AE-MDB (15), pole (10) and far side (10) | [MPDB and full width](https://vsk1729.github.io/crashmetrics/guides/euroncap-frontal/), [Side and far side](https://vsk1729.github.io/crashmetrics/guides/euroncap-side/) |
 | Homologation | UN R94 / AIS-098, UN R95 / AIS-099 and UN R135 pass/fail per requirement with clause and utilisation; post-crash electrical safety (voltage, energy, IPXXB, isolation, electrolyte, REESS, fire) | [Homologation](https://vsk1729.github.io/crashmetrics/guides/homologation/) |
+| Whiplash | BioRID NIC and Nkm; 2026 rear impact score (front seat geometry and medium/high sled pulses with capping, rear seats; 5 points) | [Rear impact](https://vsk1729.github.io/crashmetrics/guides/whiplash/) |
 | Bharat NCAP | AIS-197 ODB frontal and MDB side scores, ES-2 criteria, pole test, star rating; child occupant protection (Q1.5/Q3 dynamic, CRS installation, vehicle based); safety assist star qualifiers | [Bharat NCAP](https://vsk1729.github.io/crashmetrics/guides/bharat-ncap/), [Child occupant and rating](https://vsk1729.github.io/crashmetrics/guides/bharat-ncap-cop/) |
 | Intrusion | Pedal, steering column, A-pillar, footwell intrusion relative to the vehicle (best-fit frame of reference nodes), one node or ground; dynamic and static; survival space between nodes | [Intrusion](https://vsk1729.github.io/crashmetrics/guides/intrusion/) |
 | Vehicle | OLC, delta-V, rebound, crush, absorbed energy, CFE, SEA | [Pulse and energy](https://vsk1729.github.io/crashmetrics/guides/pulse-energy/) |
@@ -66,8 +67,8 @@ are in the [guides](https://vsk1729.github.io/crashmetrics/guides/).
 ## Runnable examples
 
 The [`examples/`](https://github.com/vsk1729/crashmetrics/tree/main/examples)
-folder has sixteen scripts with synthetic data, one per topic, from
-`01_signals_hic.py` to `16_bharat_ncap_cop_rating.py`. The test suite checks that
+folder has seventeen scripts with synthetic data, one per topic, from
+`01_signals_hic.py` to `17_whiplash.py`. The test suite checks that
 each one still prints exactly its documented output.
 
 ```bash

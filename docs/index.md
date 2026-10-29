@@ -24,6 +24,7 @@ pip install crashmetrics
 | Frontal dummies | DAMAGE, BrIC, neck loads, Nij, R94 limits, chest deflection, VC, CTI, THOR Rmax and abdomen, acetabulum, iliac force drop, femur, Tibia Index, knee slider | [Frontal criteria](guides/frontal-dummy-criteria.md) |
 | Euro NCAP 2026 | MPDB (20 points) and full width (10 points) scores with modifiers and the compatibility penalty; side impact AE-MDB (15), pole (10) and far side (10) | [MPDB and full width](guides/euroncap-frontal.md), [Side and far side](guides/euroncap-side.md) |
 | Homologation | UN R94 / AIS-098, UN R95 / AIS-099, UN R135 and post-crash electrical safety, pass/fail per requirement | [Homologation](guides/homologation.md) |
+| Whiplash | BioRID NIC and Nkm; 2026 rear impact score, 5 points | [Rear impact](guides/whiplash.md) |
 | Bharat NCAP | AIS-197 adult occupant scoring (ODB frontal, MDB side), pole test, star rating; child occupant protection; safety assist star qualifiers | [Bharat NCAP](guides/bharat-ncap.md), [Child occupant and rating](guides/bharat-ncap-cop.md) |
 | Intrusion | Pedal, steering column, A-pillar and footwell intrusion relative to the vehicle; dynamic and static; survival space | [Intrusion](guides/intrusion.md) |
 | Vehicle | OLC, delta-V, rebound, dynamic crush, crash box energy, CFE, SEA | [Pulse and energy](guides/pulse-energy.md) |

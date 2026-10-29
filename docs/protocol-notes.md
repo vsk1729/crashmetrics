@@ -94,6 +94,21 @@ and how to change it. If your organisation reads a rule differently, the
 | 17-point rule | Driver total in AE-MDB and pole below 17.0 of 20 removes far side rewards | All far side points removed | `near_side_driver_points=` |
 | Not implemented | OEM colour prediction and verification, head protection coverage geometry, DAMAGE monitoring | Give the outcome (`curtain_zone_rows_failed`, modifiers) | |
 
+## Rear impact (whiplash, 2026)
+
+| Topic | Source | crashmetrics | Change it |
+| --- | --- | --- | --- |
+| Points per criterion | Rear Impact Protocol v1.2 lists HPL / LPL and 0.5 points each for NIC, +Fx, Fz; the calculation is deferred to CP 005 | Linear sliding scale between the limits, as stated in the earlier Euro NCAP / ANCAP whiplash scoring text | |
+| Capping | v1.2 tabulates capping limits; the earlier scoring text: "no score is given for that pulse" | Any capping limit reached: that pulse scores 0; T1 and T-HRC only when both are reached | |
+| ⚠️ Pulse names | Appendix B: medium and high severity; the scoring summary table says "low severity" | `"medium"` and `"high"` | |
+| Nkm | Not used in the medium pulse; capping 0.78 in the high pulse | Accepted and ignored for the medium pulse | |
+| ⚠️ Front geometry total | Test position "0 / +1.0", lowest and rearmost 0.5/n per seat, static total 1 point; how they combine is not stated | Test position plus the lowest/rearmost credit, capped at 1 | Use `test_position` and `lowest_rearmost` separately |
+| Test position height | HPL 825 mm, LPL 790 mm | Linear between | |
+| Backset | Single limits: 45 mm (test position), 70 mm (lowest and rearmost) | Pass/fail: below 45 mm scores 1, otherwise 0; at most 70 mm for the credit | |
+| Rear seat scaling | Sum of the two outboard seats (or one doubled) scaled to 1 point; up to 1 point per seat | Mean of the seat scores | |
+| NIC formula | CP 005: `0.2 a_rel + v_rel²`, `a_rel = T1 − head` (x), maximum to T-HRC(end) | As written; trapezoidal integration | |
+| Nkm | CP 005 intercepts 88.1 / −47.5 N m, ±845 N; "particular forces and moments must be set to 0 ... AND condition" | Each combination counted only where both signs match | |
+
 ## Bharat NCAP (AIS-197)
 
 | Topic | Source | crashmetrics | Change it |

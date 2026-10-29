@@ -1,0 +1,18 @@
+Seat A: close head restraint (backset 32 mm)
+  medium: NIC/Fx/Fz nic 7.2, upper_neck_fx 128.0, upper_neck_fz 532.0 | Nkm 0.39 | points 0.973
+  high  : NIC/Fx/Fz nic 9.8, upper_neck_fx 172.8, upper_neck_fz 718.2 | Nkm 0.52 | points 0.690
+Rear impact (whiplash): 3.538 / 5
+  Front seat 2.663 / 4: geometry 1.000 (test position 1.000, lowest/rearmost 0.500), dynamic 1.663
+    medium pulse 0.973 / 1.5 (nic 0.500, upper_neck_fx 0.194, upper_neck_fz 0.279)
+    high   pulse 0.690 / 1.5 (nic 0.500, upper_neck_fx 0.103, upper_neck_fz 0.086)
+  Rear seats 0.875 / 1
+
+Seat B: large backset (52 mm), late contact
+  medium: NIC/Fx/Fz nic 9.5, upper_neck_fx 224.0, upper_neck_fz 836.0 | Nkm 0.66 | points 0.500
+  high  : NIC/Fx/Fz nic 12.9, upper_neck_fx 302.4, upper_neck_fz 1128.6 | Nkm 0.90 | points 0.000  capped: nkm, upper_neck_fz
+Rear impact (whiplash): 1.875 / 5
+  Front seat 1.000 / 4: geometry 0.500 (test position 0.000, lowest/rearmost 0.500), dynamic 0.500
+    medium pulse 0.500 / 1.5 (nic 0.500, upper_neck_fx 0.000, upper_neck_fz 0.000)
+    high   pulse 0.000 / 1.5 (nic 0.500, upper_neck_fx 0.000, upper_neck_fz 0.000)  CAPPED: nkm, upper_neck_fz
+  Rear seats 0.875 / 1
+
