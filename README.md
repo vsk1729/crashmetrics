@@ -8,7 +8,8 @@
 
 Open-source Python for automotive crash safety calculations: injury
 criteria, Euro NCAP and Bharat NCAP scoring, pedestrian protection,
-AIS-100 compliance and LS-DYNA energy checks.
+homologation checks, test-versus-CAE correlation, LS-DYNA output readers
+and energy checks.
 
 **Documentation: <https://vsk1729.github.io/crashmetrics/>**, with
 step-by-step guides, runnable examples, the full API reference and the
@@ -47,13 +48,19 @@ Python 3.10 or later; the only dependency is NumPy 1.24 or later.
 ## Quick examples
 
 ```python
+from crashmetrics.lsdyna import read_nodout
 from crashmetrics.pedestrian import calculate_hic, check_flexpli, hic_colour
-from crashmetrics.signals import cfc_filter, resultant, to_g, to_seconds
+from crashmetrics.signals import cfc_filter, resample_uniform, resultant, to_g, to_seconds
 
-# HIC15 from LS-DYNA headform output (mm-ms-kg): filter each axis, then the resultant
-t = to_seconds(time_ms, "ms")
-a = resultant(*(cfc_filter(t, to_g(c, "mm/ms^2"), cfc=1000) for c in (ax, ay, az)))
-hic = calculate_hic(t, a, window_ms=15.0)
+# HIC15 from an LS-DYNA nodout (mm-ms-kg): resample, filter each axis, then the resultant
+nodout = read_nodout("run01/nodout", ids=[1001])            # headform CG node
+t_s = to_seconds(nodout.time, "ms")
+axes = []
+for c in "xyz":
+    t, a = resample_uniform(t_s, to_g(nodout.channel(f"{c}_acceleration"), "mm/ms^2"),
+                            sample_rate=10_000.0)
+    axes.append(cfc_filter(t, a, cfc=1000))
+hic = calculate_hic(t, resultant(*axes), window_ms=15.0)
 print(hic.value, hic_colour(hic.value))          # Euro NCAP headform colour
 
 # AIS-100 Rev.1 Flex-PLI check (peaks in N m and mm)

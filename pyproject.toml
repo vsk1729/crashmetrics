@@ -17,6 +17,9 @@ dependencies = [
 keywords = [
     "crashworthiness",
     "LS-DYNA",
+    "nodout",
+    "Euro NCAP",
+    "Bharat NCAP",
     "CAE",
     "HIC",
     "automotive-safety"

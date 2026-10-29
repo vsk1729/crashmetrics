@@ -113,6 +113,10 @@ rows = feature_table(runs, extract, params=params)
 
 - `runs` is a dict `{name: input}` or a list of `(name, input)` pairs;
   the input is whatever your extractor takes (a folder, a file, arrays).
+  For LS-DYNA run folders, `load_headform` can be the `read_nodout`
+  loader in [Loading your data](../getting-started/loading-data.md#ls-dyna-ascii-output),
+  and `read_run(folder)` gives contact, section, belt and airbag
+  channels for more features ([LS-DYNA ASCII output](lsdyna-ascii.md)).
 - `params` adds the design parameters to each row, so the table is
   directly a training set.
 - The extractor may return a dict, a result object or a list of them

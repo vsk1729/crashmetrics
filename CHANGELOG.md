@@ -26,6 +26,13 @@ follow [Semantic Versioning](https://semver.org/).
   moment. Guide "LS-DYNA ASCII output", protocol notes and example
   `18_lsdyna_ascii.py`.
 
+### Changed
+
+- Documentation: "Loading your data" reads LS-DYNA output with the new
+  readers (a `read_nodout` headform loader, `read_run`, CSV export); the
+  README quick example starts from a `nodout`; the intrusion, energy
+  check, batch and machine learning guides point to the readers.
+
 ## [0.12.0] - 2026-10-29
 
 ### Added

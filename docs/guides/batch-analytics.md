@@ -35,6 +35,11 @@ with open("results.csv", "w", newline="") as f:
     writer.writerows(rows)
 ```
 
+For LS-DYNA runs, a `load_headform` built on `read_nodout` is in
+[Loading your data](../getting-started/loading-data.md#ls-dyna-ascii-output),
+and `read_run(run)` reads every ASCII file of a run (rcforc, secforc,
+sbtout ...) in one call; see [LS-DYNA ASCII output](lsdyna-ascii.md).
+
 Three habits make this robust:
 
 1. **One row per run, one column per quantity**: easy to filter, plot

@@ -5,6 +5,9 @@ Modules: `crashmetrics.energy_check`, `crashmetrics.lsdyna`,
 
 A simulation result is only as good as its energy balance. These checks
 work for any load case (frontal, side, pedestrian, component tests).
+The other ASCII files (`nodout`, `rcforc`, `sleout`, `secforc`,
+`rwforc`, `sbtout`, `abstat` ...) are read by the
+[LS-DYNA ASCII output](lsdyna-ascii.md) readers.
 
 ## From the command line
 

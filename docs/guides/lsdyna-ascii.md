@@ -4,7 +4,7 @@ Module: `crashmetrics.lsdyna_ascii` (also importable from
 `crashmetrics.lsdyna`); command `crashmetrics-ascii`.
 
 LS-DYNA writes its time-history output either to `binout` or, with
-`*DATABASE_<NAME>` and `BINARY = 1` (the default) or `3`, to ASCII files
+`*DATABASE_<NAME>` and `BINARY = 1` (the SMP default) or `3`, to ASCII files
 named after the database: `nodout`, `rcforc`, `sleout` and so on. These
 readers turn the ASCII files into NumPy arrays for the injury criteria,
 scoring and feature functions in this package.

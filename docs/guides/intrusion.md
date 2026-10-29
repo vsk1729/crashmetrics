@@ -31,7 +31,16 @@ pedal = node_track(ux, uy, uz, initial=(2350.0, 350.0, 250.0))   # displacements
 ```
 
 LS-DYNA `nodout` holds both coordinates and displacements per node;
-either form works. For a physical test, a point is two rows: the
+either form works:
+
+```python
+from crashmetrics.lsdyna import read_nodout
+
+nodout = read_nodout("run01/nodout")
+t = nodout.time / 1000.0                            # ms -> s
+pedal = node_track(*(nodout.channel(f"{c}_coordinate", 501) for c in "xyz"))
+```
+ For a physical test, a point is two rows: the
 coordinates measured before and after the test.
 
 ## Step 2: choose the reference

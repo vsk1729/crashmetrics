@@ -2,7 +2,8 @@
 
 **Open-source Python for automotive crash safety calculations:** injury
 criteria, Euro NCAP and Bharat NCAP scoring, pedestrian protection,
-AIS-100 compliance and LS-DYNA energy checks, all in one package.
+homologation checks, test-versus-CAE correlation, LS-DYNA output readers
+and energy checks, all in one package.
 
 ```bash
 pip install crashmetrics
