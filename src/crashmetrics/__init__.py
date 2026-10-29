@@ -13,6 +13,9 @@ crashmetrics.energy
     Energy and force-displacement metrics.
 crashmetrics.lsdyna, crashmetrics.d3hsp
     LS-DYNA glstat, matsum and d3hsp readers.
+crashmetrics.lsdyna_ascii
+    LS-DYNA ASCII output readers (nodout, rcforc, sleout, secforc, rwforc,
+    sbtout, deforc, jntforc, abstat, rbdout, spcforc, swforc).
 crashmetrics.energy_check
     Simulation energy checks for any load case.
 crashmetrics.pulse

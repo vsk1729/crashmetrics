@@ -109,6 +109,7 @@ nav:
       - Vehicle pulse and crush energy: guides/pulse-energy.md
       - Intrusion measurement: guides/intrusion.md
       - LS-DYNA energy checks: guides/lsdyna-energy.md
+      - LS-DYNA ASCII output: guides/lsdyna-ascii.md
       - Batch runs, analytics and ML: guides/batch-analytics.md
       - Features for machine learning: guides/ml-features.md
       - Test-versus-CAE correlation: guides/test-cae-correlation.md
@@ -132,6 +133,7 @@ nav:
       - pulse: reference/pulse.md
       - energy: reference/energy.md
       - energy_check and lsdyna: reference/lsdyna.md
+      - lsdyna_ascii: reference/lsdyna_ascii.md
       - features: reference/features.md
       - correlation: reference/correlation.md
       - intrusion: reference/intrusion.md

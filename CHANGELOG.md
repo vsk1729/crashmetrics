@@ -4,6 +4,35 @@ All notable changes to this project are listed here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions
 follow [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+
+- `crashmetrics.lsdyna_ascii`: readers for LS-DYNA ASCII time-history
+  output: `nodout`, `rcforc`, `sleout`, `secforc`, `rwforc`, `sbtout`,
+  `deforc`, `jntforc`, `abstat`, `rbdout`, `spcforc` and `swforc`
+  (`read_nodout` ... `read_swforc`, `read_ascii` with type detection,
+  `read_run` for a whole run directory). Each returns an `AsciiOutput`
+  with times, entity IDs and legend titles, one array per channel (binout
+  variable names), file totals, `to_csv` and `summary`. Handles touching
+  numbers, Fortran exponents without `E`, overflow fields, restarts,
+  `slave`/`master` and `SURFA`/`SURFB` labels, and an `ids` filter for
+  large files. Also importable from `crashmetrics.lsdyna`.
+- `crashmetrics-ascii` command: summarise the ASCII files of runs and
+  write them to CSV.
+- Test data: real LS-DYNA R16 `nodout` and `secforc` of a helmeted
+  Hybrid III head and R14 `rcforc` and `spcforc` (MIT-licensed public
+  projects); the readers reproduce the helmet study's HIC, BrIC and neck
+  moment. Guide "LS-DYNA ASCII output", protocol notes and example
+  `18_lsdyna_ascii.py`.
+
+### Changed
+
+- Documentation: "Loading your data" reads LS-DYNA output with the new
+  readers (a `read_nodout` headform loader, `read_run`, CSV export); the
+  README quick example starts from a `nodout`; the intrusion, energy
+  check, batch and machine learning guides point to the readers.
+
 ## [0.12.0] - 2026-10-29
 
 ### Added

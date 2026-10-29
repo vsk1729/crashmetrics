@@ -35,7 +35,49 @@ ax = df["head_ax"].to_numpy()
 Excel works the same way with `pd.read_excel("file.xlsx", sheet_name="Sheet1")`
 (needs `openpyxl`).
 
-## LS-DYNA ASCII output (nodout, xy curves)
+## LS-DYNA ASCII output
+
+crashmetrics reads the LS-DYNA ASCII files itself: `nodout`, `rcforc`,
+`sleout`, `secforc`, `rwforc`, `sbtout`, `deforc`, `jntforc`, `abstat`,
+`rbdout`, `spcforc` and `swforc` (see
+[LS-DYNA ASCII output](../guides/lsdyna-ascii.md)), and `glstat`,
+`matsum` and `d3hsp` for the [energy checks](../guides/lsdyna-energy.md).
+
+A headform or head CG node from `nodout`, ready for HIC (LS-DYNA writes
+at the first step after each output time, so resample before
+filtering):
+
+```python
+from pathlib import Path
+
+from crashmetrics.lsdyna import read_nodout
+from crashmetrics.signals import resample_uniform, to_g, to_seconds
+
+
+def load_headform(run, node=1001):
+    """Time (s) and x, y, z acceleration (g) of a node in an LS-DYNA nodout (mm, ms)."""
+    nodout = read_nodout(Path(run) / "nodout", ids=[node])
+    t = to_seconds(nodout.time, "ms")
+    axes = [to_g(nodout.channel(f"{c}_acceleration"), "mm/ms^2") for c in "xyz"]
+    resampled = [resample_uniform(t, a, sample_rate=10_000.0) for a in axes]
+    return resampled[0][0], *(a for _, a in resampled)
+
+
+t, ax, ay, az = load_headform("run01")
+```
+
+Every ASCII file of a run at once, or as CSV for Excel:
+
+```python
+from crashmetrics.lsdyna import read_run
+
+run = read_run("run01")                          # {"nodout": ..., "rcforc": ..., ...}
+wall_force = run["rwforc"].channel("normal_force", 1)
+```
+
+```bash
+crashmetrics-ascii run01 --csv tables
+```
 
 Curves exported from LS-PrePost or other post-processors as two-column
 text (time, value) load directly:
@@ -44,15 +86,12 @@ text (time, value) load directly:
 t_ms, ax = np.loadtxt("headform_ax.txt", comments=("#", "$"), unpack=True)
 ```
 
-For data written in blocks (for example `nodout`), extract the node's
-rows with your post-processor or a short script, then pass the arrays.
-crashmetrics reads LS-DYNA **energy** output (`glstat`, `matsum`,
-`d3hsp`) itself; see [LS-DYNA energy checks](../guides/lsdyna-energy.md).
-
 !!! note "binout"
     For binary `binout` files, read the variables with a binout reader
     such as the BSD-licensed `lasso-python` package, then pass the arrays
-    to crashmetrics.
+    to crashmetrics; the channel names of the ASCII readers are the
+    binout variable names. Or write ASCII output instead
+    (`*DATABASE_<NAME>` with `BINARY = 1` or `3`).
 
 ## Physical test data
 

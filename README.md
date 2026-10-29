@@ -8,7 +8,8 @@
 
 Open-source Python for automotive crash safety calculations: injury
 criteria, Euro NCAP and Bharat NCAP scoring, pedestrian protection,
-AIS-100 compliance and LS-DYNA energy checks.
+homologation checks, test-versus-CAE correlation, LS-DYNA output readers
+and energy checks.
 
 **Documentation: <https://vsk1729.github.io/crashmetrics/>**, with
 step-by-step guides, runnable examples, the full API reference and the
@@ -40,20 +41,26 @@ Python 3.10 or later; the only dependency is NumPy 1.24 or later.
 | Bharat NCAP | AIS-197 ODB frontal and MDB side scores, ES-2 criteria, pole test, star rating; child occupant protection (Q1.5/Q3 dynamic, CRS installation, vehicle based); safety assist star qualifiers | [Bharat NCAP](https://vsk1729.github.io/crashmetrics/guides/bharat-ncap/), [Child occupant and rating](https://vsk1729.github.io/crashmetrics/guides/bharat-ncap-cop/) |
 | Intrusion | Pedal, steering column, A-pillar, footwell intrusion relative to the vehicle (best-fit frame of reference nodes), one node or ground; dynamic and static; survival space between nodes | [Intrusion](https://vsk1729.github.io/crashmetrics/guides/intrusion/) |
 | Vehicle | OLC, delta-V, rebound, crush, absorbed energy, CFE, SEA | [Pulse and energy](https://vsk1729.github.io/crashmetrics/guides/pulse-energy/) |
-| LS-DYNA | glstat / matsum energy checks, d3hsp run summary, `crashmetrics-energy` command | [LS-DYNA energy](https://vsk1729.github.io/crashmetrics/guides/lsdyna-energy/) |
+| LS-DYNA | ASCII output readers (nodout, rcforc, sleout, secforc, rwforc, sbtout, deforc, jntforc, abstat, rbdout, spcforc, swforc), `crashmetrics-ascii` to CSV; glstat / matsum energy checks, d3hsp run summary, `crashmetrics-energy` command | [ASCII output](https://vsk1729.github.io/crashmetrics/guides/lsdyna-ascii/), [LS-DYNA energy](https://vsk1729.github.io/crashmetrics/guides/lsdyna-energy/) |
 | Test vs CAE | ISO/TS 18571 rating (corridor, phase, magnitude, slope) and grade, corridor and cross-correlation (CC) rating, peak / timing / RMSE / Sprague & Geers / Russell errors | [Test-versus-CAE correlation](https://vsk1729.github.io/crashmetrics/guides/test-cae-correlation/) |
 | Analytics and ML | Batch runs into tables; signal shape features, criteria and design parameters per run as a training set; CSV, pandas and NumPy output | [Batch and analytics](https://vsk1729.github.io/crashmetrics/guides/batch-analytics/), [ML features](https://vsk1729.github.io/crashmetrics/guides/ml-features/) |
 
 ## Quick examples
 
 ```python
+from crashmetrics.lsdyna import read_nodout
 from crashmetrics.pedestrian import calculate_hic, check_flexpli, hic_colour
-from crashmetrics.signals import cfc_filter, resultant, to_g, to_seconds
+from crashmetrics.signals import cfc_filter, resample_uniform, resultant, to_g, to_seconds
 
-# HIC15 from LS-DYNA headform output (mm-ms-kg): filter each axis, then the resultant
-t = to_seconds(time_ms, "ms")
-a = resultant(*(cfc_filter(t, to_g(c, "mm/ms^2"), cfc=1000) for c in (ax, ay, az)))
-hic = calculate_hic(t, a, window_ms=15.0)
+# HIC15 from an LS-DYNA nodout (mm-ms-kg): resample, filter each axis, then the resultant
+nodout = read_nodout("run01/nodout", ids=[1001])            # headform CG node
+t_s = to_seconds(nodout.time, "ms")
+axes = []
+for c in "xyz":
+    t, a = resample_uniform(t_s, to_g(nodout.channel(f"{c}_acceleration"), "mm/ms^2"),
+                            sample_rate=10_000.0)
+    axes.append(cfc_filter(t, a, cfc=1000))
+hic = calculate_hic(t, resultant(*axes), window_ms=15.0)
 print(hic.value, hic_colour(hic.value))          # Euro NCAP headform colour
 
 # AIS-100 Rev.1 Flex-PLI check (peaks in N m and mm)
@@ -67,8 +74,9 @@ are in the [guides](https://vsk1729.github.io/crashmetrics/guides/).
 ## Runnable examples
 
 The [`examples/`](https://github.com/vsk1729/crashmetrics/tree/main/examples)
-folder has seventeen scripts with synthetic data, one per topic, from
-`01_signals_hic.py` to `17_whiplash.py`. The test suite checks that
+folder has eighteen scripts, one per topic, from `01_signals_hic.py` to
+`18_lsdyna_ascii.py`, with synthetic data except the two LS-DYNA
+examples, which read real output files. The test suite checks that
 each one still prints exactly its documented output.
 
 ```bash

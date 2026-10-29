@@ -2,7 +2,8 @@
 
 **Open-source Python for automotive crash safety calculations:** injury
 criteria, Euro NCAP and Bharat NCAP scoring, pedestrian protection,
-AIS-100 compliance and LS-DYNA energy checks, all in one package.
+homologation checks, test-versus-CAE correlation, LS-DYNA output readers
+and energy checks, all in one package.
 
 ```bash
 pip install crashmetrics
@@ -28,7 +29,7 @@ pip install crashmetrics
 | Bharat NCAP | AIS-197 adult occupant scoring (ODB frontal, MDB side), pole test, star rating; child occupant protection; safety assist star qualifiers | [Bharat NCAP](guides/bharat-ncap.md), [Child occupant and rating](guides/bharat-ncap-cop.md) |
 | Intrusion | Pedal, steering column, A-pillar and footwell intrusion relative to the vehicle; dynamic and static; survival space | [Intrusion](guides/intrusion.md) |
 | Vehicle | OLC, delta-V, rebound, dynamic crush, crash box energy, CFE, SEA | [Pulse and energy](guides/pulse-energy.md) |
-| LS-DYNA | glstat / matsum energy balance checks, d3hsp run summary, `crashmetrics-energy` command | [LS-DYNA energy](guides/lsdyna-energy.md) |
+| LS-DYNA | ASCII output readers (nodout, rcforc, sleout, secforc, rwforc, sbtout, abstat and more), `crashmetrics-ascii` to CSV; glstat / matsum energy balance checks, d3hsp run summary, `crashmetrics-energy` command | [ASCII output](guides/lsdyna-ascii.md), [LS-DYNA energy](guides/lsdyna-energy.md) |
 | Test vs CAE | ISO/TS 18571 rating and grade, corridor and cross-correlation (CC) rating, peak, timing and RMSE errors | [Test-versus-CAE correlation](guides/test-cae-correlation.md) |
 | Analytics and ML | Batch runs into tables; signal shape features, criteria and design parameters per run as a training set | [Batch and analytics](guides/batch-analytics.md), [ML features](guides/ml-features.md) |
 

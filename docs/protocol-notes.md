@@ -183,6 +183,17 @@ and how to change it. If your organisation reads a rule differently, the
 | Hourglass limit | LS-DYNA rule of thumb: 10 % of internal energy | 10 % globally and per part | `EnergyLimits(hourglass=..., part_hourglass=...)` |
 | Other limits | No standard | Common rules of thumb (ratio 0.95–1.05, contact and damping 5 %, added mass 5 %) | `EnergyLimits(...)` or command-line flags |
 
+## LS-DYNA ASCII readers
+
+| Topic | Source | crashmetrics | Change it |
+| --- | --- | --- | --- |
+| Contact sides | `slave` / `master` before R13, `SURFA` / `SURFB` after | Both read as `surfa_*` / `surfb_*` (slave = SURFA) | |
+| Restarts | A restarted run appends to the file from the restart time | States from the restart time on are replaced by the restarted ones | |
+| `sleout` totals | LS-DYNA's printed summary | Kept as printed in `totals`; force transducer contacts are not in them | Sum `data` yourself |
+| `spcforc` | A node can appear in several constraint sets | Its forces are added up per state | |
+| `swforc` | Trailing columns depend on the weld type | Length, resultant moment and torsion read for spotweld beams, solids and assemblies only; `failure` is 1.0 when printed as `failure` | |
+| ⚠️ `rwforc`, `sbtout`, `jntforc`, `rbdout` | No public real file with data was found | Written to the layout of LS-DYNA's l2a converter | Please report a file that is not read correctly |
+
 ## Found something else?
 
 If a protocol you use reads differently, or a newer version changes a

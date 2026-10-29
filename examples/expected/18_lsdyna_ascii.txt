@@ -1,0 +1,17 @@
+nodout: LSTC 50th% Full_FE H-III Dummy (Beta Version, February 17, 2019)
+  ls-dyna smp s R16 R16.0_619_d222963 date 03/18/2025
+  251 states, time 0 to 25
+  entities: 22626
+  channels: x_displacement, y_displacement, z_displacement, x_velocity, y_velocity, z_velocity, x_acceleration, y_acceleration, z_acceleration, x_coordinate, y_coordinate, z_coordinate, rx_displacement, ry_displacement, rz_displacement, rx_velocity, ry_velocity, rz_velocity, rx_acceleration, ry_acceleration, rz_acceleration
+
+Head CG: peak 90.8 g, HIC15 194.6 (6.0 to 10.6 ms)
+BrIC 0.388
+The study reported HIC 195.2 and BrIC 0.388 from these files.
+
+Upper_Neck_Force_INJURY: peak force 3834 N, peak tension 1030 N, peak moment 58.27 N m (section area 2515 mm^2)
+
+Files found: rcforc, spcforc
+rcforc contacts: 80085 (Left_on_left_action), 8008 (Right_on_right_action), 80086 (Mortar silent backup for contact 80085), 8009 (Mortar silent backup for contact 8008)
+spcforc: 32 constrained nodes; y reaction at t = 0.1: sum of nodes 13.769, printed resultant 13.769
+
+19 features of the head resultant, e.g. head_res.t_peak_abs_ms 8.7, head_res.rise_ms 2.25, head_res.width50_ms 4.41

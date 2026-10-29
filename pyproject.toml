@@ -17,6 +17,9 @@ dependencies = [
 keywords = [
     "crashworthiness",
     "LS-DYNA",
+    "nodout",
+    "Euro NCAP",
+    "Bharat NCAP",
     "CAE",
     "HIC",
     "automotive-safety"
@@ -50,6 +53,7 @@ docs = [
 
 [project.scripts]
 crashmetrics-energy = "crashmetrics.lsdyna:main"
+crashmetrics-ascii = "crashmetrics.lsdyna_ascii:main"
 
 [project.urls]
 Homepage = "https://github.com/vsk1729/crashmetrics"

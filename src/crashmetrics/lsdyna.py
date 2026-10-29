@@ -12,6 +12,11 @@ Functions:
   energies.
 - `main`: Command-line entry point: ``crashmetrics-energy RUN_DIR``.
 
+The readers for the other ASCII files (nodout, rcforc, sleout, secforc,
+rwforc, sbtout, deforc, jntforc, abstat, rbdout, spcforc, swforc) live
+in `crashmetrics.lsdyna_ascii` and are re-exported here, so
+``from crashmetrics.lsdyna import read_nodout`` works.
+
 The parsers read values by their labels, not by position, so they do
 not depend on the line order or on which optional channels a given
 LS-DYNA version writes:
@@ -47,17 +52,49 @@ from crashmetrics.energy_check import (
     check_energies,
     normalise_name,
 )
+from crashmetrics.lsdyna_ascii import (
+    AsciiOutput,
+    read_abstat,
+    read_ascii,
+    read_deforc,
+    read_jntforc,
+    read_nodout,
+    read_rbdout,
+    read_rcforc,
+    read_run,
+    read_rwforc,
+    read_sbtout,
+    read_secforc,
+    read_sleout,
+    read_spcforc,
+    read_swforc,
+)
 
 __all__ = [
+    "AsciiOutput",
     "D3hsp",
     "check_run",
     "main",
     "parse_d3hsp",
     "parse_glstat",
     "parse_matsum",
+    "read_abstat",
+    "read_ascii",
     "read_d3hsp",
+    "read_deforc",
     "read_glstat",
+    "read_jntforc",
     "read_matsum",
+    "read_nodout",
+    "read_rbdout",
+    "read_rcforc",
+    "read_run",
+    "read_rwforc",
+    "read_sbtout",
+    "read_secforc",
+    "read_sleout",
+    "read_spcforc",
+    "read_swforc",
 ]
 
 _NUMBER = r"[-+]?(?:\d+\.?\d*|\.\d+)(?:[EeDd]?[-+]?\d+)?"
