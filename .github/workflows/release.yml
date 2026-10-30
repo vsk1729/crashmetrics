@@ -6,6 +6,9 @@ name: Release
 #   publish the current version to TestPyPI.
 # - Publish a GitHub release with a tag like v0.3.0 to publish that
 #   version to PyPI. The tag must match crashmetrics.__version__.
+#
+# Before either upload, the built wheel is installed on Python 3.10-3.13
+# and the full test suite runs against it.
 
 on:
   workflow_dispatch:
@@ -57,10 +60,46 @@ jobs:
           name: dist
           path: dist/
 
+  test-wheel:
+    name: Test the wheel on Python ${{ matrix.python-version }}
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - name: Check out source (tests, examples and test data only)
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Download distributions
+        uses: actions/download-artifact@v6
+        with:
+          name: dist
+          path: dist/
+
+      - name: Install the built wheel
+        run: |
+          rm -rf src     # the tests must use the installed wheel, not the source
+          python -m pip install dist/*.whl "pytest>=8"
+
+      - name: Check the installed package
+        run: |
+          python -c "import crashmetrics, sys; print(crashmetrics.__version__, crashmetrics.__file__); assert 'site-packages' in crashmetrics.__file__"
+          crashmetrics-ascii --help
+
+      - name: Run the test suite against the wheel
+        run: python -m pytest -q
+
   publish-testpypi:
     name: Publish to TestPyPI
     if: github.event_name == 'workflow_dispatch'
-    needs: build
+    needs: [build, test-wheel]
     runs-on: ubuntu-latest
     environment:
       name: testpypi
@@ -82,7 +121,7 @@ jobs:
   publish-pypi:
     name: Publish to PyPI
     if: github.event_name == 'release'
-    needs: build
+    needs: [build, test-wheel]
     runs-on: ubuntu-latest
     environment:
       name: pypi

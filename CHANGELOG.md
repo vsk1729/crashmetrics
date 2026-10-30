@@ -6,6 +6,29 @@ follow [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- `calculate_hic(..., method="exact")`: the exact HIC maximum over
+  continuous end points of the linearly interpolated signal (closed-form
+  stationary points, window-length and record-limit cases, with a
+  branch-and-bound search), verified against closed forms and
+  independent searches.
+- Documentation page "HIC accuracy and performance": verification,
+  grid-search accuracy against the exact value and run times;
+  `examples/hic_convergence.py` reproduces it.
+- Release workflow: the built wheel is installed and tested on Python
+  3.10, 3.11, 3.12 and 3.13 before publishing.
+
+### Changed
+
+- The HIC grid search is vectorised: 100 000 samples take about 0.1 s
+  instead of 5 s. Records of more than 20 000 samples that are over four
+  times as dense as the grid use the grid points only as end-point
+  candidates (the integral is still exact); results for other records
+  are unchanged.
+- A tiny negative integral from rounding on a zero signal no longer
+  produces a NumPy warning.
+
 ## [0.15.0] - 2026-10-30
 
 ### Added

@@ -60,9 +60,11 @@ hic.value, hic.start_time, hic.end_time
 ```
 
 - Acceleration is the resultant in g, time in s.
-- The integral uses the trapezoidal rule on a refined grid
-  (`resolution_ms=0.1` by default); `examples/hic_convergence.py` shows
-  the effect of the resolution.
+- The signal is linearly interpolated between samples and integrated
+  exactly. The default `method="grid"` searches the interval end points
+  on a 0.1 ms grid (`resolution_ms`) plus the samples, which is a lower
+  bound usually within 0.05 %; `method="exact"` finds the maximum over
+  continuous end points. See [HIC accuracy and performance](hic-accuracy.md).
 - If the record is shorter than the window, a warning is issued and the
   whole record is used.
 
