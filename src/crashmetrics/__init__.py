@@ -47,4 +47,4 @@ crashmetrics.bncap
 """
 
 # Single source of the package version; pyproject.toml reads it.
-__version__ = "0.15.0"
+__version__ = "0.16.0"
