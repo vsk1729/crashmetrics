@@ -5,7 +5,7 @@ type: software
 authors:
   - family-names: "Voonna"
     given-names: "Satish Kumar"
-version: "0.15.0"
+version: "0.16.0"
 doi: 10.5281/zenodo.23806423
 date-released: "2026-10-30"
 license: MIT
