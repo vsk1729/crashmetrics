@@ -24,6 +24,7 @@ its real output (the test suite checks that output on every change).
 | [Bharat NCAP child occupant and complete rating](bharat-ncap-cop.md) | Score child occupant protection (dynamic, CRS installation, vehicle based) and apply the safety assist qualifiers to the stars | `16_bharat_ncap_cop_rating.py` |
 | [Rear impact (whiplash)](whiplash.md) | Compute NIC and Nkm from BioRID signals and score the 2026 rear impact assessment (front seat geometry and sled tests, rear seats) | `17_whiplash.py` |
 | [LS-DYNA ASCII output](lsdyna-ascii.md) | Read nodout, rcforc, sleout, secforc, rwforc, sbtout, deforc, jntforc, abstat, rbdout, spcforc and swforc into arrays, a whole run at once or as CSV | `18_lsdyna_ascii.py` |
+| [Euro NCAP sled and virtual testing (VTC)](euroncap-virtual-testing.md) | Validate restraint simulations against sled tests (model quality, ISO/TS 18571 sensor scores, assessment criteria) and score the 10-point sled and virtual testing; exchange data as ISO-MME | `19_euroncap_virtual_testing.py` |
 
 ## The general workflow
 

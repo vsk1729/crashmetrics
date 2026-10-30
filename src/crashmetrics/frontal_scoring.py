@@ -37,7 +37,7 @@ Check all limits against the protocol version you assess to.
 """
 
 import math
-from collections.abc import Mapping, Sequence
+from collections.abc import Collection, Mapping, Sequence
 from dataclasses import dataclass, field
 
 __all__ = [
@@ -378,6 +378,7 @@ def score_dummy(
     speed: int = 50,
     band_fractions: Mapping[str, float] = BAND_FRACTIONS,
     driver: bool = False,
+    exclude: Collection[str] = (),
 ) -> DummyScore:
     """Score one dummy.
 
@@ -396,6 +397,9 @@ def score_dummy(
         Share of the region points per band.
     driver:
         True for the driver (driver-only capping limits).
+    exclude:
+        Criteria not assessed (e.g. ``knee_displacement``, ``tibia_index``
+        and ``tibia_force`` in virtual tests); they need no value.
 
     Raises
     ------
@@ -431,7 +435,7 @@ def score_dummy(
             raise ValueError(f"Unknown region {region!r} for {dummy}.")
         results = []
         for crit in regions_map[region]:
-            if crit not in limits or crit in skipped:
+            if crit not in limits or crit in skipped or crit in exclude:
                 continue
             if crit not in values:
                 if crit in _OPTIONAL and child:

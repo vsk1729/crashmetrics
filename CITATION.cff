@@ -13,7 +13,8 @@ url: "https://vsk1729.github.io/crashmetrics/"
 abstract: >-
   Open-source Python package for automotive crash safety calculations:
   injury criteria (HIC, Nij, BrIC, DAMAGE, chest and leg criteria),
-  Euro NCAP scoring (frontal, side, far side, whiplash), Bharat NCAP
+  Euro NCAP scoring (frontal, sled and virtual testing, side, far side,
+  whiplash), Bharat NCAP
   adult and child occupant scoring and star rating, pedestrian protection, homologation
   checks (UN R94, R95, R135, AIS-098, AIS-099, AIS-100, post-crash
   electrical safety), intrusion measurement, LS-DYNA ASCII output

@@ -77,6 +77,27 @@ and how to change it. If your organisation reads a rule differently, the
 | Compatibility combination | CP 007 Figure 2 (no formula in the text) | `1.25 (s + o + 2so)` points, read from the figure and checked against the worked examples | |
 | Modifier totals | CP 007: no limit to the number of modifiers; scores not below 0 | Summed per region; regions and tests floored at 0 | |
 
+## Euro NCAP sled and virtual testing (VTC)
+
+Virtual Testing Protocol v1.0.2 and Frontal Impact Protocol v1.2.
+
+| Topic | Source | crashmetrics | Change it |
+| --- | --- | --- | --- |
+| ⚠️ Points per load case | §3.3 table: sled "0.625 / 2", virtual "0.625 / 3" per region; the text does not explain the divisors | 0.625 / 2 per region in each of the two sled load cases, 0.625 / 3 in each of the three virtual Hybrid III load cases (totals 2.5 + 2.5 per occupant) | |
+| ⚠️ Which load cases are sled tested | Two validation load cases, chosen in the procedure | Given by the user (any two of load cases 1-5; the other three are virtual) | `sled=`, `virtual=` |
+| ⚠️ No HBM data | "the maximum available score for virtual testing is halved" | Virtual points halved, for driver and passenger | Adjust the result |
+| Validation not met | "only the sled load cases can be scored" | Virtual points 0 (`validated=False`) | |
+| ⚠️ Validation scope | Acceptance per sensor and criterion; the protocol does not say whether one failed load case fails all | One `validated` flag per occupant; decide from your `validate_load_case` results | |
+| Sensor score | §5.3.1: weights from the test, for sensors with more than one axis | Same; single-axis sensors use their one score | |
+| ⚠️ Filtering before rating | Simulation submitted unfiltered; filter classes for the rating not stated | Not applied: filter test and simulation the same way (CP 005 classes) before `sensor_score` | |
+| Rating interval | Data from T0 to Tend; Tend = maximum head x excursion + 40 % | `frontal_end_time`; pass `t_start`, `t_end` | |
+| AC limit | §5.3.2: the lower performance limits of the Frontal Impact Protocol §3.5 | LPLs of `frontal_scoring` for the load case's dummy and speed | |
+| dAC below 50 % | dAC defined only where rAC_test ≥ 50 % | Not assessed; listed in the notes | |
+| Strict limits | "below 10 %", "below 5 %", "exceed 0.5", "below 30 %", "> 0.95" | Strict comparisons: a value at the limit fails | |
+| Virtual criteria | Knee displacement and tibia criteria not applicable; lower leg points by default unless a physical test exceeds a tibia LPL | As stated | `tibia_lpl_exceeded=` |
+| ⚠️ Modifiers | §4.3.3: "% of the maximum available score for that load case"; same as full scale "where feasible" | Applied per body region as in the full-scale tests (`Occupant.modifiers`) | |
+| Human body model | Required for full virtual points; HBM limits not given | Not scored | |
+
 ## Euro NCAP 2026 side impact (AE-MDB, pole, far side)
 
 | Topic | Source | crashmetrics | Change it |

@@ -32,6 +32,10 @@ crashmetrics.lower_extremity
     Tibia Index, tibia compression, knee slider and femur force.
 crashmetrics.frontal_scoring
     Euro NCAP MPDB and full width test scoring.
+crashmetrics.virtual_testing
+    Euro NCAP frontal sled and virtual testing (VTC).
+crashmetrics.isomme
+    ISO-MME (ISO/TS 13499) test data: read and write.
 crashmetrics.side
     ES-2 side impact criteria.
 crashmetrics.bncap

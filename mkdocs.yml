@@ -101,6 +101,7 @@ nav:
       - Flex-PLI and AIS-100 compliance: guides/flexpli-ais100.md
       - Frontal dummy criteria: guides/frontal-dummy-criteria.md
       - Euro NCAP MPDB and full width: guides/euroncap-frontal.md
+      - Euro NCAP sled and virtual testing (VTC): guides/euroncap-virtual-testing.md
       - Euro NCAP side and far side: guides/euroncap-side.md
       - Rear impact (whiplash): guides/whiplash.md
       - Bharat NCAP star rating: guides/bharat-ncap.md
@@ -126,6 +127,7 @@ nav:
       - lower_extremity: reference/lower_extremity.md
       - side: reference/side.md
       - frontal_scoring: reference/frontal_scoring.md
+      - virtual_testing: reference/virtual_testing.md
       - side_scoring: reference/side_scoring.md
       - whiplash: reference/whiplash.md
       - bncap: reference/bncap.md
@@ -134,6 +136,7 @@ nav:
       - energy: reference/energy.md
       - energy_check and lsdyna: reference/lsdyna.md
       - lsdyna_ascii: reference/lsdyna_ascii.md
+      - isomme: reference/isomme.md
       - features: reference/features.md
       - correlation: reference/correlation.md
       - intrusion: reference/intrusion.md

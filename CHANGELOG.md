@@ -6,6 +6,31 @@ follow [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- `crashmetrics.virtual_testing`: Euro NCAP frontal sled and virtual
+  testing (VTC), from the Crash Protection Virtual Testing Protocol
+  v1.0.2 and the Frontal Impact Protocol v1.2: the load case matrix
+  (`FRONTAL_LOAD_CASES`), model quality criteria
+  (`check_model_quality`, with `model_quality_inputs` from LS-DYNA
+  glstat and matsum), the end time (`frontal_end_time`), ISO/TS 18571
+  sensor scores with test-peak axis weights (`sensor_score`),
+  assessment criteria deviations (`kpi_check`, `kpi_checks`), load case
+  acceptance (`validate_load_case`) and the 10-point sled and virtual
+  score per occupant (`score_sled_virtual`: two sled and three virtual
+  load cases, default virtual lower leg points, HBM halving, sled only
+  if not validated).
+- `crashmetrics.isomme`: read ISO-MME (ISO/TS 13499) tests from a
+  folder, `.mme` file or zip (implicit and explicit time bases,
+  `NOVALUE`, UTF-8 / Windows-1252 / ISO-8859-1), find channels by code
+  pattern, parse channel codes, and write ISO-MME 1.6 test folders (for
+  example simulation results for a virtual testing submission).
+- `frontal_scoring.score_dummy(..., exclude=...)`: leave criteria out of
+  the assessment (used for virtual tests).
+- Guide "Euro NCAP sled and virtual testing (VTC)", protocol notes,
+  example `19_euroncap_virtual_testing.py`; ISO-MME in "Loading your
+  data". Test data: the pyisomme ISO-MME fixtures (MIT).
+
 ## [0.13.0] - 2026-10-29
 
 ### Added

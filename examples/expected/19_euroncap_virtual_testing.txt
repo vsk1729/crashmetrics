@@ -1,0 +1,29 @@
+ISO-MME VTC_LC1_SIM: Euro NCAP VTC load case 1, simulation, 12 channels, e.g. 11HEAD0000H3ACXA
+
+Rating interval 0 to 119.0 ms (head excursion + 40 %)
+VTC validation (load case 1, driver): PASS
+  iso_head                   0.946 > 0.5    ok           [5.4.1]
+  iso_chest_acceleration     0.948 > 0.5    ok           [5.4.1]
+  iso_chest_deflection       0.950 > 0.5    ok           [5.4.1]
+  iso_pelvis                 0.946 > 0.5    ok           [5.4.1]
+  iso_sled                   1.000 > 0.5    ok           [5.4.1]
+  iso_shoulder_belt          0.950 > 0.5    ok           [5.4.1]
+  dAC_hic15                  0.064 < 0.3    ok           [5.4.2]  rAC test 0.59, sim 0.65
+  dAC_head_a3ms              0.037 < 0.3    ok           [5.4.2]  rAC test 0.59, sim 0.62
+  dAC_neck_tension           0.045 < 0.3    ok           [5.4.2]  rAC test 0.58, sim 0.62
+  dAC_chest_compression      0.060 < 0.3    ok           [5.4.2]  rAC test 0.74, sim 0.80
+  hourglass_ratio            0.046 < 0.1    ok           [5.2]  hourglass / max internal energy
+  added_mass_ratio           0.011 < 0.05   ok           [5.2]  added mass / model mass
+  hpoint_dz_mm               1.800 < 10     ok           [5.2]  H-point z displacement, first 5 ms
+  hourglass_ratio[driver]    0.071 < 0.1    ok           [5.2]
+  Note: femur_force: test at 34% of the limit (below 50 %), deviation not assessed
+
+Sled & virtual testing, driver: 4.229 / 5.0 points
+  sled    LC1 hybrid3_50  1.125 / 1.250  head_neck: green, chest_abdomen: orange, knee_femur_pelvis: green, lower_leg: green
+  sled    LC3 hybrid3_50  1.188 / 1.250  head_neck: green, chest_abdomen: yellow, knee_femur_pelvis: green, lower_leg: green
+  virtual LC2 hybrid3_95  0.500 / 0.625  head_neck: green, chest_abdomen: orange, knee_femur_pelvis: yellow
+  virtual LC4 hybrid3_05  0.417 / 0.625  head_neck: orange, chest_abdomen: orange, knee_femur_pelvis: yellow
+  virtual LC5 hybrid3_05  0.375 / 0.625  head_neck: brown, chest_abdomen: orange, knee_femur_pelvis: yellow
+  sled 2.312 / 2.5, virtual 1.917 / 2.5 (raw 1.917, lower leg 0.625)
+
+Without human body model data: 3.271 / 5 (virtual 0.958)
