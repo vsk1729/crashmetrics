@@ -35,12 +35,13 @@ Python 3.10 or later; the only dependency is NumPy 1.24 or later.
 | Pedestrian (Euro NCAP) | Headform grid with correction factor, blue / default-red / A-pillar points; aPLI, upper legform, total VRU score | [Headform](https://vsk1729.github.io/crashmetrics/guides/pedestrian-headform/), [Legforms](https://vsk1729.github.io/crashmetrics/guides/pedestrian-legforms/) |
 | Pedestrian (India) | AIS-100 compliance: Flex-PLI and legacy legform, upper legform, HIC1000 / HIC1700 zones; Flex-PLI assessment interval and Euro NCAP Flex-PLI score | [Flex-PLI and AIS-100](https://vsk1729.github.io/crashmetrics/guides/flexpli-ais100/) |
 | Frontal dummies | DAMAGE, BrIC, neck loads, Nij, R94 limits, chest deflection, VC, CTI, THOR Rmax and abdomen, acetabulum, iliac force drop, femur, Tibia Index, knee slider | [Frontal criteria](https://vsk1729.github.io/crashmetrics/guides/frontal-dummy-criteria/) |
-| Euro NCAP 2026 | MPDB (20 points) and full width (10 points) with modifiers and the compatibility penalty; side impact AE-MDB (15), pole (10) and far side (10) | [MPDB and full width](https://vsk1729.github.io/crashmetrics/guides/euroncap-frontal/), [Side and far side](https://vsk1729.github.io/crashmetrics/guides/euroncap-side/) |
+| Euro NCAP 2026 | MPDB (20 points) and full width (10 points) with modifiers and the compatibility penalty; sled and virtual testing (VTC: model quality, ISO/TS 18571 validation, 10 points); side impact AE-MDB (15), pole (10) and far side (10) | [MPDB and full width](https://vsk1729.github.io/crashmetrics/guides/euroncap-frontal/), [Virtual testing](https://vsk1729.github.io/crashmetrics/guides/euroncap-virtual-testing/), [Side and far side](https://vsk1729.github.io/crashmetrics/guides/euroncap-side/) |
 | Homologation | UN R94 / AIS-098, UN R95 / AIS-099 and UN R135 pass/fail per requirement with clause and utilisation; post-crash electrical safety (voltage, energy, IPXXB, isolation, electrolyte, REESS, fire) | [Homologation](https://vsk1729.github.io/crashmetrics/guides/homologation/) |
 | Whiplash | BioRID NIC and Nkm; 2026 rear impact score (front seat geometry and medium/high sled pulses with capping, rear seats; 5 points) | [Rear impact](https://vsk1729.github.io/crashmetrics/guides/whiplash/) |
 | Bharat NCAP | AIS-197 ODB frontal and MDB side scores, ES-2 criteria, pole test, star rating; child occupant protection (Q1.5/Q3 dynamic, CRS installation, vehicle based); safety assist star qualifiers | [Bharat NCAP](https://vsk1729.github.io/crashmetrics/guides/bharat-ncap/), [Child occupant and rating](https://vsk1729.github.io/crashmetrics/guides/bharat-ncap-cop/) |
 | Intrusion | Pedal, steering column, A-pillar, footwell intrusion relative to the vehicle (best-fit frame of reference nodes), one node or ground; dynamic and static; survival space between nodes | [Intrusion](https://vsk1729.github.io/crashmetrics/guides/intrusion/) |
 | Vehicle | OLC, delta-V, rebound, crush, absorbed energy, CFE, SEA | [Pulse and energy](https://vsk1729.github.io/crashmetrics/guides/pulse-energy/) |
+| Data formats | ISO-MME (ISO/TS 13499) read and write for test and simulation channels | [Virtual testing](https://vsk1729.github.io/crashmetrics/guides/euroncap-virtual-testing/), [Loading data](https://vsk1729.github.io/crashmetrics/getting-started/loading-data/) |
 | LS-DYNA | ASCII output readers (nodout, rcforc, sleout, secforc, rwforc, sbtout, deforc, jntforc, abstat, rbdout, spcforc, swforc), `crashmetrics-ascii` to CSV; glstat / matsum energy checks, d3hsp run summary, `crashmetrics-energy` command | [ASCII output](https://vsk1729.github.io/crashmetrics/guides/lsdyna-ascii/), [LS-DYNA energy](https://vsk1729.github.io/crashmetrics/guides/lsdyna-energy/) |
 | Test vs CAE | ISO/TS 18571 rating (corridor, phase, magnitude, slope) and grade, corridor and cross-correlation (CC) rating, peak / timing / RMSE / Sprague & Geers / Russell errors | [Test-versus-CAE correlation](https://vsk1729.github.io/crashmetrics/guides/test-cae-correlation/) |
 | Analytics and ML | Batch runs into tables; signal shape features, criteria and design parameters per run as a training set; CSV, pandas and NumPy output | [Batch and analytics](https://vsk1729.github.io/crashmetrics/guides/batch-analytics/), [ML features](https://vsk1729.github.io/crashmetrics/guides/ml-features/) |
@@ -74,8 +75,8 @@ are in the [guides](https://vsk1729.github.io/crashmetrics/guides/).
 ## Runnable examples
 
 The [`examples/`](https://github.com/vsk1729/crashmetrics/tree/main/examples)
-folder has eighteen scripts, one per topic, from `01_signals_hic.py` to
-`18_lsdyna_ascii.py`, with synthetic data except the two LS-DYNA
+folder has nineteen scripts, one per topic, from `01_signals_hic.py` to
+`19_euroncap_virtual_testing.py`, with synthetic data except the two LS-DYNA
 examples, which read real output files. The test suite checks that
 each one still prints exactly its documented output.
 

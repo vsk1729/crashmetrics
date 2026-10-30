@@ -3,7 +3,9 @@
 Module: `crashmetrics.frontal_scoring`.
 
 Protocols: Euro NCAP Crash Protection – Frontal Impact Protocol v1.1
-(2026–2028) and CP 007 Assessment Modifiers v1.1.
+(2026–2028) and CP 007 Assessment Modifiers v1.1. The third part of the
+frontal assessment, sled and virtual testing (10 points), is in
+[Euro NCAP sled and virtual testing](euroncap-virtual-testing.md).
 
 | Test | Speed | Occupants and points | Total |
 | --- | --- | --- | --- |

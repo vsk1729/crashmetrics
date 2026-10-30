@@ -96,8 +96,19 @@ t_ms, ax = np.loadtxt("headform_ax.txt", comments=("#", "$"), unpack=True)
 ## Physical test data
 
 Test labs deliver channels as ISO-MME (ISO/TS 13499) or as CSV / Excel
-exports. Export the channels you need with their time base, then load
-them as above. Make sure you know:
+exports. ISO-MME is read directly (a test folder, its `.mme` file or a
+zip):
+
+```python
+from crashmetrics.isomme import read_isomme
+
+test = read_isomme("tests/AB1234.zip")
+print(test.summary())
+head_x = test.channel("11HEAD??????ACX?")          # ? and * wildcards
+t, ax = head_x.time, head_x.values                  # s, channel unit (head_x.unit)
+```
+
+CSV and Excel exports load as above. Make sure you know:
 
 - whether the channels are already filtered (and with which CFC);
 - the sign convention of each channel (SAE J211 in Euro NCAP);
