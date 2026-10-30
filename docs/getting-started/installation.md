@@ -75,7 +75,7 @@ python -m pip install pandas matplotlib openpyxl
 
 ## Run the examples
 
-The repository has nineteen runnable examples, with synthetic data except
+The repository has twenty-one runnable examples, with synthetic data except
 the two LS-DYNA examples (9 and 18), which read real output files:
 
 ```bash

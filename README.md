@@ -5,6 +5,7 @@
 [![Tests](https://github.com/vsk1729/crashmetrics/actions/workflows/tests.yml/badge.svg)](https://github.com/vsk1729/crashmetrics/actions/workflows/tests.yml)
 [![Docs](https://github.com/vsk1729/crashmetrics/actions/workflows/docs.yml/badge.svg)](https://vsk1729.github.io/crashmetrics/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](https://github.com/vsk1729/crashmetrics/blob/main/LICENSE)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23806423.svg)](https://doi.org/10.5281/zenodo.23806423)
 
 Open-source Python for automotive crash safety calculations: injury
 criteria, Euro NCAP and Bharat NCAP scoring, pedestrian protection,
@@ -44,7 +45,7 @@ Python 3.10 or later; the only dependency is NumPy 1.24 or later.
 | Data formats | ISO-MME (ISO/TS 13499) read and write for test and simulation channels | [Virtual testing](https://vsk1729.github.io/crashmetrics/guides/euroncap-virtual-testing/), [Loading data](https://vsk1729.github.io/crashmetrics/getting-started/loading-data/) |
 | LS-DYNA | ASCII output readers (nodout, rcforc, sleout, secforc, rwforc, sbtout, deforc, jntforc, abstat, rbdout, spcforc, swforc), `crashmetrics-ascii` to CSV; glstat / matsum energy checks, d3hsp run summary, `crashmetrics-energy` command | [ASCII output](https://vsk1729.github.io/crashmetrics/guides/lsdyna-ascii/), [LS-DYNA energy](https://vsk1729.github.io/crashmetrics/guides/lsdyna-energy/) |
 | Test vs CAE | ISO/TS 18571 rating (corridor, phase, magnitude, slope) and grade, corridor and cross-correlation (CC) rating, peak / timing / RMSE / Sprague & Geers / Russell errors | [Test-versus-CAE correlation](https://vsk1729.github.io/crashmetrics/guides/test-cae-correlation/) |
-| Analytics and ML | Batch runs into tables; signal shape features, criteria and design parameters per run as a training set; CSV, pandas and NumPy output | [Batch and analytics](https://vsk1729.github.io/crashmetrics/guides/batch-analytics/), [ML features](https://vsk1729.github.io/crashmetrics/guides/ml-features/) |
+| Analytics and ML | Batch runs into tables; signal shape features, criteria and design parameters per run as a training set; DOE sampling (Latin hypercube, Halton, Morris) with LS-DYNA parameters; margins to limits as targets; sensitivity ranking (PRCC, Morris); probabilistic star ratings (Monte Carlo) | [Batch and analytics](https://vsk1729.github.io/crashmetrics/guides/batch-analytics/), [ML features](https://vsk1729.github.io/crashmetrics/guides/ml-features/), [DOE and sensitivity](https://vsk1729.github.io/crashmetrics/guides/doe-sensitivity/) |
 
 ## Quick examples
 
@@ -75,8 +76,8 @@ are in the [guides](https://vsk1729.github.io/crashmetrics/guides/).
 ## Runnable examples
 
 The [`examples/`](https://github.com/vsk1729/crashmetrics/tree/main/examples)
-folder has nineteen scripts, one per topic, from `01_signals_hic.py` to
-`19_euroncap_virtual_testing.py`, with synthetic data except the two LS-DYNA
+folder has twenty-one scripts, one per topic, from `01_signals_hic.py` to
+`21_probabilistic_rating.py`, with synthetic data except the two LS-DYNA
 examples, which read real output files. The test suite checks that
 each one still prints exactly its documented output.
 
@@ -92,6 +93,13 @@ standards: Euro NCAP (assessment protocols, CP 005, CP 007), Bharat NCAP
 published research. The tests reproduce the protocols' own worked
 examples where they give one, and check other formulas against hand
 calculations and closed-form solutions.
+
+## Citing
+
+If you use crashmetrics in your work, please cite it (Zenodo,
+[doi:10.5281/zenodo.23806423](https://doi.org/10.5281/zenodo.23806423);
+the "Cite this repository" button on GitHub gives the reference from
+`CITATION.cff`).
 
 ## Contributing
 

@@ -1,0 +1,24 @@
+Nominal design: 27.73 / 32 points, 5 stars
+Monte Carlo, 400 samples
+  output     nominal      mean        p5       p50       p95
+  points       27.73     27.41     25.64     27.56     28.84
+
+Star rating probabilities:
+  4 stars:  31.5%
+  5 stars:  68.5%
+P(5 stars) = 68.5%
+
+Sensitivity of points (linear fit R² 0.90):
+  variable         PRCC  Spearman     SRC
+  hic15           -0.91     -0.74   -0.76
+  chest           -0.73     -0.35   -0.37
+  abdomen         -0.69     -0.34   -0.32
+  rib             -0.66     -0.26   -0.28
+  tibia_index     -0.49     -0.20   -0.16
+  vc              +0.06     +0.09   -0.01
+  femur_scale     -0.06     -0.04   -0.03
+  chest_p         -0.04     +0.02   +0.00
+  rib_vc          -0.04     -0.04   +0.00
+  neck_scale      +0.02     +0.04   +0.02
+  pubic           -0.02     -0.06   -0.02
+  head_a3ms       +0.00     -0.04   -0.01
