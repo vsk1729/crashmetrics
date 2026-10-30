@@ -5,8 +5,8 @@ type: software
 authors:
   - family-names: "Voonna"
     given-names: "Satish Kumar"
-version: "0.13.0"
-date-released: "2026-10-29"
+version: "0.14.0"
+date-released: "2026-10-30"
 license: MIT
 repository-code: "https://github.com/vsk1729/crashmetrics"
 url: "https://vsk1729.github.io/crashmetrics/"

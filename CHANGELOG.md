@@ -6,6 +6,8 @@ follow [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.14.0] - 2026-10-30
+
 ### Added
 
 - `crashmetrics.virtual_testing`: Euro NCAP frontal sled and virtual
@@ -389,7 +391,8 @@ follow [Semantic Versioning](https://semver.org/).
 - `crashmetrics.pedestrian.calculate_hic` for HIC on a refined,
   linearly interpolated time grid.
 
-[Unreleased]: https://github.com/vsk1729/crashmetrics/compare/v0.13.0...main
+[Unreleased]: https://github.com/vsk1729/crashmetrics/compare/v0.14.0...main
+[0.14.0]: https://github.com/vsk1729/crashmetrics/compare/v0.13.0...v0.14.0
 [0.13.0]: https://github.com/vsk1729/crashmetrics/compare/v0.12.0...v0.13.0
 [0.12.0]: https://github.com/vsk1729/crashmetrics/compare/v0.11.0...v0.12.0
 [0.11.0]: https://github.com/vsk1729/crashmetrics/compare/v0.10.0...v0.11.0
