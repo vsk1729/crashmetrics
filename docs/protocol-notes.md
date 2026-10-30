@@ -17,7 +17,7 @@ and how to change it. If your organisation reads a rule differently, the
 | Topic | Source | crashmetrics | Change it |
 | --- | --- | --- | --- |
 | CFC filter end effects | SAE J211-1 does not prescribe padding | Each end padded by odd reflection over 10 ms | `cfc_filter(..., pad_ms=...)` |
-| HIC integration | Definition only | Trapezoidal rule on a 0.1 ms refined grid; warning if the record is shorter than the window | `calculate_hic(..., resolution_ms=...)` |
+| HIC integration | Definition only | Linear interpolation between samples, integrated exactly; end points on a 0.1 ms grid plus the samples (a lower bound, usually within 0.05 %), or the exact maximum over continuous end points; warning if the record is shorter than the window | `calculate_hic(..., resolution_ms=..., method="exact")`; see [HIC accuracy](guides/hic-accuracy.md) |
 | 3 ms clip | Euro NCAP: cumulative | Cumulative by default | `clip_3ms(..., mode="continuous")` |
 | UN R94 neck and femur durations | R94 does not say cumulative or continuous | Cumulative | `mode="continuous"` |
 | R94 femur limit | R94: 9.07 kN at 0 ms, 7.58 kN at ≥ 10 ms; Euro NCAP / AIS-197 print 7.56 kN | `"r94_hybrid3_50"` uses 7.58 kN; Bharat NCAP scoring uses 7.56 kN | Pass your own `limit` points |

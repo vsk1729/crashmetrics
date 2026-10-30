@@ -34,7 +34,7 @@ python examples/07_bharat_ncap.py
 | `19_euroncap_virtual_testing.py` | Euro NCAP frontal sled and virtual testing: simulation channels written and read as ISO-MME, model quality, ISO/TS 18571 sensor scores, assessment criteria deviations, load case validation and the driver's sled and virtual score |
 | `20_doe_margins_sensitivity.py` | A 30-run Latin hypercube with LS-DYNA *PARAMETER cards, Euro NCAP points and margins to the limits per run, PRCC / Spearman / SRC ranking of three criteria and Morris screening |
 | `21_probabilistic_rating.py` | Bharat NCAP adult occupant rating under test scatter: Monte Carlo of the full scoring, probability of 5 stars and the criteria that decide it |
-| `hic_convergence.py` | How HIC changes with the integration resolution (for developers) |
+| `hic_convergence.py` | Grid search against the exact HIC maximum for several pulses (including a real LS-DYNA head drop), and run times |
 
 The full step-by-step explanations are in the documentation:
 <https://vsk1729.github.io/crashmetrics/>.

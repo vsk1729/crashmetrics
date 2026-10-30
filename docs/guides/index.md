@@ -7,6 +7,7 @@ its real output (the test suite checks that output on every change).
 | Guide | You will learn to | Example |
 | --- | --- | --- |
 | [Signals, HIC and the 3 ms clip](signals.md) | Filter channels, form resultants, compute HIC, peaks, 3 ms clips and exceedance curves | `01_signals_hic.py` |
+| [HIC accuracy and performance](hic-accuracy.md) | Choose between the grid search and the exact HIC maximum, with verification, accuracy and run times | `hic_convergence.py` |
 | [Pedestrian headform](pedestrian-headform.md) | Score a Euro NCAP headform grid from CAE predictions and verification tests | `02_headform_grid.py` |
 | [Pedestrian legforms and VRU score](pedestrian-legforms.md) | Score aPLI and upper legform grids and combine the total VRU score | `03_legform_vru.py` |
 | [Flex-PLI and AIS-100](flexpli-ais100.md) | Process Flex-PLI signals and check AIS-100 compliance | `04_flexpli_ais100.py` |

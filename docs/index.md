@@ -19,7 +19,7 @@ pip install crashmetrics
 
 | Area | What you can calculate | Guide |
 | --- | --- | --- |
-| Signals | SAE J211 CFC filtering, resultants, unit conversion, resampling, HIC, peak, 3 ms clip | [Signals](guides/signals.md) |
+| Signals | SAE J211 CFC filtering, resultants, unit conversion, resampling, HIC (grid search or exact maximum, [verified](guides/hic-accuracy.md)), peak, 3 ms clip | [Signals](guides/signals.md) |
 | Pedestrian (Euro NCAP) | Headform grid score with correction factor, blue / default-red / A-pillar points; aPLI and upper legform grids; total VRU score | [Headform](guides/pedestrian-headform.md), [Legforms](guides/pedestrian-legforms.md) |
 | Pedestrian (India) | AIS-100 compliance: Flex-PLI and legacy legform limits, upper legform, HIC1000 / HIC1700 zones; Flex-PLI assessment interval and Euro NCAP Flex-PLI score | [Flex-PLI and AIS-100](guides/flexpli-ais100.md) |
 | Frontal dummies | DAMAGE, BrIC, neck loads, Nij, R94 limits, chest deflection, VC, CTI, THOR Rmax and abdomen, acetabulum, iliac force drop, femur, Tibia Index, knee slider | [Frontal criteria](guides/frontal-dummy-criteria.md) |

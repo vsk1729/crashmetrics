@@ -96,6 +96,7 @@ nav:
   - Guides:
       - guides/index.md
       - Signals, HIC and the 3 ms clip: guides/signals.md
+      - HIC accuracy and performance: guides/hic-accuracy.md
       - Pedestrian headform (Euro NCAP): guides/pedestrian-headform.md
       - Pedestrian legforms and VRU score: guides/pedestrian-legforms.md
       - Flex-PLI and AIS-100 compliance: guides/flexpli-ais100.md
