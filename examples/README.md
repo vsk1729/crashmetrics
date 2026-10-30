@@ -32,6 +32,8 @@ python examples/07_bharat_ncap.py
 | `17_whiplash.py` | Rear impact (whiplash): NIC and Nkm from BioRID signals, medium and high pulse scores with capping, front seat geometry, rear seats, for two seat designs |
 | `18_lsdyna_ascii.py` | LS-DYNA ASCII output of a helmeted Hybrid III head (real R16 files): HIC and BrIC from nodout, upper neck load from secforc, a run directory with rcforc and spcforc, features for ML |
 | `19_euroncap_virtual_testing.py` | Euro NCAP frontal sled and virtual testing: simulation channels written and read as ISO-MME, model quality, ISO/TS 18571 sensor scores, assessment criteria deviations, load case validation and the driver's sled and virtual score |
+| `20_doe_margins_sensitivity.py` | A 30-run Latin hypercube with LS-DYNA *PARAMETER cards, Euro NCAP points and margins to the limits per run, PRCC / Spearman / SRC ranking of three criteria and Morris screening |
+| `21_probabilistic_rating.py` | Bharat NCAP adult occupant rating under test scatter: Monte Carlo of the full scoring, probability of 5 stars and the criteria that decide it |
 | `hic_convergence.py` | How HIC changes with the integration resolution (for developers) |
 
 The full step-by-step explanations are in the documentation:

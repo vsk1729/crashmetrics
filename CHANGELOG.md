@@ -6,6 +6,29 @@ follow [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- `crashmetrics.doe`: Latin hypercube (`latin_hypercube`), Halton
+  (`halton`), full factorial (`full_factorial`) and Morris trajectory
+  (`morris_design`) designs as a `Design` with `rows()`; LS-DYNA
+  `*PARAMETER` cards per run (`lsdyna_parameters`).
+- `crashmetrics.sensitivity`: Spearman (`rank_correlation`), partial
+  rank correlation (`partial_rank_correlation`), standardised regression
+  coefficients with R² (`regression_coefficients`), a ranked table from
+  run rows (`rank_sensitivity`) and Morris elementary effects
+  (`morris_effects`). Checked against SciPy and SALib.
+- `crashmetrics.margins`: distance of criteria to their limits
+  (`position`, `margin_lpl`, `margin_hpl`, `sliding`) for any limits or
+  the Euro NCAP frontal limits (`euroncap_margins`), flattened for
+  feature tables (`margin_features`).
+- `crashmetrics.uncertainty`: Monte Carlo of any scoring function
+  (`monte_carlo`) with normal, relative, uniform and scale scatter;
+  probabilities, distributions, percentiles and star probabilities.
+- Guide "DOE, sensitivity and probabilistic ratings", examples
+  `20_doe_margins_sensitivity.py` and `21_probabilistic_rating.py`.
+- Zenodo DOI badge and a "Citing" section in the README; DOI in
+  `CITATION.cff`. The API reference index lists every module.
+
 ## [0.14.0] - 2026-10-30
 
 ### Added

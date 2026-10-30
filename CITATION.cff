@@ -6,6 +6,7 @@ authors:
   - family-names: "Voonna"
     given-names: "Satish Kumar"
 version: "0.14.0"
+doi: 10.5281/zenodo.23806423
 date-released: "2026-10-30"
 license: MIT
 repository-code: "https://github.com/vsk1729/crashmetrics"
@@ -20,7 +21,8 @@ abstract: >-
   electrical safety), intrusion measurement, LS-DYNA ASCII output
   readers and energy checks,
   test-versus-CAE correlation (ISO/TS 18571, corridor and
-  cross-correlation) and feature extraction for machine learning.
+  cross-correlation), feature extraction, design of experiments,
+  sensitivity ranking and probabilistic ratings for machine learning.
 keywords:
   - crashworthiness
   - crash safety

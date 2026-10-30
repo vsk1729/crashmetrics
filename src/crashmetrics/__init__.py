@@ -32,6 +32,10 @@ crashmetrics.lower_extremity
     Tibia Index, tibia compression, knee slider and femur force.
 crashmetrics.frontal_scoring
     Euro NCAP MPDB and full width test scoring.
+crashmetrics.doe, crashmetrics.sensitivity
+    Design of experiments and sensitivity ranking.
+crashmetrics.margins, crashmetrics.uncertainty
+    Margins to limits as ML targets; probabilistic scores and ratings.
 crashmetrics.virtual_testing
     Euro NCAP frontal sled and virtual testing (VTC).
 crashmetrics.isomme

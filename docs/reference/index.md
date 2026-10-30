@@ -23,3 +23,14 @@ dataclass, so `dataclasses.asdict(result)` turns it into a plain dict.
 | [`energy_check` and `lsdyna`](lsdyna.md) | Energy balance checks, glstat / matsum / d3hsp readers |
 | [`isomme`](isomme.md) | ISO-MME (ISO/TS 13499) test data: read and write |
 | [`lsdyna_ascii`](lsdyna_ascii.md) | nodout, rcforc, sleout, secforc, rwforc, sbtout, deforc, jntforc, abstat, rbdout, spcforc, swforc readers |
+| [`side_scoring`](side_scoring.md) | Euro NCAP 2026 side impact: AE-MDB, pole and far side scoring |
+| [`whiplash`](whiplash.md) | BioRID NIC and Nkm, 2026 rear impact score |
+| [`bncap_cop` and `bncap_rating`](bncap_cop.md) | Bharat NCAP child occupant protection and complete rating with safety assist |
+| [`homologation`](homologation.md) | UN R94 / AIS-098, UN R95 / AIS-099, UN R135 and post-crash electrical safety checks |
+| [`intrusion`](intrusion.md) | Intrusion relative to the vehicle, node distances |
+| [`correlation`](correlation.md) | ISO/TS 18571, CC rating, error measures |
+| [`features`](features.md) | Signal shape features, feature tables, CSV / pandas / NumPy output |
+| [`doe`](doe.md) | Latin hypercube, Halton, full factorial, Morris designs; LS-DYNA *PARAMETER cards |
+| [`sensitivity`](sensitivity.md) | PRCC, Spearman, SRC and Morris sensitivity ranking |
+| [`margins`](margins.md) | Distance to performance limits as continuous ML targets |
+| [`uncertainty`](uncertainty.md) | Monte Carlo scatter of inputs, probabilistic scores and star ratings |

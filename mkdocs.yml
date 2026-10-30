@@ -113,6 +113,7 @@ nav:
       - LS-DYNA ASCII output: guides/lsdyna-ascii.md
       - Batch runs, analytics and ML: guides/batch-analytics.md
       - Features for machine learning: guides/ml-features.md
+      - DOE, sensitivity and probabilistic ratings: guides/doe-sensitivity.md
       - Test-versus-CAE correlation: guides/test-cae-correlation.md
   - Protocol notes: protocol-notes.md
   - API reference:
@@ -138,6 +139,10 @@ nav:
       - lsdyna_ascii: reference/lsdyna_ascii.md
       - isomme: reference/isomme.md
       - features: reference/features.md
+      - doe: reference/doe.md
+      - sensitivity: reference/sensitivity.md
+      - margins: reference/margins.md
+      - uncertainty: reference/uncertainty.md
       - correlation: reference/correlation.md
       - intrusion: reference/intrusion.md
       - homologation: reference/homologation.md

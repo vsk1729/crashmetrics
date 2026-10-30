@@ -151,6 +151,13 @@ _, X = to_matrix(good_rows, inputs)
 model = RandomForestRegressor().fit(X, y)
 ```
 
+## Next: designs, targets and sensitivity
+
+[DOE, sensitivity and probabilistic ratings](doe-sensitivity.md) adds
+design-of-experiments sampling, margins to the limits as continuous
+targets (`crashmetrics.margins.margin_features` fits straight into a
+feature row), sensitivity ranking and Monte Carlo star ratings.
+
 ## Good practice for crash training data
 
 1. **Remove failed and suspicious runs before training.** Check the

@@ -1,0 +1,40 @@
+latin_hypercube: 30 runs of vent, limiter, knee_k
+*KEYWORD
+$ run001
+*PARAMETER
+$#   prmr1      val1
+R vent         34.75
+R limiter      3.075
+R knee_k     103.103
+*END
+
+run     vent  limiter knee_k | HIC15 chest femur | chest position  points
+run001   34.8   3.07    103  |   307  23.3  3072 |         +0.150  4.50
+run002   27.2   3.78    159  |   380  25.5  4208 |         +0.249  4.25
+run003   26.3   3.65     91  |   389  24.9  2723 |         +0.221  4.50
+run004   32.0   3.11    181  |   316  23.2  4783 |         +0.143  4.25
+run005   40.5   4.20    162  |   362  28.6  4199 |         +0.391  4.00
+run006   40.0   4.50    151  |   365  29.8  3916 |         +0.446  4.00
+(position: 0 at the HPL, 1 at the LPL; points change in steps, the position does not)
+
+Sensitivity of hic15 (linear fit R² 0.44):
+  variable      PRCC  Spearman     SRC
+  limiter      +0.66     +0.67   +0.64
+  knee_k       +0.18     +0.15   +0.16
+  vent         -0.06     -0.09   -0.07
+
+Sensitivity of chest_compression (linear fit R² 1.00):
+  variable      PRCC  Spearman     SRC
+  limiter      +0.99     +0.98   +1.01
+  vent         +0.80     +0.01   +0.19
+  knee_k       +0.16     +0.10   +0.00
+
+Sensitivity of femur_force (linear fit R² 1.00):
+  variable      PRCC  Spearman     SRC
+  knee_k       +1.00     +0.99   +0.99
+  limiter      -0.82     -0.07   -0.14
+  vent         -0.34     +0.31   +0.00
+
+Morris screening of hic15 (48 runs): vent mu* 120.0 sigma 123.6, limiter mu* 62.5 sigma 0.0, knee_k mu* 0.0 sigma 0.0
+
+Morris screening of chest_compression (48 runs): limiter mu* 10.5 sigma 0.0, vent mu* 2.0 sigma 0.0, knee_k mu* 0.0 sigma 0.0
