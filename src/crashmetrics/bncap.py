@@ -385,6 +385,20 @@ def t12_modifier(fy: float, mx: float) -> float:
 
 _INCORRECT_AIRBAG_REGIONS = ("head", "neck", "chest", "knee_left", "knee_right",
                              "lower_leg_left", "lower_leg_right", "foot")
+_SIDE_REGIONS = ("head", "chest", "abdomen", "pelvis")
+
+
+def _regions(value: str | Sequence[str] | None, allowed: Sequence[str],
+             name: str) -> list[str]:
+    """Regions of an incorrect airbag deployment (one or several)."""
+    if value is None:
+        return []
+    regions = [value] if isinstance(value, str) else list(value)
+    unknown = [r for r in regions if r not in allowed]
+    if unknown or len(set(regions)) != len(regions):
+        raise ValueError(f"{name} must name distinct regions from: "
+                         f"{', '.join(allowed)}; got {regions}.")
+    return regions
 
 
 def _add(out: dict[str, float], region: str, points: float) -> None:
@@ -401,12 +415,14 @@ def frontal_modifiers(
     blocked_pedal_rearward: float | None = None,
     unstable_airbag_contact: bool = False,
     hazardous_airbag_deployment: bool = False,
-    incorrect_airbag_deployment: str | None = None,
+    incorrect_airbag_deployment: str | Sequence[str] | None = None,
     steering_wheel_contact: bool = False,
     compartment_integrity_lost: bool = False,
     shoulder_belt_load: float | None = None,
     knee_variable_contact: tuple[bool, bool] = (False, False),
     knee_concentrated_load: tuple[bool, bool] = (False, False),
+    knee_variable_contact_areas: tuple[tuple[bool, bool], tuple[bool, bool]]
+    | None = None,
     footwell_rupture: bool = False,
     edition: int = EDITION,
 ) -> dict[str, float]:
@@ -422,13 +438,14 @@ def frontal_modifiers(
     ``steering_column``            head                     0-1, sliding
     ``unstable_airbag_contact``    head                     1
     ``hazardous_airbag_deployment``  head                   1
-    ``incorrect_airbag_deployment``  the region given       1
+    ``incorrect_airbag_deployment``  each region given      1 each
     ``a_pillar``                   chest                    0-2, sliding
     ``steering_wheel_contact``     chest                    1
     ``compartment_integrity_lost`` chest                    1
     ``shoulder_belt_load``         chest                    2 above 6 kN
     ``knee_variable_contact``      knee (per leg)           1
     ``knee_concentrated_load``     knee (per leg)           1
+    ``knee_variable_contact_areas``  knee (per leg)         0.5 per area
     ``pedal_upward``               lower leg (per leg)      0-1, sliding
     ``blocked_pedal_rearward``     foot                     0-1, sliding
     ``footwell_rupture``           foot                     1
@@ -449,11 +466,21 @@ def frontal_modifiers(
     blocked_pedal_rearward:
         Rearward displacement of a blocked pedal, mm.
     incorrect_airbag_deployment:
-        Region the penalty applies to (for example ``"head"``), or None.
+        Region or regions the airbag was meant to protect, 1 point each
+        (Annexure VII 2.1.4): ``"head"`` for a steering wheel airbag,
+        ``("knee_left", "knee_right")`` for a passenger knee airbag,
+        ``("head", "chest")`` for a seat airbag protecting both.
     shoulder_belt_load:
         Peak shoulder belt force, N.
     knee_variable_contact, knee_concentrated_load:
-        (left, right) flags.
+        (left, right) flags, 1 point each.
+    knee_variable_contact_areas:
+        Driver only, when the concentrated loading modifier is applied to
+        neither knee (Annexure VII 2.1.7.2): each knee zone is split into
+        the column area (75 mm either side of the steering column
+        centreline) and the rest of the facia, 0.5 point each. Give
+        ``((left_column, left_facia), (right_column, right_facia))``
+        instead of ``knee_variable_contact``.
     edition:
         Bharat NCAP edition (2023).
 
@@ -474,17 +501,25 @@ def frontal_modifiers(
     if not driver and any(driver_only.values()):
         given = [k for k, v in driver_only.items() if v]
         raise ValueError(f"Driver-only modifiers given for the passenger: {given}.")
-    if (incorrect_airbag_deployment is not None
-            and incorrect_airbag_deployment not in _INCORRECT_AIRBAG_REGIONS):
-        raise ValueError("incorrect_airbag_deployment must be a region: "
-                         f"{', '.join(_INCORRECT_AIRBAG_REGIONS)}.")
+    airbag_regions = _regions(incorrect_airbag_deployment, _INCORRECT_AIRBAG_REGIONS,
+                              "incorrect_airbag_deployment")
+    if knee_variable_contact_areas is not None:
+        if not driver:
+            raise ValueError("The passenger knee zones are not divided into "
+                             "areas (Annexure VII 2.2).")
+        if any(knee_concentrated_load):
+            raise ValueError("The knee zones are split into areas only when the "
+                             "concentrated loading modifier is not applied.")
+        if any(knee_variable_contact):
+            raise ValueError("Give knee_variable_contact or "
+                             "knee_variable_contact_areas, not both.")
     out: dict[str, float] = {}
     if steering_column is not None:
         _add(out, "head", steering_column_modifier(*steering_column))
     _add(out, "head",
          float(unstable_airbag_contact) + float(hazardous_airbag_deployment))
-    if incorrect_airbag_deployment is not None:
-        _add(out, incorrect_airbag_deployment, 1.0)
+    for region in airbag_regions:
+        _add(out, region, 1.0)
     if a_pillar is not None:
         _add(out, "chest", a_pillar_modifier(a_pillar))
     _add(out, "chest",
@@ -496,6 +531,9 @@ def frontal_modifiers(
     for i, leg in enumerate(("left", "right")):
         _add(out, f"knee_{leg}",
              float(knee_variable_contact[i]) + float(knee_concentrated_load[i]))
+        if knee_variable_contact_areas is not None:
+            _add(out, f"knee_{leg}", 0.5 * sum(map(float,
+                                                   knee_variable_contact_areas[i])))
         _add(out, f"lower_leg_{leg}", pedal_upward_modifier(pedal_upward[i]))
     if blocked_pedal_rearward is not None:
         _add(out, "foot", pedal_blocking_modifier(blocked_pedal_rearward))
@@ -508,15 +546,32 @@ def side_modifiers(
     backplate_fy: float | None = None,
     t12_fy: float | None = None,
     t12_mx: float | None = None,
+    incorrect_airbag_deployment: str | Sequence[str] | None = None,
     edition: int = EDITION,
 ) -> dict[str, float]:
     """Side (MDB) modifiers by name, as points per region for
-    `SideOccupant` (AIS-197 2023, Annexure VII Section 3): backplate load
-    (`backplate_modifier`, 0-2) and T12 load (`t12_modifier`, 0-2), both
-    on the chest and added. Forces in N, moment in N m; peak magnitudes.
+    `SideOccupant` (AIS-197 2023, Annexure VII Section 3).
+
+    - ``backplate_fy``: backplate load penalty (`backplate_modifier`,
+      0-2) on the chest.
+    - ``t12_fy``, ``t12_mx``: T12 load penalty (`t12_modifier`, 0-2) on
+      the chest, added to the backplate penalty.
+    - ``incorrect_airbag_deployment``: region or regions the airbag was
+      meant to protect, 1 point each (3.1), for example ``"head"`` for a
+      curtain airbag, ``("head", "chest")`` for a seat airbag protecting
+      both. A knee airbag deploying incorrectly in the side test is
+      penalised in the frontal test instead (`frontal_modifiers`).
+
+    Forces in N, moment in N m; peak magnitudes. A hazardous airbag
+    deployment seen in the pole test (-1 point, 4.2) is carried over with
+    ``score_side(..., other_test_modifiers=1)``.
     """
     check_edition(edition)
+    airbag_regions = _regions(incorrect_airbag_deployment, _SIDE_REGIONS,
+                              "incorrect_airbag_deployment")
     out: dict[str, float] = {}
+    for region in airbag_regions:
+        _add(out, region, 1.0)
     if backplate_fy is not None:
         _add(out, "chest", backplate_modifier(backplate_fy))
     if (t12_fy is None) != (t12_mx is None):

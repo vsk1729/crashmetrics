@@ -31,6 +31,11 @@ follow [Semantic Versioning](https://semver.org/).
   `AopRating`, `CopScore` and `BncapRating` carry a `protocol` field, and
   ratings refuse results scored under another protocol.
 - `RegionResult.values`: the criterion values behind each region score.
+- Modifiers checked against AIS-197 Annexure VII: `incorrect_airbag_deployment`
+  takes several regions (1 point each) in `frontal_modifiers` and, new,
+  in `side_modifiers`; `knee_variable_contact_areas` gives the driver's
+  0.5-point column / facia split when no knee has the concentrated
+  loading modifier.
 - Example 22: Bharat NCAP from unfiltered channels to the scorecard.
 
 - `CONTRIBUTING.md`: contributor guide (set-up, coding standards,

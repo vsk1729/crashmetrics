@@ -137,6 +137,10 @@ Virtual Testing Protocol v1.0.2 and Frontal Impact Protocol v1.2.
 | Edition and validity | AIS-197 (September 2023), Section 1.0: valid for four years; Bharat NCAP 2.0 (AIS-197 Rev 1) from October 2027 | 2023 edition for ratings 1 Oct 2023 – 30 Sep 2027; `edition=2027` raises an error | `edition_for_date`, `PROTOCOL` |
 | Frontal hard head contact from channels | No hard contact if the peak resultant head acceleration is at most 80 g and there is no other evidence | `frontal_occupant_from_channels` assumes contact above 80 g | `head_contact=` |
 | Tibia location | Upper and lower tibia measured | The worse Tibia Index and the worse compression of the given locations, per leg | Pass only one location |
+| Incorrect airbag deployment | Annexure VII 2.1.4 and 3.1: −1 on each of the most relevant body parts, also in the other test if the airbag protects there | 1 point per region given; you choose the regions (and the test) | `incorrect_airbag_deployment=` |
+| Driver knee variable contact split | 2.1.7.2: without concentrated loading on either driver knee, −0.5 for the column area and −0.5 for the rest of the facia, per knee | `knee_variable_contact_areas=`; refused for the passenger (2.2) or with concentrated loading | |
+| ⚠️ Backplate and T12 load direction | 3.2 / 3.3: only loads that unload the chest count; T12 sign Fy < 0 and Mx > 0 for RHD (SAE J211) | Peak magnitudes are used | Pass only the unloading direction's peak |
+| Asymmetry of reinforcements | 2.1.6.3: test agencies apply the structural and footwell modifiers (and T12 / backplate in side tests) | Not a separate modifier; apply those modifiers | |
 | Shoulder belt load modifier | 2 points for a shoulder belt load above 6 kN | Applied strictly above 6000 N | |
 | Backplate and T12 modifiers | Both listed for the side chest | Added together (each 0–2) | `modifiers=` |
 | ISO-MME codes | AIS-197 lists channels, not ISO codes | Hybrid III codes of Euro NCAP CP 005 (`HYBRID3_ISOMME`); no ES-2 default | `channels_from_isomme(patterns=)` |
