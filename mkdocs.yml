@@ -133,6 +133,7 @@ nav:
       - side_scoring: reference/side_scoring.md
       - whiplash: reference/whiplash.md
       - bncap: reference/bncap.md
+      - bncap_channels and bncap_report: reference/bncap_channels.md
       - bncap_cop and bncap_rating: reference/bncap_cop.md
       - pulse: reference/pulse.md
       - energy: reference/energy.md

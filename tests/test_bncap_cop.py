@@ -306,3 +306,15 @@ def test_bncap_rating_applies_the_qualifiers():
     assert capped.aop.stars == 4
     assert "safety assist qualifiers" in capped.aop.reasons
     assert "for 5 stars: side head protection standard in 60%" in capped.summary()
+    # Every result names its protocol; other editions are refused.
+    from crashmetrics.bncap import PROTOCOL
+    assert full.protocol == full.aop.protocol == full.cop.protocol == PROTOCOL
+    assert f"Protocol: {PROTOCOL}" in full.summary()
+    with pytest.raises(ValueError, match="Bharat NCAP 2.0"):
+        bncap_rating(frontal, side, cop, full_sat(), edition=2027)
+    with pytest.raises(ValueError, match="Bharat NCAP 2.0"):
+        score_cop(score_crs_installation(ok, ok), score_vehicle_based(FULL),
+                  score_cop_dynamic(f, s), edition=2027)
+    other = type(cop)(**{**cop.__dict__, "protocol": "other rules"})
+    with pytest.raises(ValueError, match="child score"):
+        bncap_rating(frontal, side, other, full_sat())

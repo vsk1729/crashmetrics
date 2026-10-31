@@ -17,7 +17,8 @@ dataclass, so `dataclasses.asdict(result)` turns it into a plain dict.
 | [`side`](side.md) | ES-2 rib deflection and VC, abdominal and pubic forces |
 | [`frontal_scoring`](frontal_scoring.md) | Euro NCAP 2026 MPDB and full width scoring |
 | [`virtual_testing`](virtual_testing.md) | Euro NCAP frontal sled and virtual testing (VTC): model quality, ISO sensor scores, validation, 10-point score |
-| [`bncap`](bncap.md) | Bharat NCAP (AIS-197) scoring and star rating |
+| [`bncap`](bncap.md) | Bharat NCAP (AIS-197, 2023 edition) scoring, named modifiers, star rating, edition and validity dates |
+| [`bncap_channels` and `bncap_report`](bncap_channels.md) | Bharat NCAP occupants from dummy channels (and ISO-MME); adult occupant scorecard |
 | [`pulse`](pulse.md) | OLC and pulse summary |
 | [`energy`](energy.md) | Integration, absorbed energy, crush metrics |
 | [`energy_check` and `lsdyna`](lsdyna.md) | Energy balance checks, glstat / matsum / d3hsp readers |

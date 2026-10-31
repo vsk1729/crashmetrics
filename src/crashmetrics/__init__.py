@@ -43,7 +43,10 @@ crashmetrics.isomme
 crashmetrics.side
     ES-2 side impact criteria.
 crashmetrics.bncap
-    Bharat NCAP (AIS-197) adult occupant scoring and star rating.
+    Bharat NCAP (AIS-197, 2023 edition) adult occupant scoring and star
+    rating.
+crashmetrics.bncap_channels, crashmetrics.bncap_report
+    Bharat NCAP occupants from dummy channels; adult occupant scorecard.
 """
 
 # Single source of the package version; pyproject.toml reads it.

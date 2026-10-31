@@ -26,7 +26,7 @@ pip install crashmetrics
 | Euro NCAP 2026 | MPDB (20 points) and full width (10 points) scores with modifiers and the compatibility penalty; sled and virtual testing (VTC, 10 points); side impact AE-MDB (15), pole (10) and far side (10) | [MPDB and full width](guides/euroncap-frontal.md), [Virtual testing](guides/euroncap-virtual-testing.md), [Side and far side](guides/euroncap-side.md) |
 | Homologation | UN R94 / AIS-098, UN R95 / AIS-099, UN R135 and post-crash electrical safety, pass/fail per requirement | [Homologation](guides/homologation.md) |
 | Whiplash | BioRID NIC and Nkm; 2026 rear impact score, 5 points | [Rear impact](guides/whiplash.md) |
-| Bharat NCAP | AIS-197 adult occupant scoring (ODB frontal, MDB side), pole test, star rating; child occupant protection; safety assist star qualifiers | [Bharat NCAP](guides/bharat-ncap.md), [Child occupant and rating](guides/bharat-ncap-cop.md) |
+| Bharat NCAP | AIS-197 (2023 edition, ratings to September 2027) adult occupant scoring (ODB frontal, MDB side), pole test, star rating; scores from dummy channels or ISO-MME, named modifiers, scorecard; child occupant protection; safety assist star qualifiers | [Bharat NCAP](guides/bharat-ncap.md), [Child occupant and rating](guides/bharat-ncap-cop.md) |
 | Intrusion | Pedal, steering column, A-pillar and footwell intrusion relative to the vehicle; dynamic and static; survival space | [Intrusion](guides/intrusion.md) |
 | Vehicle | OLC, delta-V, rebound, dynamic crush, crash box energy, CFE, SEA | [Pulse and energy](guides/pulse-energy.md) |
 | Data formats | ISO-MME (ISO/TS 13499) read and write | [Virtual testing](guides/euroncap-virtual-testing.md) |

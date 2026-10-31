@@ -10,6 +10,11 @@ the **safety assist technology qualifiers** that cap the adult stars.
 
 Source: AIS-197 Annexure V (child occupant protection), Annexure VI
 (safety assist technologies), Annexure VIII (scoring), Table 2A/2B.
+
+Edition: the 2023 edition of AIS-197, for ratings from 1 October 2023
+to 30 September 2027. `score_cop` and `bncap_rating` take
+`edition=2023`, their results carry a `protocol` field, and the rating
+summary prints it; see [Which edition](bharat-ncap.md#which-edition-years-of-validity).
 Every number on this page and in the code was checked against the
 standard; interpretations are in the [protocol notes](../protocol-notes.md).
 

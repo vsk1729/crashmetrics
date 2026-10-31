@@ -28,6 +28,7 @@ its real output (the test suite checks that output on every change).
 | [Euro NCAP sled and virtual testing (VTC)](euroncap-virtual-testing.md) | Validate restraint simulations against sled tests (model quality, ISO/TS 18571 sensor scores, assessment criteria) and score the 10-point sled and virtual testing; exchange data as ISO-MME | `19_euroncap_virtual_testing.py` |
 | [DOE, sensitivity and probabilistic ratings](doe-sensitivity.md) | Sample design variables (with LS-DYNA parameters), use margins to the limits as ML targets, rank which variable drives which criterion | `20_doe_margins_sensitivity.py` |
 | [DOE, sensitivity and probabilistic ratings](doe-sensitivity.md) | Turn test scatter into the probability of a star rating | `21_probabilistic_rating.py` |
+| [Bharat NCAP star rating](bharat-ncap.md) | Go from unfiltered dummy channels to the Bharat NCAP scores and a scorecard with point losses and the next star | `22_bncap_channels_scorecard.py` |
 
 ## The general workflow
 
