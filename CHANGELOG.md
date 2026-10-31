@@ -6,6 +6,8 @@ follow [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.17.0] - 2026-10-31
+
 ### Added
 
 - `crashmetrics.bncap_channels`: Bharat NCAP inputs straight from dummy
@@ -482,7 +484,8 @@ follow [Semantic Versioning](https://semver.org/).
 - `crashmetrics.pedestrian.calculate_hic` for HIC on a refined,
   linearly interpolated time grid.
 
-[Unreleased]: https://github.com/vsk1729/crashmetrics/compare/v0.16.0...main
+[Unreleased]: https://github.com/vsk1729/crashmetrics/compare/v0.17.0...main
+[0.17.0]: https://github.com/vsk1729/crashmetrics/compare/v0.16.0...v0.17.0
 [0.16.0]: https://github.com/vsk1729/crashmetrics/compare/v0.15.0...v0.16.0
 [0.15.0]: https://github.com/vsk1729/crashmetrics/compare/v0.14.0...v0.15.0
 [0.14.0]: https://github.com/vsk1729/crashmetrics/compare/v0.13.0...v0.14.0
