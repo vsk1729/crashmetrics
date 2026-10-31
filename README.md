@@ -103,9 +103,13 @@ the "Cite this repository" button on GitHub gives the reference from
 
 ## Contributing
 
-Issues and pull requests are welcome. See
+Issues and pull requests are welcome, from code and test data to
+protocol corrections. Start with
+[CONTRIBUTING.md](https://github.com/vsk1729/crashmetrics/blob/main/CONTRIBUTING.md)
+(setup, coding standards, how to add a criterion, an LS-DYNA reader or
+an example, and the pull request checklist); see
 [Development and releases](https://vsk1729.github.io/crashmetrics/about/development/)
-for the setup and the checks CI runs, and the
+for the checks CI runs, and the
 [changelog](https://github.com/vsk1729/crashmetrics/blob/main/CHANGELOG.md)
 for what changed.
 

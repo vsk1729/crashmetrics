@@ -6,6 +6,13 @@ follow [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- `CONTRIBUTING.md`: contributor guide (set-up, coding standards,
+  adding a criterion, an LS-DYNA reader, an example or a test, licensing
+  and sources, pull request checklist), linked from the README and the
+  development page.
+
 ## [0.16.0] - 2026-10-30
 
 ### Added
