@@ -320,8 +320,47 @@ def test_frontal_modifiers_by_name():
     assert result.regions["driver"]["chest"].points == 0.0
     with pytest.raises(ValueError, match="Driver-only"):
         frontal_modifiers(driver=False, footwell_rupture=True)
-    with pytest.raises(ValueError, match="must be a region"):
+    with pytest.raises(ValueError, match="distinct regions"):
         frontal_modifiers(incorrect_airbag_deployment="arm")
+    with pytest.raises(ValueError, match="distinct regions"):
+        frontal_modifiers(incorrect_airbag_deployment=("head", "head"))
+
+
+def test_incorrect_airbag_several_regions():
+    # Annexure VII 2.1.4: a passenger knee airbag -> both knees; a seat
+    # airbag protecting head and chest -> -1 on each.
+    from crashmetrics.bncap import frontal_modifiers, side_modifiers
+    assert frontal_modifiers(driver=False, incorrect_airbag_deployment=(
+        "knee_left", "knee_right")) == {"knee_left": 1.0, "knee_right": 1.0}
+    assert frontal_modifiers(incorrect_airbag_deployment=("head", "chest"),
+                             unstable_airbag_contact=True) == {"head": 2.0,
+                                                               "chest": 1.0}
+    # Side 3.1: curtain airbag -> head; seat airbag -> head and chest.
+    assert side_modifiers(incorrect_airbag_deployment="head") == {"head": 1.0}
+    assert side_modifiers(incorrect_airbag_deployment=("head", "chest"),
+                          backplate_fy=2500.0) == {"head": 1.0, "chest": 2.0}
+    with pytest.raises(ValueError, match="distinct regions"):
+        side_modifiers(incorrect_airbag_deployment="knee_left")
+
+
+def test_driver_knee_variable_contact_split():
+    # Annexure VII 2.1.7.2: without concentrated loading, each driver knee
+    # zone splits into column area and rest of facia, 0.5 point each.
+    from crashmetrics.bncap import frontal_modifiers
+    mods = frontal_modifiers(knee_variable_contact_areas=((True, False),
+                                                          (True, True)))
+    assert mods == {"knee_left": 0.5, "knee_right": 1.0}
+    assert frontal_modifiers(knee_variable_contact_areas=((False, False),
+                                                          (False, False))) == {}
+    with pytest.raises(ValueError, match="concentrated loading"):
+        frontal_modifiers(knee_variable_contact_areas=((True, False), (False, False)),
+                          knee_concentrated_load=(False, True))
+    with pytest.raises(ValueError, match="passenger knee zones"):
+        frontal_modifiers(driver=False, knee_variable_contact_areas=(
+            (True, False), (False, False)))
+    with pytest.raises(ValueError, match="not both"):
+        frontal_modifiers(knee_variable_contact=(True, False),
+                          knee_variable_contact_areas=((False, True), (False, False)))
 
 
 def test_side_modifiers_by_name():

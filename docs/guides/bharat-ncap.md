@@ -141,21 +141,28 @@ side_mods = side_modifiers(backplate_fy=1600.0, t12_fy=1700.0, t12_mx=120.0)
 | Steering column displacement | `steering_column=(r, u, l)` | head | 0–1 (90–110 % of 100 / 80 / 100 mm) |
 | Unstable airbag contact | `unstable_airbag_contact=True` | head | 1 |
 | Hazardous airbag deployment | `hazardous_airbag_deployment=True` | head | 1 |
-| Incorrect airbag deployment | `incorrect_airbag_deployment="head"` | the region given | 1 |
+| Incorrect airbag deployment | `incorrect_airbag_deployment="head"`, or several: `("knee_left", "knee_right")`, `("head", "chest")` | each region the airbag protects | 1 each |
 | A-pillar rearward displacement | `a_pillar=` | chest | 0–2 (100–200 mm) |
 | Steering wheel contact | `steering_wheel_contact=True` | chest | 1 |
 | Compartment integrity lost | `compartment_integrity_lost=True` | chest | 1 |
 | Shoulder belt load | `shoulder_belt_load=` (N) | chest | 2 above 6 kN |
 | Knee variable contact / concentrated load | `knee_variable_contact=(l, r)`, `knee_concentrated_load=(l, r)` | knee (per leg) | 1 each |
+| Driver knee variable contact by area (no concentrated load on either knee) | `knee_variable_contact_areas=((l_column, l_facia), (r_column, r_facia))` | knee (per leg) | 0.5 per area |
 | Pedal upward displacement | `pedal_upward=(l, r)` | lower leg | 0–1 (72–88 mm) |
 | Blocked pedal rearward | `blocked_pedal_rearward=` | foot | 0–1 (50–175 mm) |
 | Footwell rupture | `footwell_rupture=True` | foot | 1 |
 | Backplate load (side) | `side_modifiers(backplate_fy=)` | chest | 0–2 (1–4 kN) |
 | T12 load (side) | `side_modifiers(t12_fy=, t12_mx=)` | chest | 0–2 (Fy 1.5–2 kN or Mx 150–200 N m) |
+| Incorrect airbag deployment (side) | `side_modifiers(incorrect_airbag_deployment=("head", "chest"))` | each region the airbag protects | 1 each |
+| Hazardous airbag seen in the pole test | `score_side(other_test_modifiers=1)` | side test | 1 |
 | Door opening (per door), fuel leakage | `score_frontal(door_openings=, fuel_leakage=)` | whole test | 1 |
 
-Steering, pedal and footwell modifiers are driver-only:
-`frontal_modifiers(driver=False, ...)` refuses them. The sliding
+Steering, pedal and footwell modifiers and the knee area split are
+driver-only: `frontal_modifiers(driver=False, ...)` refuses them. The
+split into a column area (75 mm either side of the steering column
+centreline) and the rest of the facia applies only when the concentrated
+loading modifier is applied to neither driver knee (Annexure VII
+2.1.7.2). The sliding
 helpers (`steering_column_modifier`, `a_pillar_modifier`, ...) remain
 available for single values.
 
