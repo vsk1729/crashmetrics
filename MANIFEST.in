@@ -1,3 +1,4 @@
 recursive-include tests/data *
 recursive-include examples *.py *.txt *.md
 include CITATION.cff
+include CONTRIBUTING.md

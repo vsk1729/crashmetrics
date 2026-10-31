@@ -1,5 +1,11 @@
 # Development and releases
 
+Contributions are welcome. The contributor guide,
+[CONTRIBUTING.md](https://github.com/vsk1729/crashmetrics/blob/main/CONTRIBUTING.md),
+covers coding standards, how to add a criterion, an LS-DYNA reader, an
+example or a test, the licensing rules and the pull request checklist.
+This page covers the set-up, the checks and the release process.
+
 ## Set up
 
 ```bash
