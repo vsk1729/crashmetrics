@@ -1,7 +1,8 @@
 # Bharat NCAP star rating (AIS-197)
 
-Module: `crashmetrics.bncap` (and `crashmetrics.side` for the ES-2
-criteria).
+Modules: `crashmetrics.bncap` (scoring), `crashmetrics.bncap_channels`
+(from dummy channels), `crashmetrics.bncap_report` (scorecard) and
+`crashmetrics.side` for the ES-2 criteria.
 
 AIS-197 rates cars sold in India in three areas: Adult Occupant
 Protection (AOP, 32 points), Child Occupant Protection (COP, 49 points)
@@ -14,6 +15,31 @@ covers the child score and the safety assist qualifiers.
 | ODB frontal | 64 km/h | Hybrid III 50th driver and passenger | 16 |
 | MDB side | 50 km/h | ES-2 driver | 16 |
 | Pole side | 29 km/h | ES-2 driver | pass / fail (3+ stars) |
+
+## Which edition: years of validity
+
+Everything on this page is the **2023 edition** of Bharat NCAP: AIS-197
+of September 2023, for ratings from **1 October 2023 to 30 September
+2027** (four years, AIS-197 Section 1.0). Bharat NCAP 2.0 (AIS-197
+Revision 1) replaces it for ratings from October 2027 with a 100-point
+rating in five pillars and new tests; it is not implemented yet.
+
+```python
+import datetime as dt
+from crashmetrics.bncap import PROTOCOL, VALID_FROM, VALID_UNTIL, edition_for_date
+
+edition_for_date(dt.date(2026, 3, 15))   # 2023
+edition_for_date(dt.date(2027, 11, 1))   # ValueError: Bharat NCAP 2.0 ... not implemented yet
+PROTOCOL                                 # 'Bharat NCAP AIS-197 (2023 edition, ratings 1 Oct 2023 - 30 Sep 2027)'
+```
+
+- Every scoring function takes `edition=2023` (the default);
+  `edition=2027` raises an error instead of scoring a new car by the
+  old rules.
+- Every result (`TestResult`, `AopRating`, `CopScore`, `BncapRating`,
+  `Scorecard`) has a `protocol` field, so a stored result says which
+  rules produced it. `aop_rating` and `bncap_rating` refuse to combine
+  results scored under different protocols.
 
 ## How Bharat NCAP scores a region
 
@@ -96,22 +122,42 @@ head scores 4 points.
 
 ### Modifiers (Annexure VII)
 
-Sliding modifiers have helpers; fixed ones are passed as points:
+Give the modifiers **by name** with `frontal_modifiers` and
+`side_modifiers`; they return the points per region for `modifiers=`,
+so no penalty lands on the wrong region:
 
-| Modifier | Region | Penalty | Helper |
+```python
+from crashmetrics.bncap import frontal_modifiers, side_modifiers
+
+mods = frontal_modifiers(steering_column=(40.0, 30.0, 10.0),   # rearward, upward, lateral mm
+                         a_pillar=120.0, shoulder_belt_load=5400.0,
+                         knee_concentrated_load=(False, True))
+# {'chest': 0.4, 'knee_right': 1.0}
+side_mods = side_modifiers(backplate_fy=1600.0, t12_fy=1700.0, t12_mx=120.0)
+```
+
+| Modifier | Argument | Region | Penalty |
 | --- | --- | --- | --- |
-| Steering column displacement | head | 0–1 (90–110 % of 100 / 80 / 100 mm) | `steering_column_modifier` |
-| A-pillar rearward displacement | chest | 0–2 (100–200 mm) | `a_pillar_modifier` |
-| Pedal upward displacement | lower leg | 0–1 (72–88 mm) | `pedal_upward_modifier` |
-| Blocked pedal rearward | foot | 0–1 (50–175 mm) | `pedal_blocking_modifier` |
-| Backplate load (side) | chest | 0–2 (1–4 kN) | `backplate_modifier` |
-| T12 load (side) | chest | 0–2 (Fy 1.5–2 kN or Mx 150–200 N m) | `t12_modifier` |
-| Unstable / hazardous / incorrect airbag | head (or region) | 1 | |
-| Steering wheel contact, compartment integrity | chest | 1 | |
-| Shoulder belt load > 6 kN | chest | 2 | |
-| Knee variable contact / concentrated load | knee (per leg) | 1 | |
-| Footwell rupture | foot | 1 | |
-| Door opening (per door), fuel leakage | whole test | 1 | `door_openings=`, `fuel_leakage=` |
+| Steering column displacement | `steering_column=(r, u, l)` | head | 0–1 (90–110 % of 100 / 80 / 100 mm) |
+| Unstable airbag contact | `unstable_airbag_contact=True` | head | 1 |
+| Hazardous airbag deployment | `hazardous_airbag_deployment=True` | head | 1 |
+| Incorrect airbag deployment | `incorrect_airbag_deployment="head"` | the region given | 1 |
+| A-pillar rearward displacement | `a_pillar=` | chest | 0–2 (100–200 mm) |
+| Steering wheel contact | `steering_wheel_contact=True` | chest | 1 |
+| Compartment integrity lost | `compartment_integrity_lost=True` | chest | 1 |
+| Shoulder belt load | `shoulder_belt_load=` (N) | chest | 2 above 6 kN |
+| Knee variable contact / concentrated load | `knee_variable_contact=(l, r)`, `knee_concentrated_load=(l, r)` | knee (per leg) | 1 each |
+| Pedal upward displacement | `pedal_upward=(l, r)` | lower leg | 0–1 (72–88 mm) |
+| Blocked pedal rearward | `blocked_pedal_rearward=` | foot | 0–1 (50–175 mm) |
+| Footwell rupture | `footwell_rupture=True` | foot | 1 |
+| Backplate load (side) | `side_modifiers(backplate_fy=)` | chest | 0–2 (1–4 kN) |
+| T12 load (side) | `side_modifiers(t12_fy=, t12_mx=)` | chest | 0–2 (Fy 1.5–2 kN or Mx 150–200 N m) |
+| Door opening (per door), fuel leakage | `score_frontal(door_openings=, fuel_leakage=)` | whole test | 1 |
+
+Steering, pedal and footwell modifiers are driver-only:
+`frontal_modifiers(driver=False, ...)` refuses them. The sliding
+helpers (`steering_column_modifier`, `a_pillar_modifier`, ...) remain
+available for single values.
 
 ## Step 3: score the tests
 
@@ -128,6 +174,45 @@ side = score_side(SideOccupant(
     modifiers={"chest": backplate_modifier(1600.0)},
 ))
 ```
+
+## Shortcut: straight from dummy channels
+
+`crashmetrics.bncap_channels` does steps 1 and 2 in one call from the
+dummy time histories, from a test or a simulation. It filters each
+channel with its CFC (unless `filtered=True`), calculates every
+criterion and returns the occupant:
+
+```python
+from crashmetrics.bncap_channels import (
+    channels_from_isomme, frontal_occupant_from_channels,
+    pole_test_from_channels, side_occupant_from_channels,
+)
+from crashmetrics.isomme import read_isomme
+
+test = read_isomme("tests/ODB_001")
+driver = frontal_occupant_from_channels(
+    channels_from_isomme(test, position="1"), filtered=True,
+    pedal_rearward=62.0, modifiers=mods)
+passenger = frontal_occupant_from_channels(
+    channels_from_isomme(test, position="3"), filtered=True, driver=False)
+
+side_occupant = side_occupant_from_channels(es2_channels)       # {name: (t, values)}
+pole_ok = pole_test_from_channels(es2_pole_channels, head_contact=False)
+```
+
+| Function | Dummy | Calculates |
+| --- | --- | --- |
+| `frontal_occupant_from_channels` | Hybrid III 50th | HIC15 and 3 ms of the resultant head acceleration, hard contact (peak > 80 g unless `head_contact=` is given), neck shear and tension histories, extension moment at the occipital condyle, chest compression and VC, femur histories, knee slider, worst Tibia Index and tibia compression of the upper and lower locations |
+| `side_occupant_from_channels` | ES-2 | HIC15, 3 ms, worst rib deflection and VC, total abdominal force, pubic force; backplate and T12 modifiers if those channels are given |
+| `pole_test_from_channels` | ES-2 | The pole test pass / fail |
+| `channels_from_isomme` | any | The named channels of one seating position from an ISO-MME test, in N, N m, mm and g, filtered with the protocol CFC |
+
+The channel names, units and CFCs are in `FRONTAL_CHANNELS` and
+`SIDE_CHANNELS`; the Hybrid III ISO-MME codes (`HYBRID3_ISOMME`) follow
+Euro NCAP CP 005. For the ES-2, pass your laboratory's codes as
+`patterns=` with `table=SIDE_CHANNELS`. From LS-DYNA, read the dummy
+outputs (for example with `crashmetrics.lsdyna_ascii`), convert them to
+these units, resample them to a uniform step and pass them by name.
 
 ## Step 4: pole test and the star rating
 
@@ -154,6 +239,32 @@ cop_stars(38.5)                                       # child occupant points ->
 
 `rating.reasons` explains any reduction.
 
+## Step 5: the scorecard
+
+`crashmetrics.bncap_report.scorecard` lays the result out like a rating
+sheet, for design reviews:
+
+```python
+from crashmetrics.bncap_report import scorecard
+
+card = scorecard(frontal, side)          # or scorecard(frontal, side, rating=full.aop)
+print(card.markdown())                   # tables per test, losses, next star
+card.points_to_next_star                 # e.g. 3.715 more points for 5 stars
+card.losses[0]                           # largest loss: test, group, occupant, region, cause
+write_csv(card.rows(), "scorecard.csv")  # one row per criterion (crashmetrics.features)
+```
+
+- Every body region with its points, colour, governing criterion (in
+  bold) and the modifiers it lost.
+- Every criterion with its value, unit, higher and lower performance
+  limit and points (force–duration criteria show the exceedance level
+  where the score is lowest).
+- **Where the points are lost**: per scored group, the occupant and
+  region that set it and whether a criterion or the modifiers cost
+  most, largest first.
+- **Next star**: the points the next star threshold needs (left out of
+  the text when a rule such as capping limits the rating).
+
 ## Complete example
 
 ```python
@@ -164,4 +275,16 @@ Output:
 
 ```text
 --8<-- "examples/expected/07_bharat_ncap.txt"
+```
+
+From unfiltered dummy channels to the scorecard, with named modifiers:
+
+```python
+--8<-- "examples/22_bncap_channels_scorecard.py"
+```
+
+Output:
+
+```text
+--8<-- "examples/expected/22_bncap_channels_scorecard.txt"
 ```

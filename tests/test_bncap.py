@@ -237,3 +237,98 @@ def test_curve_points_full_score_reports_peak_duration():
     assert result.points == 4.0
     assert result.level == 1000.0
     assert result.duration_ms == pytest.approx(40.0)
+
+
+# --- Protocol edition ----------------------------------------------------------
+
+
+def test_edition_constants_and_dates():
+    import datetime as dt
+
+    from crashmetrics.bncap import (
+        EDITION,
+        PROTOCOL,
+        VALID_FROM,
+        VALID_UNTIL,
+        check_edition,
+        edition_for_date,
+    )
+    assert EDITION == 2023
+    assert (VALID_FROM, VALID_UNTIL) == (dt.date(2023, 10, 1), dt.date(2027, 9, 30))
+    assert check_edition(2023) == PROTOCOL
+    assert edition_for_date(dt.date(2023, 10, 1)) == 2023
+    assert edition_for_date(dt.date(2027, 9, 30)) == 2023
+    with pytest.raises(ValueError, match="not implemented yet"):
+        edition_for_date(dt.date(2027, 10, 1))
+    with pytest.raises(ValueError, match="started"):
+        edition_for_date(dt.date(2023, 9, 30))
+    with pytest.raises(ValueError, match="Unknown Bharat NCAP edition"):
+        check_edition(2019)
+
+
+def test_results_carry_protocol_and_refuse_other_editions():
+    from crashmetrics.bncap import PROTOCOL
+    frontal = score_frontal(_driver(), _passenger())
+    side = score_side(_side())
+    assert frontal.protocol == side.protocol == PROTOCOL
+    assert aop_rating(frontal, side).protocol == PROTOCOL
+    for call in (lambda: score_frontal(_driver(), _passenger(), edition=2027),
+                 lambda: score_side(_side(), edition=2027),
+                 lambda: aop_rating(frontal, side, edition=2027),
+                 lambda: pole_test_passed(500, 70, False, 30, 0.5, 1500, 3000,
+                                          edition=2027)):
+        with pytest.raises(ValueError, match="Bharat NCAP 2.0"):
+            call()
+    other = type(frontal)(**{**frontal.__dict__, "protocol": "other rules"})
+    with pytest.raises(ValueError, match="different protocol"):
+        aop_rating(other, side)
+
+
+def test_region_values_recorded():
+    result = score_frontal(_driver(), _passenger())
+    drv = result.regions["driver"]
+    assert drv["head"].values == {"hic15": 600.0, "head_a3ms": 60.0}
+    assert drv["neck"].values["neck_tension"] == pytest.approx(2500.0)
+    assert drv["knee_left"].values["femur_force"] == pytest.approx(5000.0)
+    assert drv["foot"].values == {"pedal_rearward": 150.0}
+    assert result.regions["passenger"]["head"].values == {}
+    assert score_side(_side()).regions["driver"]["pelvis"].values == {
+        "pubic_force": 3000.0}
+
+
+# --- Named modifiers -----------------------------------------------------------
+
+
+def test_frontal_modifiers_by_name():
+    from crashmetrics.bncap import frontal_modifiers
+    mods = frontal_modifiers(
+        steering_column=(100.0, 0.0, 0.0),           # head 0.5
+        unstable_airbag_contact=True,                # head 1
+        a_pillar=150.0,                              # chest 1
+        shoulder_belt_load=6500.0,                   # chest 2
+        knee_concentrated_load=(True, False),        # knee left 1
+        pedal_upward=(0.0, 80.0),                    # lower leg right 0.5
+        blocked_pedal_rearward=112.5,                # foot 0.5
+        footwell_rupture=True,                       # foot 1
+        incorrect_airbag_deployment="chest",         # chest 1
+    )
+    assert mods == pytest.approx({"head": 1.5, "chest": 4.0, "knee_left": 1.0,
+                                  "lower_leg_right": 0.5, "foot": 1.5})
+    assert frontal_modifiers(shoulder_belt_load=6000.0) == {}
+    assert frontal_modifiers() == {}
+    result = score_frontal(_driver(modifiers=mods), _passenger())
+    assert result.regions["driver"]["chest"].points == 0.0
+    with pytest.raises(ValueError, match="Driver-only"):
+        frontal_modifiers(driver=False, footwell_rupture=True)
+    with pytest.raises(ValueError, match="must be a region"):
+        frontal_modifiers(incorrect_airbag_deployment="arm")
+
+
+def test_side_modifiers_by_name():
+    from crashmetrics.bncap import side_modifiers
+    assert side_modifiers(backplate_fy=-2500.0) == {"chest": 1.0}
+    assert side_modifiers(backplate_fy=2500.0, t12_fy=1750.0, t12_mx=100.0) == \
+        pytest.approx({"chest": 2.0})
+    assert side_modifiers() == {}
+    with pytest.raises(ValueError, match="both"):
+        side_modifiers(t12_fy=1750.0)

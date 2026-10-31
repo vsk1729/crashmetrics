@@ -15,6 +15,10 @@ vehicles without rear seats, such as two-seaters), the sum of:
 `score_cop` adds them up and gives the COP stars (Annexure VIII 4.3).
 Scores are rounded to 3 decimals (Section 4.2 of the standard).
 
+Edition: AIS-197 of September 2023, for ratings from 1 October 2023 to
+30 September 2027 (`crashmetrics.bncap.PROTOCOL`); `score_cop` takes
+``edition=2023`` and its result carries the ``protocol`` text.
+
 Units: accelerations g, forces N, excursions mm.
 """
 
@@ -26,7 +30,7 @@ from dataclasses import dataclass, field
 from typing import Literal
 
 from crashmetrics._scoring import linear_fraction
-from crashmetrics.bncap import cop_stars
+from crashmetrics.bncap import EDITION, PROTOCOL, check_edition, cop_stars
 
 __all__ = [
     "CHILD_FRONTAL_LIMITS",
@@ -469,6 +473,8 @@ class CopScore:
     vehicle_based: VehicleBasedScore
     two_seater: bool
     notes: tuple[str, ...] = field(default=())
+    protocol: str = PROTOCOL
+    """Rules that produced the result (`crashmetrics.bncap.PROTOCOL`)."""
 
     def summary(self) -> str:
         """A short text report."""
@@ -501,13 +507,15 @@ def score_cop(
     vehicle_based: VehicleBasedScore,
     dynamic: CopDynamicScore | None = None,
     two_seater: bool = False,
+    edition: int = EDITION,
 ) -> CopScore:
-    """Child occupant protection total and stars.
+    """Child occupant protection total and stars (AIS-197 2023).
 
     49 points (dynamic 24, installation 12, vehicle based 13) with the
     star thresholds 41 / 35 / 27 / 18 / 9; two-seaters (no dynamic
     assessment) 22 points with 20 / 17 / 13 / 9 / 5 (Annexure VIII 4.3).
     """
+    protocol = check_edition(edition)
     if two_seater and dynamic is not None:
         raise ValueError("Two-seaters have no dynamic assessment (6.1.2.1).")
     if not two_seater and dynamic is None:
@@ -519,4 +527,4 @@ def score_cop(
                  + (dynamic.points if dynamic else 0.0))
     return CopScore(points, 22.0 if two_seater else 49.0,
                     cop_stars(points, two_seater), dynamic, installation,
-                    vehicle_based, two_seater)
+                    vehicle_based, two_seater, protocol=protocol)

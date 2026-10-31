@@ -22,6 +22,11 @@ Functions:
   head protection for 4 or 5 stars by publication date.
 - `safety_assist_max_stars`: Highest star level whose qualifiers are met.
 - `bncap_rating`: AOP stars (with the qualifiers) and COP stars together.
+
+Edition: AIS-197 of September 2023, for ratings from 1 October 2023 to
+30 September 2027 (`crashmetrics.bncap.PROTOCOL`). `bncap_rating` takes
+``edition=2023``, refuses results scored under another protocol, and
+prints the protocol in its summary.
 """
 
 from __future__ import annotations
@@ -29,7 +34,14 @@ from __future__ import annotations
 import datetime as dt
 from dataclasses import dataclass
 
-from crashmetrics.bncap import AopRating, TestResult, aop_rating
+from crashmetrics.bncap import (
+    EDITION,
+    PROTOCOL,
+    AopRating,
+    TestResult,
+    aop_rating,
+    check_edition,
+)
 from crashmetrics.bncap_cop import CopScore
 
 __all__ = [
@@ -181,11 +193,14 @@ class BncapRating:
     aop: AopRating
     cop: CopScore
     safety_assist: SafetyAssistResult
+    protocol: str = PROTOCOL
+    """Rules that produced the result (`crashmetrics.bncap.PROTOCOL`)."""
 
     def summary(self) -> str:
         a, c = self.aop, self.cop
         lines = [
             f"Bharat NCAP: adult {a.stars} stars, child {c.stars} stars",
+            f"  Protocol: {self.protocol}",
             f"  Adult occupant {a.points:.3f} / 32 (frontal {a.frontal:.3f}, "
             f"side {a.side:.3f})",
         ]
@@ -205,6 +220,7 @@ def bncap_rating(
     side: TestResult,
     cop: CopScore,
     safety_assist: SafetyAssist,
+    edition: int = EDITION,
 ) -> BncapRating:
     """Return the adult and child star ratings.
 
@@ -212,6 +228,10 @@ def bncap_rating(
     safety assist qualifiers as ``max_stars_allowed``; the COP stars
     from the COP points (`crashmetrics.bncap_cop.score_cop`).
     """
+    protocol = check_edition(edition)
+    if cop.protocol != protocol:
+        raise ValueError(f"The child score was made with {cop.protocol!r}.")
     sat = safety_assist_max_stars(safety_assist)
-    aop = aop_rating(frontal, side, max_stars_allowed=sat.max_stars)
-    return BncapRating(aop, cop, sat)
+    aop = aop_rating(frontal, side, max_stars_allowed=sat.max_stars,
+                     edition=edition)
+    return BncapRating(aop, cop, sat, protocol)

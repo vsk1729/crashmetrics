@@ -8,10 +8,39 @@ follow [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- `crashmetrics.bncap_channels`: Bharat NCAP inputs straight from dummy
+  channels. `frontal_occupant_from_channels` (Hybrid III 50th: HIC15,
+  3 ms, hard contact above 80 g, neck histories and extension, chest
+  compression and VC, femur, knee, worst Tibia Index and compression),
+  `side_occupant_from_channels` (ES-2, with the backplate and T12
+  modifiers from their channels), `pole_test_from_channels`, and
+  `channels_from_isomme` (Hybrid III codes of Euro NCAP CP 005, unit
+  conversion, CFC filtering).
+- `crashmetrics.bncap_report.scorecard`: adult occupant scorecard with
+  points, colour and governing criterion per region, criterion values
+  against the limits, where the points are lost, and the points to the
+  next star; Markdown and CSV rows.
+- `bncap.frontal_modifiers` and `bncap.side_modifiers`: every Annexure
+  VII modifier by name (airbag, steering wheel, compartment integrity,
+  shoulder belt, knee contact, footwell rupture, sliding ones), returning
+  the points per region.
+- Bharat NCAP edition and validity years: `EDITION` (2023), `VALID_FROM`
+  (1 October 2023), `VALID_UNTIL` (30 September 2027), `PROTOCOL`,
+  `edition_for_date`. The scoring functions take `edition=2023` and
+  refuse 2027 (Bharat NCAP 2.0, not implemented yet); `TestResult`,
+  `AopRating`, `CopScore` and `BncapRating` carry a `protocol` field, and
+  ratings refuse results scored under another protocol.
+- `RegionResult.values`: the criterion values behind each region score.
+- Example 22: Bharat NCAP from unfiltered channels to the scorecard.
+
 - `CONTRIBUTING.md`: contributor guide (set-up, coding standards,
   adding a criterion, an LS-DYNA reader, an example or a test, licensing
   and sources, pull request checklist), linked from the README and the
   development page.
+
+### Changed
+
+- `BncapRating.summary()` prints the protocol and its validity years.
 
 ## [0.16.0] - 2026-10-30
 

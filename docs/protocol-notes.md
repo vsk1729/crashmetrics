@@ -134,6 +134,12 @@ Virtual Testing Protocol v1.0.2 and Frontal Impact Protocol v1.2.
 
 | Topic | Source | crashmetrics | Change it |
 | --- | --- | --- | --- |
+| Edition and validity | AIS-197 (September 2023), Section 1.0: valid for four years; Bharat NCAP 2.0 (AIS-197 Rev 1) from October 2027 | 2023 edition for ratings 1 Oct 2023 – 30 Sep 2027; `edition=2027` raises an error | `edition_for_date`, `PROTOCOL` |
+| Frontal hard head contact from channels | No hard contact if the peak resultant head acceleration is at most 80 g and there is no other evidence | `frontal_occupant_from_channels` assumes contact above 80 g | `head_contact=` |
+| Tibia location | Upper and lower tibia measured | The worse Tibia Index and the worse compression of the given locations, per leg | Pass only one location |
+| Shoulder belt load modifier | 2 points for a shoulder belt load above 6 kN | Applied strictly above 6000 N | |
+| Backplate and T12 modifiers | Both listed for the side chest | Added together (each 0–2) | `modifiers=` |
+| ISO-MME codes | AIS-197 lists channels, not ISO codes | Hybrid III codes of Euro NCAP CP 005 (`HYBRID3_ISOMME`); no ES-2 default | `channels_from_isomme(patterns=)` |
 | ⚠️ Neck exceedance | Annex IV §3.1.2.2 says "continuous", §3.2.2 note says "cumulative exceedance plots" | Cumulative (as in Global NCAP) | `score_frontal` always uses cumulative; check a curve yourself with `curve_points(..., mode="continuous")` |
 | ⚠️ T12 modifier lower bound | Annex VII §3.3 text: 1.5 kN; its limits table: 1.0 kN | 1.5 kN (text) | Compute the penalty yourself |
 | 35 % front / side rule | "difference of scores above 35 %" | 35 % of the 16-point test maximum | |

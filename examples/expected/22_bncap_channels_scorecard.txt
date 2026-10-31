@@ -1,0 +1,52 @@
+Protocol: Bharat NCAP AIS-197 (2023 edition, ratings 1 Oct 2023 - 30 Sep 2027)
+Edition for a rating on 15 March 2026: 2023
+Driver: HIC15 661, 3 ms 78.6 g, hard contact True, chest 30.0 mm, VC 0.16 m/s, TI 0.44
+
+# Bharat NCAP adult occupant scorecard
+
+Protocol: Bharat NCAP AIS-197 (2023 edition, ratings 1 Oct 2023 - 30 Sep 2027)
+
+**23.285 / 32 points: 4 stars** (frontal 9.352 / 16, side 13.933 / 16)
+- 3.715 more points reach the 5-star threshold
+
+## Frontal test
+
+| Occupant | Region | Points | Colour | Criteria (value: points) | Modifiers |
+| --- | --- | --- | --- | --- | --- |
+| driver | head | 0.781 | brown | **hic15 661: 0.781**; head_a3ms 78.6 g: 2.341 |  |
+| driver | neck | 4.000 | green | **neck_shear 822 N: 4.000**; neck_tension 2158 N: 4.000; neck_extension 11.4 N m: 4.000 |  |
+| driver | chest | 1.999 | orange | **chest_compression 30 mm: 2.399**; viscous_criterion 0.165 m/s: 4.000 | -0.4 |
+| driver | knee_left | 4.000 | green | **femur_force 3251 N: 4.000**; knee_displacement 3 mm: 4.000 |  |
+| driver | lower_leg_left | 3.572 | yellow | tibia_index 0.438: 3.833; **tibia_force 2641 N: 3.572** |  |
+| driver | knee_right | 3.000 | yellow | **femur_force 2926 N: 4.000**; knee_displacement 2.7 mm: 4.000 | -1 |
+| driver | lower_leg_right | 3.749 | yellow | tibia_index 0.394: 4.000; **tibia_force 2377 N: 3.749** |  |
+| driver | foot | 4.000 | green | **pedal_rearward 62 mm: 4.000** |  |
+| passenger | head | 4.000 | green | **no hard contact: 4.000** |  |
+| passenger | neck | 4.000 | green | **neck_shear 822 N: 4.000**; neck_tension 1850 N: 4.000; neck_extension 11.4 N m: 4.000 |  |
+| passenger | chest | 3.599 | yellow | **chest_compression 24 mm: 3.599**; viscous_criterion 0.106 m/s: 4.000 |  |
+| passenger | knee_left | 4.000 | green | **femur_force 2845 N: 4.000**; knee_displacement 2 mm: 4.000 |  |
+| passenger | lower_leg_left | 4.000 | green | **tibia_index 0.317: 4.000**; tibia_force 1930 N: 4.000 |  |
+| passenger | knee_right | 4.000 | green | **femur_force 2560 N: 4.000**; knee_displacement 1.8 mm: 4.000 |  |
+| passenger | lower_leg_right | 4.000 | green | **tibia_index 0.285: 4.000**; tibia_force 1737 N: 4.000 |  |
+
+## Side test
+
+| Occupant | Region | Points | Colour | Criteria (value: points) | Modifiers |
+| --- | --- | --- | --- | --- | --- |
+| driver | head | 4.000 | green | **hic15 126: 4.000**; head_a3ms 50.2 g: 4.000 |  |
+| driver | chest | 2.382 | orange | **rib_deflection 28 mm: 2.799**; rib_vc 0.298 m/s: 4.000 | -0.417 |
+| driver | abdomen | 3.551 | yellow | **abdominal_force 1168 N: 3.551** |  |
+| driver | pelvis | 4.000 | green | **pubic_force 2438 N: 4.000** |  |
+
+## Where the points are lost
+
+| Test | Group | Lost | Occupant | Region | Cause |
+| --- | --- | --- | --- | --- | --- |
+| frontal | head_neck | 3.219 | driver | head | hic15 |
+| frontal | chest | 2.001 | driver | chest | chest_compression |
+| side | chest | 1.618 | driver | chest | rib_deflection |
+| frontal | knee_femur_pelvis | 1.000 | driver | knee_right | modifiers |
+| side | abdomen | 0.449 | driver | abdomen | abdominal_force |
+| frontal | leg_foot | 0.428 | driver | lower_leg_left | tibia_force |
+
+36 criteria rows; first: frontal driver hic15 = 661.0 -> 0.781 points

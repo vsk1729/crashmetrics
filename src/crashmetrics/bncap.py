@@ -30,10 +30,24 @@ neck, chest; side head, chest, abdomen, pelvis) removes all points of
 that test and caps the rating at 0 stars; a critical region scoring zero
 after modifiers caps it at 1 star.
 
+Protocol edition
+----------------
+Every function here implements the **2023 edition** of Bharat NCAP
+(AIS-197, published September 2023), which rates cars from 1 October
+2023 and is valid for four years, until 30 September 2027 (`PROTOCOL`,
+`VALID_FROM`, `VALID_UNTIL`). The scoring functions take
+``edition=2023`` and their results carry a ``protocol`` text, so a
+stored result says which rules produced it. Bharat NCAP 2.0 (AIS-197
+Revision 1, ratings from October 2027: 100 points in five pillars) is
+not implemented yet; asking for ``edition=2027`` raises an error rather
+than scoring by the old rules. `edition_for_date` gives the edition for a
+rating date.
+
 Units: forces in N, moments in N m, deflections and displacements in
 mm, accelerations in g, VC in m/s, time in s.
 """
 
+import datetime as dt
 import math
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, field
@@ -48,6 +62,11 @@ from ._scoring import linear_fraction
 
 __all__ = [
     "AOP_STAR_THRESHOLDS",
+    "EDITION",
+    "PROTOCOL",
+    "SUPPORTED_EDITIONS",
+    "VALID_FROM",
+    "VALID_UNTIL",
     "COP_STAR_THRESHOLDS",
     "COP_STAR_THRESHOLDS_TWO_SEATER",
     "FEMUR_CURVES",
@@ -63,19 +82,73 @@ __all__ = [
     "TestResult",
     "a_pillar_modifier",
     "aop_rating",
+    "check_edition",
     "backplate_modifier",
     "colour",
     "cop_stars",
     "curve_points",
+    "edition_for_date",
+    "frontal_modifiers",
     "pedal_blocking_modifier",
     "pedal_upward_modifier",
     "pole_test_passed",
     "score_frontal",
     "score_side",
+    "side_modifiers",
     "sliding_points",
     "steering_column_modifier",
     "t12_modifier",
 ]
+
+# --- Protocol edition --------------------------------------------------------
+
+EDITION = 2023
+"""Bharat NCAP edition implemented here: AIS-197 of September 2023."""
+
+VALID_FROM = dt.date(2023, 10, 1)
+"""First day of Bharat NCAP ratings under AIS-197 (2023)."""
+
+VALID_UNTIL = dt.date(2027, 9, 30)
+"""Last day of the 2023 edition: four years (AIS-197 Section 1.0).
+Bharat NCAP 2.0 (AIS-197 Revision 1) applies from October 2027."""
+
+PROTOCOL = "Bharat NCAP AIS-197 (2023 edition, ratings 1 Oct 2023 - 30 Sep 2027)"
+"""Text stored in every result, naming the rules that produced it."""
+
+SUPPORTED_EDITIONS: tuple[int, ...] = (2023,)
+"""Editions this package can score."""
+
+
+def check_edition(edition: int) -> str:
+    """Return `PROTOCOL` for a supported edition; raise for any other.
+
+    ``2027`` (Bharat NCAP 2.0) is refused with an explanation, so old
+    rules are never applied to a new-edition rating by mistake.
+    """
+    if edition in SUPPORTED_EDITIONS:
+        return PROTOCOL
+    if edition >= 2027:
+        raise ValueError(
+            f"Bharat NCAP edition {edition}: Bharat NCAP 2.0 (AIS-197 Revision 1, "
+            "ratings from October 2027) is not implemented yet. Edition 2023 "
+            f"applies to ratings up to {VALID_UNTIL:%d %B %Y}.")
+    raise ValueError(f"Unknown Bharat NCAP edition {edition}; supported: "
+                     f"{', '.join(map(str, SUPPORTED_EDITIONS))}.")
+
+
+def edition_for_date(date: dt.date) -> int:
+    """Bharat NCAP edition that applies to a rating on ``date``.
+
+    2023 for 1 October 2023 to 30 September 2027. Earlier dates (before
+    the programme started) and later dates (Bharat NCAP 2.0, not
+    implemented yet) raise ``ValueError``.
+    """
+    if date < VALID_FROM:
+        raise ValueError(f"Bharat NCAP ratings started on {VALID_FROM:%d %B %Y}.")
+    if date > VALID_UNTIL:
+        check_edition(2027)
+    return EDITION
+
 
 MAX_POINTS = 4.0
 
@@ -310,6 +383,149 @@ def t12_modifier(fy: float, mx: float) -> float:
     return max(_ramp(abs(fy), 1500.0, 2000.0, 2.0), _ramp(abs(mx), 150.0, 200.0, 2.0))
 
 
+_INCORRECT_AIRBAG_REGIONS = ("head", "neck", "chest", "knee_left", "knee_right",
+                             "lower_leg_left", "lower_leg_right", "foot")
+
+
+def _add(out: dict[str, float], region: str, points: float) -> None:
+    if points > 0.0:
+        out[region] = round(out.get(region, 0.0) + points, 3)
+
+
+def frontal_modifiers(
+    *,
+    driver: bool = True,
+    steering_column: tuple[float, float, float] | None = None,
+    a_pillar: float | None = None,
+    pedal_upward: tuple[float, float] = (0.0, 0.0),
+    blocked_pedal_rearward: float | None = None,
+    unstable_airbag_contact: bool = False,
+    hazardous_airbag_deployment: bool = False,
+    incorrect_airbag_deployment: str | None = None,
+    steering_wheel_contact: bool = False,
+    compartment_integrity_lost: bool = False,
+    shoulder_belt_load: float | None = None,
+    knee_variable_contact: tuple[bool, bool] = (False, False),
+    knee_concentrated_load: tuple[bool, bool] = (False, False),
+    footwell_rupture: bool = False,
+    edition: int = EDITION,
+) -> dict[str, float]:
+    """Frontal (ODB) modifiers by name, as points per region for
+    `FrontalOccupant` (AIS-197 2023, Annexure VII Section 2).
+
+    Each argument is one modifier, so none is applied to the wrong
+    region or forgotten:
+
+    =============================  =======================  ============
+    Argument                       Region                   Penalty
+    =============================  =======================  ============
+    ``steering_column``            head                     0-1, sliding
+    ``unstable_airbag_contact``    head                     1
+    ``hazardous_airbag_deployment``  head                   1
+    ``incorrect_airbag_deployment``  the region given       1
+    ``a_pillar``                   chest                    0-2, sliding
+    ``steering_wheel_contact``     chest                    1
+    ``compartment_integrity_lost`` chest                    1
+    ``shoulder_belt_load``         chest                    2 above 6 kN
+    ``knee_variable_contact``      knee (per leg)           1
+    ``knee_concentrated_load``     knee (per leg)           1
+    ``pedal_upward``               lower leg (per leg)      0-1, sliding
+    ``blocked_pedal_rearward``     foot                     0-1, sliding
+    ``footwell_rupture``           foot                     1
+    =============================  =======================  ============
+
+    Parameters
+    ----------
+    driver:
+        False for the passenger: the steering, pedal and footwell
+        modifiers are driver-only and raise an error if given.
+    steering_column:
+        Rearward, upward and lateral steering column displacement, mm.
+    a_pillar:
+        A-pillar rearward displacement, mm.
+    pedal_upward:
+        Upward pedal displacement acting on the (left, right) lower leg,
+        mm.
+    blocked_pedal_rearward:
+        Rearward displacement of a blocked pedal, mm.
+    incorrect_airbag_deployment:
+        Region the penalty applies to (for example ``"head"``), or None.
+    shoulder_belt_load:
+        Peak shoulder belt force, N.
+    knee_variable_contact, knee_concentrated_load:
+        (left, right) flags.
+    edition:
+        Bharat NCAP edition (2023).
+
+    Returns
+    -------
+    dict
+        Points to subtract per region; regions without a penalty are
+        left out. Pass it as ``FrontalOccupant(..., modifiers=...)``.
+    """
+    check_edition(edition)
+    driver_only = {
+        "steering_column": steering_column is not None,
+        "steering_wheel_contact": steering_wheel_contact,
+        "pedal_upward": any(v != 0.0 for v in pedal_upward),
+        "blocked_pedal_rearward": blocked_pedal_rearward is not None,
+        "footwell_rupture": footwell_rupture,
+    }
+    if not driver and any(driver_only.values()):
+        given = [k for k, v in driver_only.items() if v]
+        raise ValueError(f"Driver-only modifiers given for the passenger: {given}.")
+    if (incorrect_airbag_deployment is not None
+            and incorrect_airbag_deployment not in _INCORRECT_AIRBAG_REGIONS):
+        raise ValueError("incorrect_airbag_deployment must be a region: "
+                         f"{', '.join(_INCORRECT_AIRBAG_REGIONS)}.")
+    out: dict[str, float] = {}
+    if steering_column is not None:
+        _add(out, "head", steering_column_modifier(*steering_column))
+    _add(out, "head",
+         float(unstable_airbag_contact) + float(hazardous_airbag_deployment))
+    if incorrect_airbag_deployment is not None:
+        _add(out, incorrect_airbag_deployment, 1.0)
+    if a_pillar is not None:
+        _add(out, "chest", a_pillar_modifier(a_pillar))
+    _add(out, "chest",
+         float(steering_wheel_contact) + float(compartment_integrity_lost))
+    if shoulder_belt_load is not None:
+        if not math.isfinite(shoulder_belt_load):
+            raise ValueError("shoulder_belt_load must be finite.")
+        _add(out, "chest", 2.0 if abs(shoulder_belt_load) > 6000.0 else 0.0)
+    for i, leg in enumerate(("left", "right")):
+        _add(out, f"knee_{leg}",
+             float(knee_variable_contact[i]) + float(knee_concentrated_load[i]))
+        _add(out, f"lower_leg_{leg}", pedal_upward_modifier(pedal_upward[i]))
+    if blocked_pedal_rearward is not None:
+        _add(out, "foot", pedal_blocking_modifier(blocked_pedal_rearward))
+    _add(out, "foot", float(footwell_rupture))
+    return out
+
+
+def side_modifiers(
+    *,
+    backplate_fy: float | None = None,
+    t12_fy: float | None = None,
+    t12_mx: float | None = None,
+    edition: int = EDITION,
+) -> dict[str, float]:
+    """Side (MDB) modifiers by name, as points per region for
+    `SideOccupant` (AIS-197 2023, Annexure VII Section 3): backplate load
+    (`backplate_modifier`, 0-2) and T12 load (`t12_modifier`, 0-2), both
+    on the chest and added. Forces in N, moment in N m; peak magnitudes.
+    """
+    check_edition(edition)
+    out: dict[str, float] = {}
+    if backplate_fy is not None:
+        _add(out, "chest", backplate_modifier(backplate_fy))
+    if (t12_fy is None) != (t12_mx is None):
+        raise ValueError("Give both t12_fy and t12_mx, or neither.")
+    if t12_fy is not None and t12_mx is not None:
+        _add(out, "chest", t12_modifier(t12_fy, t12_mx))
+    return out
+
+
 # --- Occupant inputs ---------------------------------------------------------
 
 Series = tuple[ArrayLike, ArrayLike]
@@ -383,6 +599,10 @@ class RegionResult:
     """Points per criterion."""
     capped: bool
     """A criterion of a critical region is above its capping limit."""
+    values: dict[str, float] = field(default_factory=dict)
+    """Criterion values (HIC15, mm, N ...). For force-duration criteria
+    (neck shear and tension, femur) the level of the exceedance curve
+    where the score is lowest, N."""
 
     @property
     def colour(self) -> str:
@@ -402,17 +622,21 @@ class TestResult:
     critical_zero: bool
     """A critical region scores zero after modifiers (at most 1 star)."""
     test_modifiers: float
+    protocol: str = PROTOCOL
+    """Rules that produced the result (`PROTOCOL`)."""
 
 
 def _region(
-    scores: Mapping[str, float], modifier: float, capped: bool = False
+    scores: Mapping[str, float], modifier: float, capped: bool = False,
+    values: Mapping[str, float] | None = None,
 ) -> RegionResult:
     governing = min(scores, key=lambda k: scores[k])
     raw = scores[governing]
     if not math.isfinite(modifier) or modifier < 0:
         raise ValueError("Modifiers are points to subtract (>= 0).")
     return RegionResult(round(max(0.0, raw - modifier), 3), raw, governing,
-                        dict(scores), capped)
+                        dict(scores), capped,
+                        {k: float(v) for k, v in (values or {}).items()})
 
 
 def _scale(name: str, value: float, limits: Mapping[str, tuple[float, float]]
@@ -438,7 +662,8 @@ def _frontal_regions(occ: FrontalOccupant, driver: bool) -> dict[str, RegionResu
         hic, c1 = _scale("hic15", occ.hic15, FRONTAL_LIMITS)
         a3, c2 = _scale("head_a3ms", occ.head_a3ms, FRONTAL_LIMITS)
         out["head"] = _region({"hic15": hic, "head_a3ms": a3},
-                              mod.get("head", 0.0), c1 or c2)
+                              mod.get("head", 0.0), c1 or c2,
+                              {"hic15": occ.hic15, "head_a3ms": occ.head_a3ms})
     else:
         out["head"] = _region({"no hard contact": MAX_POINTS}, mod.get("head", 0.0))
 
@@ -448,12 +673,16 @@ def _frontal_regions(occ: FrontalOccupant, driver: bool) -> dict[str, RegionResu
     out["neck"] = _region(
         {"neck_shear": shear.points, "neck_tension": tension.points,
          "neck_extension": ext},
-        mod.get("neck", 0.0), shear.exceeds_lower or tension.exceeds_lower or c3)
+        mod.get("neck", 0.0), shear.exceeds_lower or tension.exceeds_lower or c3,
+        {"neck_shear": shear.level, "neck_tension": tension.level,
+         "neck_extension": abs(occ.neck_extension)})
 
     comp, c4 = _scale("chest_compression", occ.chest_compression, FRONTAL_LIMITS)
     vc, c5 = _scale("viscous_criterion", occ.viscous_criterion, FRONTAL_LIMITS)
     out["chest"] = _region({"chest_compression": comp, "viscous_criterion": vc},
-                           mod.get("chest", 0.0), c4 or c5)
+                           mod.get("chest", 0.0), c4 or c5,
+                           {"chest_compression": occ.chest_compression,
+                            "viscous_criterion": occ.viscous_criterion})
 
     for i, side in enumerate(("left", "right")):
         femur = curve_points(*occ.femur[i], FEMUR_CURVES, direction="negative")
@@ -461,16 +690,22 @@ def _frontal_regions(occ: FrontalOccupant, driver: bool) -> dict[str, RegionResu
                          FRONTAL_LIMITS)
         out[f"knee_{side}"] = _region({"femur_force": femur.points,
                                        "knee_displacement": knee},
-                                      mod.get(f"knee_{side}", 0.0))
+                                      mod.get(f"knee_{side}", 0.0), False,
+                                      {"femur_force": abs(femur.level),
+                                       "knee_displacement":
+                                           occ.knee_displacement[i]})
         ti, _ = _scale("tibia_index", occ.tibia_index[i], FRONTAL_LIMITS)
         tf, _ = _scale("tibia_force", occ.tibia_force[i], FRONTAL_LIMITS)
-        out[f"lower_leg_{side}"] = _region({"tibia_index": ti, "tibia_force": tf},
-                                           mod.get(f"lower_leg_{side}", 0.0))
+        out[f"lower_leg_{side}"] = _region(
+            {"tibia_index": ti, "tibia_force": tf},
+            mod.get(f"lower_leg_{side}", 0.0), False,
+            {"tibia_index": occ.tibia_index[i], "tibia_force": occ.tibia_force[i]})
     if driver:
         if occ.pedal_rearward is None:
             raise ValueError("pedal_rearward is needed for the driver.")
         pedal, _ = _scale("pedal_rearward", occ.pedal_rearward, FRONTAL_LIMITS)
-        out["foot"] = _region({"pedal_rearward": pedal}, mod.get("foot", 0.0))
+        out["foot"] = _region({"pedal_rearward": pedal}, mod.get("foot", 0.0),
+                              False, {"pedal_rearward": occ.pedal_rearward})
     elif "foot" in occ.modifiers:
         raise ValueError("The passenger's foot and ankle is not assessed.")
     return out
@@ -489,8 +724,10 @@ def score_frontal(
     door_openings: int = 0,
     fuel_leakage: bool = False,
     other_test_modifiers: float = 0.0,
+    edition: int = EDITION,
 ) -> TestResult:
-    """ODB frontal test score, 16 points (Annexures IV and VIII).
+    """ODB frontal test score, 16 points (AIS-197 2023, Annexures IV and
+    VIII).
 
     Groups: head & neck (head, neck), chest, knee/femur/pelvis (both
     knees) and leg & foot (both lower legs and the driver's foot), each
@@ -498,6 +735,7 @@ def score_frontal(
     1 point per door opening, 1 point for fuel leakage (or the EV / hybrid
     post-crash penalty) and ``other_test_modifiers`` points.
     """
+    protocol = check_edition(edition)
     regions = {"driver": _frontal_regions(driver, True),
                "passenger": _frontal_regions(passenger, False)}
     group_members = {
@@ -515,7 +753,7 @@ def score_frontal(
     critical_zero = any(r[c].points == 0.0 for r in regions.values() for c in critical)
     mods = _test_modifiers(door_openings, fuel_leakage, other_test_modifiers)
     points = 0.0 if capped else max(0.0, round(sum(groups.values()) - mods, 3))
-    return TestResult(points, groups, regions, capped, critical_zero, mods)
+    return TestResult(points, groups, regions, capped, critical_zero, mods, protocol)
 
 
 def score_side(
@@ -523,11 +761,13 @@ def score_side(
     door_openings: int = 0,
     fuel_leakage: bool = False,
     other_test_modifiers: float = 0.0,
+    edition: int = EDITION,
 ) -> TestResult:
     """MDB side test score, 16 points: head, chest (worst rib), abdomen
-    and pelvis, 4 points each (Annexures IV 4.2 and VIII). All four are
+    and pelvis, 4 points each (AIS-197 2023, Annexures IV 4.2 and VIII). All four are
     critical regions. ``other_test_modifiers`` covers e.g. a hazardous
     airbag deployment carried over from the pole test (1 point)."""
+    protocol = check_edition(edition)
     unknown = set(occupant.modifiers) - {"head", "chest", "abdomen", "pelvis"}
     if unknown:
         raise ValueError(f"Unknown modifier regions: {sorted(unknown)}.")
@@ -540,11 +780,16 @@ def score_side(
     pub, c6 = _scale("pubic_force", occupant.pubic_force, SIDE_LIMITS)
     regions = {
         "head": _region({"hic15": hic, "head_a3ms": a3}, mod.get("head", 0.0),
-                        c1 or c2),
+                        c1 or c2, {"hic15": occupant.hic15,
+                                   "head_a3ms": occupant.head_a3ms}),
         "chest": _region({"rib_deflection": rib, "rib_vc": vc},
-                         mod.get("chest", 0.0), c3 or c4),
-        "abdomen": _region({"abdominal_force": abd}, mod.get("abdomen", 0.0), c5),
-        "pelvis": _region({"pubic_force": pub}, mod.get("pelvis", 0.0), c6),
+                         mod.get("chest", 0.0), c3 or c4,
+                         {"rib_deflection": occupant.rib_deflection,
+                          "rib_vc": occupant.rib_vc}),
+        "abdomen": _region({"abdominal_force": abd}, mod.get("abdomen", 0.0), c5,
+                           {"abdominal_force": occupant.abdominal_force}),
+        "pelvis": _region({"pubic_force": pub}, mod.get("pelvis", 0.0), c6,
+                          {"pubic_force": occupant.pubic_force}),
     }
     groups = {k: r.points for k, r in regions.items()}
     capped = any(r.capped for r in regions.values())
@@ -552,7 +797,7 @@ def score_side(
     mods = _test_modifiers(door_openings, fuel_leakage, other_test_modifiers)
     points = 0.0 if capped else max(0.0, round(sum(groups.values()) - mods, 3))
     return TestResult(points, groups, {"driver": regions}, capped, critical_zero,
-                      mods)
+                      mods, protocol)
 
 
 # --- Pole test and rating ----------------------------------------------------
@@ -566,11 +811,14 @@ def pole_test_passed(
     rib_vc: float,
     abdominal_force: float,
     pubic_force: float,
+    edition: int = EDITION,
 ) -> bool:
-    """Side pole test (Annexure IV 5.2, Annexure VII 4.1): HIC15 < 700,
+    """Side pole test, 29 km/h (AIS-197 2023, Annexure IV 5.2, Annexure
+    VII 4.1): HIC15 < 700,
     peak resultant head acceleration < 80 g, no direct head contact with
     the pole, and thorax, abdomen and pelvis below the side lower
     performance limits (modifiers not applied)."""
+    check_edition(edition)
     return (
         hic15 < 700.0 and head_peak < 80.0 and not head_contact
         and rib_deflection <= SIDE_LIMITS["rib_deflection"][1]
@@ -596,14 +844,17 @@ class AopRating:
     side: float
     reasons: tuple[str, ...]
     """Why the rating is below what the points give, if it is."""
+    protocol: str = PROTOCOL
+    """Rules that produced the result (`PROTOCOL`)."""
 
 
 def aop_rating(
     frontal: TestResult,
     side: TestResult,
     max_stars_allowed: int = 5,
+    edition: int = EDITION,
 ) -> AopRating:
-    """Adult occupant protection star rating (AIS-197 Table 2A and
+    """Adult occupant protection star rating (AIS-197 2023, Table 2A and
     Annexure VII Section 5).
 
     - Stars from the frontal + side points: 27 / 22 / 16 / 10 / 4 for
@@ -618,6 +869,11 @@ def aop_rating(
       test, pedestrian protection, seat belt reminders) are met; see
       `pole_test_passed`.
     """
+    protocol = check_edition(edition)
+    if frontal.protocol != protocol or side.protocol != protocol:
+        raise ValueError("The frontal and side results were scored with a "
+                         f"different protocol: {frontal.protocol!r}, "
+                         f"{side.protocol!r}.")
     total = round(frontal.points + side.points, 3)
     stars = _stars(total, AOP_STAR_THRESHOLDS)
     reasons = []
@@ -635,7 +891,8 @@ def aop_rating(
     if stars > max_stars_allowed:
         stars = max(0, max_stars_allowed)
         reasons.append("safety assist qualifiers")
-    return AopRating(stars, total, frontal.points, side.points, tuple(reasons))
+    return AopRating(stars, total, frontal.points, side.points, tuple(reasons),
+                     protocol)
 
 
 def cop_stars(points: float, two_seater: bool = False) -> int:

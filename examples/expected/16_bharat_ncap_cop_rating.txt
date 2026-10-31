@@ -1,10 +1,12 @@
 === Side head protection standard in 95% of production
 Bharat NCAP: adult 5 stars, child 4 stars
+  Protocol: Bharat NCAP AIS-197 (2023 edition, ratings 1 Oct 2023 - 30 Sep 2027)
   Adult occupant 29.156 / 32 (frontal 14.556, side 14.600)
   Safety assist allows up to 5 stars
 
 === Side head protection standard in 60% of production
 Bharat NCAP: adult 4 stars, child 4 stars
+  Protocol: Bharat NCAP AIS-197 (2023 edition, ratings 1 Oct 2023 - 30 Sep 2027)
   Adult occupant 29.156 / 32 (frontal 14.556, side 14.600)
     rating limited: safety assist qualifiers
   Safety assist allows up to 4 stars
