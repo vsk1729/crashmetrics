@@ -12,10 +12,20 @@
   Swift-Voce) and the extrapolated ``*MAT_024`` curve; n and K values.
 - `crashmetrics.materials.rate`: Cowper-Symonds and Johnson-Cook rate
   fits, strain-rate tables (``*DEFINE_TABLE``) and their checks.
+- `crashmetrics.materials.card`: the ``*MAT_PIECEWISE_LINEAR_PLASTICITY``
+  card with its curve or table in any LS-DYNA unit system; simple
+  failure strain.
 
 Units: stress MPa, force N, length mm, strain dimensionless.
 """
 
+from crashmetrics.materials.card import (
+    DENSITY_SCALE,
+    Mat024,
+    failure_strain,
+    fracture_strain,
+    keyword_number,
+)
 from crashmetrics.materials.corrections import (
     LudersPlateau,
     correct_compliance,
@@ -64,6 +74,7 @@ from crashmetrics.materials.tensile import (
 )
 
 __all__ = [
+    "DENSITY_SCALE",
     "LAWS",
     "UNIT_SYSTEMS",
     "CowperSymonds",
@@ -71,6 +82,7 @@ __all__ = [
     "HardeningFit",
     "JohnsonCookRate",
     "LudersPlateau",
+    "Mat024",
     "MeanCurve",
     "NValue",
     "NeckingPoint",
@@ -84,9 +96,12 @@ __all__ = [
     "compare_fits",
     "correct_compliance",
     "extrapolate_curve",
+    "failure_strain",
     "fit_cowper_symonds",
     "fit_hardening",
     "fit_johnson_cook_rate",
+    "fracture_strain",
+    "keyword_number",
     "luders_plateau",
     "mean_curve",
     "n_value",

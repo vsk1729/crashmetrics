@@ -39,6 +39,12 @@ follow [Semantic Versioning](https://semver.org/).
   order, ln-rate form, softening, spacing) and `RateTable.keyword`
   (`*DEFINE_TABLE` with its `*DEFINE_CURVE` cards in mm-ms-kg, mm-s-t,
   mm-s-kg or m-s-kg; linear or ln rates). Example 26.
+- `crashmetrics.materials.card`: `Mat024` writes the complete
+  `*MAT_PIECEWISE_LINEAR_PLASTICITY` card with its `*DEFINE_CURVE` or
+  `*DEFINE_TABLE` from engineering units (kg/m³, MPa, 1/s) in mm-ms-kg,
+  mm-s-t, mm-s-kg or m-s-kg; `write` adds a provenance header;
+  `failure_strain` / `fracture_strain` give a simple element-size
+  dependent FAIL; `keyword_number` formats fixed fields. Example 27.
 
 ## [0.17.0] - 2026-10-31
 

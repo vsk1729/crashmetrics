@@ -1,0 +1,51 @@
+Rp0.2 397 MPa, Rm 586 MPa, necking at plastic strain 0.133; Swift-Voce RMS 0.59 MPa
+Fracture strain 0.799 in the neck; FAIL for 2.5 mm elements 0.453
+
+$ DP600 1.2 mm (*MAT_024, MID 600)
+$ Units: mm-ms-kg (mm, ms, kg, kN, GPa)
+$ tests: DP600-L1, 0.001 /s, rolling direction
+$ hardening: measured to necking, Swift-Voce beyond
+$ rate: Cowper-Symonds C 40.4 /s, P 5
+$ failure: FAIL from Z = 55 %, 2.5 mm shells
+*KEYWORD
+*MAT_PIECEWISE_LINEAR_PLASTICITY_TITLE
+DP600 1.2 mm
+$#     mid        ro         e        pr      sigy      etan      fail      tdel
+       600   7.85e-6     210.0       0.3 0.3982837       0.0 0.4526455       0.0
+$#       c         p      lcss      lcsr        vp
+    0.0404       5.0      1600         0       0.0
+$#    eps1      eps2      eps3      eps4      eps5      eps6      eps7      eps8
+       0.0       0.0       0.0       0.0       0.0       0.0       0.0       0.0
+$#     es1       es2       es3       es4       es5       es6       es7       es8
+       0.0       0.0       0.0       0.0       0.0       0.0       0.0       0.0
+*DEFINE_CURVE_TITLE
+DP600 1.2 mm hardening
+$#    lcid      sidr       sfa       sfo      offa      offo
+      1600         0       1.0       1.0       0.0       0.0
+...
+          0.80095518           0.8231282
+                   1          0.84216204
+*END
+
+*MAT_PIECEWISE_LINEAR_PLASTICITY_TITLE
+DP600 1.2 mm table
+$#     mid        ro         e        pr      sigy      etan      fail      tdel
+       601   7.85e-9  210000.0       0.3 446.02739       0.0       0.0       0.0
+$#       c         p      lcss      lcsr        vp
+       0.0       0.0      1601         0       1.0
+$#    eps1      eps2      eps3      eps4      eps5      eps6      eps7      eps8
+       0.0       0.0       0.0       0.0       0.0       0.0       0.0       0.0
+$#     es1       es2       es3       es4       es5       es6       es7       es8
+       0.0       0.0       0.0       0.0       0.0       0.0       0.0       0.0
+*DEFINE_TABLE_TITLE
+DP600 1.2 mm table rates
+$#    tbid       sfa      offa
+      1601       1.0       0.0
+$#             value
+          -6.9077553
+                   0
+           2.3025851
+           4.6051702
+           6.9077553
+*DEFINE_CURVE_TITLE
+... 195 lines: the card, the table and 5 curves

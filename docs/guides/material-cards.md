@@ -23,7 +23,12 @@ test to a checked LS-DYNA `*MAT_PIECEWISE_LINEAR_PLASTICITY`
 | 14. Strain-rate table, written as `*DEFINE_TABLE` (linear or ln rates, model units) | `rate_table_from_model`, `rate_table_from_curves`, `RateTable.keyword` | ✅ |
 | 15. Table checks: crossing curves, rate order, ln-rate form | `RateTable.check` | ✅ |
 | 16. Johnson-Cook rate term | `fit_johnson_cook_rate` | ✅ |
-| Card writing, unit systems; checking existing cards | | planned |
+| 17. `*MAT_PIECEWISE_LINEAR_PLASTICITY` card | `Mat024`, `Mat024.keyword` | ✅ |
+| 18. `*DEFINE_CURVE` / `*DEFINE_TABLE` in fixed format | `Mat024.keyword`, `RateTable.keyword` | ✅ |
+| 19. Unit systems mm-ms-kg, mm-s-t, mm-s-kg, m-s-kg | `unit_system=` | ✅ |
+| 20. Simple failure strain (FAIL) with element size | `failure_strain`, `fracture_strain` | ✅ |
+| 21. Include file with a provenance header | `Mat024.write` | ✅ |
+| Checking and comparing existing cards; verification deck; library | | planned |
 
 Units: stress in **MPa**, force in **N**, lengths in **mm**, strain
 **dimensionless** (mm/mm, not %). E is in MPa (210 000 for steel).
@@ -331,6 +336,68 @@ errors):
 | ⚠️ Rates more than 100× apart in a linear table | Linear interpolation in rate between them is poor; use `log_rates` |
 | ⚠️ No quasi-static curve (lowest rate above 0.01 /s) | Slow loading would use the lowest curve |
 
+## Steps 17-21: the `*MAT_024` card
+
+```python
+from crashmetrics.materials import Mat024, failure_strain, fracture_strain
+
+fail = failure_strain(uniform=curve.necking_strain,
+                      fracture=fracture_strain(0.55),     # reduction of area 55 %
+                      element_size=2.5, neck_length=1.2)  # mm
+mat = Mat024(mid=600, density=7850.0, modulus=210_000.0, curve=card_curve,
+             c=40.4, p=5.0, fail=fail, title="DP600 1.2 mm",
+             provenance={"tests": "DP600-L1..L3", "hardening": "Swift-Voce"})
+mat.write("dp600.k", "mm-ms-kg")               # include file
+print(mat.keyword("mm-s-t"))                   # or just the text
+
+Mat024(mid=601, density=7850.0, modulus=210_000.0, table=rate_table, vp=1)
+```
+
+`Mat024` takes **engineering units**: density in kg/m³, modulus and
+stresses in MPa, C in 1/s. The unit system is chosen only when writing:
+
+| `unit_system` | Length, time, mass | Stress | Density 7850 kg/m³ | E 210 GPa | C 40.4 /s |
+| --- | --- | --- | --- | --- | --- |
+| `"mm-ms-kg"` | mm, ms, kg | GPa | 7.85e-6 | 210.0 | 0.0404 |
+| `"mm-s-t"` | mm, s, t | MPa | 7.85e-9 | 210000.0 | 40.4 |
+| `"mm-s-kg"` | mm, s, kg | kPa | 7.85e-6 | 2.1e8 | 40.4 |
+| `"m-s-kg"` | m, s, kg | Pa | 7850.0 | 2.1e11 | 40.4 |
+
+What is written:
+
+| Field | Value |
+| --- | --- |
+| MID, RO, E, PR | As given (PR 0.3 by default), converted |
+| SIGY | The first stress of the curve (of the lowest-rate curve of a table), so it matches LCSS |
+| ETAN, EPS1-8, ES1-8 | 0 (the curve is in LCSS) |
+| FAIL, TDEL | As given; FAIL 0 means no failure |
+| C, P | Cowper-Symonds, converted to the model's time unit; must be 0 with a rate table |
+| LCSS | The curve or table ID (default MID + 1000), written right after the card |
+| VP | 0 (scale the yield stress with rate, default) or 1 (viscoplastic) |
+
+- A single curve is resampled to `points` (default 50) plastic strains,
+  denser near yield, keeping the necking point; values are written with
+  8 significant digits in 20-character fields.
+- `write()` adds a header (`$` comments) naming the material, the
+  crashmetrics version, the date, the unit system and every
+  `provenance` entry, then `*KEYWORD` ... `*END`, so the file can be
+  included as it is and traced later.
+- `Mat024` refuses obvious unit mistakes in its input: a density below
+  1 or above 30 000 (not kg/m³), a modulus outside 100 MPa to 10⁶ MPa.
+
+### 20. Simple failure strain
+
+```text
+FAIL = uniform + (fracture − uniform) × min(1, neck length / element size)
+```
+
+The strain to fracture is reached only in the neck (about one sheet
+thickness long); an element larger than the neck averages it with the
+uniformly strained material. `fracture_strain(Z)` gives the neck strain
+`ln(1 / (1 − Z))` from the reduction of area Z of the broken specimen.
+This ignores the stress state (triaxiality) and is meant for screening;
+use a damage model such as GISSMO for failure predictions.
+
 ## Complete example
 
 A semicolon-separated machine export with decimal commas, force in kN,
@@ -385,6 +452,19 @@ Output:
 
 ```text
 --8<-- "examples/expected/26_strain_rate_table.txt"
+```
+
+From the tensile test to the include file, with Cowper-Symonds and a
+simple failure strain, and the same material with a rate table:
+
+```python
+--8<-- "examples/27_mat024_card.py"
+```
+
+Output:
+
+```text
+--8<-- "examples/expected/27_mat024_card.txt"
 ```
 
 ## References
