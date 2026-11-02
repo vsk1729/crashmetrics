@@ -19,7 +19,10 @@ test to a checked LS-DYNA `*MAT_PIECEWISE_LINEAR_PLASTICITY`
 | 9. Effective plastic strain from the yield point | `plastic_curve` | ✅ |
 | 10. Extrapolation: Swift, Voce, Hockett-Sherby, Swift-Voce | `fit_hardening`, `compare_fits`, `extrapolate_curve` | ✅ |
 | 11. n and K values | `n_value` | ✅ |
-| Strain-rate fits and `*DEFINE_TABLE` | | planned |
+| 13. Cowper-Symonds C and P from tests at several rates | `fit_cowper_symonds` | ✅ |
+| 14. Strain-rate table, written as `*DEFINE_TABLE` (linear or ln rates, model units) | `rate_table_from_model`, `rate_table_from_curves`, `RateTable.keyword` | ✅ |
+| 15. Table checks: crossing curves, rate order, ln-rate form | `RateTable.check` | ✅ |
+| 16. Johnson-Cook rate term | `fit_johnson_cook_rate` | ✅ |
 | Card writing, unit systems; checking existing cards | | planned |
 
 Units: stress in **MPa**, force in **N**, lengths in **mm**, strain
@@ -254,6 +257,80 @@ engineering strain range, by default from 10 % to Ag ("n10-Ag"); use
 true plastic strain. For certificates, ISO 10275 and ASTM E646 define
 the exact procedure.
 
+## Steps 13-16: strain rate
+
+Crash structures deform at 10-1000 /s, where steels are clearly stronger
+than in a quasi-static test. `*MAT_024` takes the rate effect either as
+**Cowper-Symonds C and P** on the card (the whole curve scaled by one
+factor) or as a **rate table**: LCSS pointing to a `*DEFINE_TABLE` with
+one hardening curve per strain rate.
+
+```python
+from crashmetrics.materials import (
+    fit_cowper_symonds, fit_johnson_cook_rate, rate_table_from_curves,
+    rate_table_from_model,
+)
+
+measured = {0.001: curve_qs, 1.0: curve_1, 100.0: curve_100, 500.0: curve_500}
+cs = fit_cowper_symonds(measured)          # cs.c (1/s), cs.p
+jc = fit_johnson_cook_rate(measured)       # jc.c with rate0 = lowest rate
+
+table = rate_table_from_model(static_extrapolated, cs,
+                              [0.001, 0.01, 0.1, 1, 10, 100, 500, 1000])
+print(table.check(log_rates=True, unit_system="mm-ms-kg").summary())
+text = table.keyword(2000, unit_system="mm-ms-kg", log_rates=True)
+```
+
+### 13 and 16. Rate laws
+
+| Law | Factor on the reference curve | Card |
+| --- | --- | --- |
+| Cowper-Symonds | `(1 + (rate/C)^(1/P)) / (1 + (rate_ref/C)^(1/P))` | C (1/s; 1/ms in mm-ms-kg) and P on `*MAT_024` |
+| Johnson-Cook | `1 + c ln(rate / rate0)`, 1 below rate0 | A table generated from it |
+
+- The curves (from `plastic_curve`) are compared at a few plastic
+  strains from the yield point to 90 % of the smallest necking strain,
+  against the lowest-rate curve. The reference test is not static
+  (0.001 /s), and the fit takes that into account.
+- Both laws scale the whole curve by one factor. When the measured
+  rate effect changes with strain (often smaller at large strain), a
+  table from the measured curves represents the tests better.
+
+### 14. Rate table and `*DEFINE_TABLE`
+
+| Builder | Curves |
+| --- | --- |
+| `rate_table_from_model(curve, law, rates)` | The reference curve times the law's factor, at any rates you choose |
+| `rate_table_from_curves({rate: curve})` | Each test's own (extrapolated) curve |
+
+All curves share one plastic strain grid (`points`, default 50, dense
+near yield). `RateTable.keyword(table_id, unit_system=..., log_rates=...)`
+writes the `*DEFINE_TABLE` and its `*DEFINE_CURVE` cards directly after
+it, as LS-DYNA requires, with:
+
+- rates converted to the model's time unit (1/s → 1/ms for mm-ms-kg)
+  and stresses to its stress unit (GPa for mm-ms-kg, MPa for mm-s-t;
+  `UNIT_SYSTEMS`);
+- `log_rates=True`: the table holds ln(rate). LS-DYNA reads a table as
+  logarithmic when its first value is negative, which `check` verifies.
+  Logarithmic tables interpolate much better between rates that are
+  decades apart.
+
+### 15. Table checks
+
+`RateTable.check()` (also run by `keyword`, which refuses a table with
+errors):
+
+| Check | Why |
+| --- | --- |
+| ❌ A curve below the curve of a lower rate at any strain | Crossing curves mean negative rate sensitivity: noisy, mesh-dependent results. Typical cause: curves extrapolated with different laws |
+| ❌ Rates not strictly increasing | LS-DYNA needs ascending table values |
+| ❌ Curves not starting at zero plastic strain | `*MAT_024` convention |
+| ❌ ln-rate table whose first value is not negative | LS-DYNA would read all values as plain rates |
+| ⚠️ Softening along a curve | Usually an extrapolation or data problem |
+| ⚠️ Rates more than 100× apart in a linear table | Linear interpolation in rate between them is poor; use `log_rates` |
+| ⚠️ No quasi-static curve (lowest rate above 0.01 /s) | Slow loading would use the lowest curve |
+
 ## Complete example
 
 A semicolon-separated machine export with decimal commas, force in kN,
@@ -297,6 +374,19 @@ Output:
 --8<-- "examples/expected/25_hardening_curve.txt"
 ```
 
+Tests at four strain rates to Cowper-Symonds, a checked `*DEFINE_TABLE`,
+and a table that fails the check because its curves cross:
+
+```python
+--8<-- "examples/26_strain_rate_table.py"
+```
+
+Output:
+
+```text
+--8<-- "examples/expected/26_strain_rate_table.txt"
+```
+
 ## References
 
 - ISO 6892-1:2019. Metallic materials — Tensile testing — Part 1:
@@ -311,6 +401,13 @@ Output:
   the Mechanics and Physics of Solids* 23(2), 87-98.
 - A. Considère (1885). Mémoire sur l'emploi du fer et de l'acier dans
   les constructions. *Annales des Ponts et Chaussées* 9, 574-775.
+- G. R. Cowper, P. S. Symonds (1957). Strain-hardening and strain-rate
+  effects in the impact loading of cantilever beams. Technical Report
+  No. 28, Division of Applied Mathematics, Brown University.
+- G. R. Johnson, W. H. Cook (1983). A constitutive model and data for
+  metals subjected to large strains, high strain rates and high
+  temperatures. *Proceedings of the 7th International Symposium on
+  Ballistics*, The Hague, 541-547.
 - J. H. Hollomon (1945). Tensile deformation. *Transactions of AIME*
   162, 268-290.
 - A. Savitzky, M. J. E. Golay (1964). Smoothing and differentiation of

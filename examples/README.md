@@ -38,6 +38,7 @@ python examples/07_bharat_ncap.py
 | `23_tensile_test.py` | Tensile test from a semicolon/decimal-comma machine export (kN, mm): read, cut after fracture, smooth, toe correction, E / Rp0.2 / Rm / Ag / A, compared with the exact values |
 | `24_tensile_specimens.py` | Three mild-steel specimens: machine compliance correction of a cross-head strain, Lüders plateau (ReH, ReL, Ae) found and replaced for a card, mean curve and property scatter |
 | `25_hardening_curve.py` | DP steel test to the extrapolated `*MAT_024` hardening curve: necking, plastic strain from Rp0.2, four hardening laws compared with the known truth beyond necking, n and K |
+| `26_strain_rate_table.py` | Tests at four strain rates: Cowper-Symonds C and P and Johnson-Cook fits, a strain-rate `*DEFINE_TABLE` (ln rates, mm-ms-kg) that passes the checks, and one whose curves cross |
 | `hic_convergence.py` | Grid search against the exact HIC maximum for several pulses (including a real LS-DYNA head drop), and run times |
 
 The full step-by-step explanations are in the documentation:

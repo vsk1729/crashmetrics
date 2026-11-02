@@ -10,6 +10,8 @@
 - `crashmetrics.materials.hardening`: true stress-strain, necking,
   effective plastic strain, hardening laws (Swift, Voce, Hockett-Sherby,
   Swift-Voce) and the extrapolated ``*MAT_024`` curve; n and K values.
+- `crashmetrics.materials.rate`: Cowper-Symonds and Johnson-Cook rate
+  fits, strain-rate tables (``*DEFINE_TABLE``) and their checks.
 
 Units: stress MPa, force N, length mm, strain dimensionless.
 """
@@ -35,6 +37,17 @@ from crashmetrics.materials.hardening import (
     plastic_curve,
     true_curve,
 )
+from crashmetrics.materials.rate import (
+    UNIT_SYSTEMS,
+    CowperSymonds,
+    JohnsonCookRate,
+    RateCheck,
+    RateTable,
+    fit_cowper_symonds,
+    fit_johnson_cook_rate,
+    rate_table_from_curves,
+    rate_table_from_model,
+)
 from crashmetrics.materials.specimens import (
     MeanCurve,
     PropertyScatter,
@@ -52,13 +65,18 @@ from crashmetrics.materials.tensile import (
 
 __all__ = [
     "LAWS",
+    "UNIT_SYSTEMS",
+    "CowperSymonds",
     "HardeningCurve",
     "HardeningFit",
+    "JohnsonCookRate",
     "LudersPlateau",
     "MeanCurve",
     "NValue",
     "NeckingPoint",
     "PropertyScatter",
+    "RateCheck",
+    "RateTable",
     "TensileProperties",
     "TensileTest",
     "TrueCurve",
@@ -66,13 +84,17 @@ __all__ = [
     "compare_fits",
     "correct_compliance",
     "extrapolate_curve",
+    "fit_cowper_symonds",
     "fit_hardening",
+    "fit_johnson_cook_rate",
     "luders_plateau",
     "mean_curve",
     "n_value",
     "necking_point",
     "plastic_curve",
     "property_scatter",
+    "rate_table_from_curves",
+    "rate_table_from_model",
     "read_tensile",
     "scatter_summary",
     "smooth_luders",

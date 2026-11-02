@@ -185,6 +185,11 @@ Virtual Testing Protocol v1.0.2 and Frontal Impact Protocol v1.2.
 | Start of the card curve | `*MAT_024`: first point at zero plastic strain, the yield stress | Rp0.2 point with plastic strain counted from 0.2 % (default), or the end of the linear part | `plastic_curve(start=)` |
 | ⚠️ Extrapolation beyond necking | No test data | Law fitted to the measured part (yield to necking); measured points kept, law added beyond with a shift to close the step | `fit_range=`, law choice |
 | ⚠️ n-value | ISO 10275 / ASTM E646 define strain measure and range | Log-log least squares of true stress against total true strain, 10 % to Ag by default | `strain=`, `strain_range=` |
+| Rate-law fit points | Not defined | Stress ratio to the lowest-rate curve at the yield point and five strains up to 90 % of the smallest necking strain | `strains=`, `reference_rate=` |
+| Cowper-Symonds with a slow reference | `*MAT_024` scales the static curve by `1 + (rate/C)^(1/P)` | The reference test's own factor is included in the fit, so C and P refer to a static curve | |
+| Johnson-Cook below rate0 | Formula gives a factor below 1 | Factor 1 below the reference rate (usual cut-off) | |
+| ⚠️ ln-rate tables | LS-DYNA reads a `*DEFINE_TABLE` as ln(rate) when its first value is negative | `keyword(log_rates=True)` writes ln of the rate in the model's time unit; `check` refuses a first value ≥ 0 | |
+| Table curves | Curves follow `*DEFINE_TABLE` directly | Written in ascending rate order with consecutive IDs after the table | `first_curve_id=` |
 | ⚠️ Machine compliance | Use an extensometer (strain from cross-head not accepted for E) | Linear machine: strain − stress × (1/E_measured − 1/E) | `correct_compliance(modulus=)` |
 
 ## Homologation (UN R94, R95, R135, electrical safety)

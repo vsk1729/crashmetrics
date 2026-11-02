@@ -32,6 +32,13 @@ follow [Semantic Versioning](https://semver.org/).
   Swift-Voce; NumPy-only Levenberg-Marquardt; RMS, R² and the Considère
   ratio at necking), `compare_fits`, `extrapolate_curve` (measured to
   necking, law beyond, no step) and `n_value` (n and K). Example 25.
+- `crashmetrics.materials.rate`: `fit_cowper_symonds` (C and P from
+  tests at several rates, with a non-static reference test),
+  `fit_johnson_cook_rate`, `rate_table_from_model` /
+  `rate_table_from_curves`, `RateTable.check` (crossing curves, rate
+  order, ln-rate form, softening, spacing) and `RateTable.keyword`
+  (`*DEFINE_TABLE` with its `*DEFINE_CURVE` cards in mm-ms-kg, mm-s-t,
+  mm-s-kg or m-s-kg; linear or ln rates). Example 26.
 
 ## [0.17.0] - 2026-10-31
 
