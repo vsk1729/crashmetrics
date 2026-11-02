@@ -25,6 +25,13 @@ follow [Semantic Versioning](https://semver.org/).
   deviation, minimum and maximum of several specimens at equal strain)
   and `property_scatter` / `scatter_summary` (mean, std and CV of E,
   Rp, Rm, Ag, A). Example 24.
+- `crashmetrics.materials.hardening`: `true_curve`, `necking_point`
+  (maximum force with the Considère check), `plastic_curve` (true stress
+  against effective plastic strain from Rp0.2 or the end of the linear
+  part to necking), `fit_hardening` (Swift, Voce, Hockett-Sherby,
+  Swift-Voce; NumPy-only Levenberg-Marquardt; RMS, R² and the Considère
+  ratio at necking), `compare_fits`, `extrapolate_curve` (measured to
+  necking, law beyond, no step) and `n_value` (n and K). Example 25.
 
 ## [0.17.0] - 2026-10-31
 

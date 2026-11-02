@@ -7,6 +7,9 @@
   and its replacement for a card; machine compliance correction.
 - `crashmetrics.materials.specimens`: mean curve of several specimens
   and the scatter of their properties.
+- `crashmetrics.materials.hardening`: true stress-strain, necking,
+  effective plastic strain, hardening laws (Swift, Voce, Hockett-Sherby,
+  Swift-Voce) and the extrapolated ``*MAT_024`` curve; n and K values.
 
 Units: stress MPa, force N, length mm, strain dimensionless.
 """
@@ -16,6 +19,21 @@ from crashmetrics.materials.corrections import (
     correct_compliance,
     luders_plateau,
     smooth_luders,
+)
+from crashmetrics.materials.hardening import (
+    LAWS,
+    HardeningCurve,
+    HardeningFit,
+    NeckingPoint,
+    NValue,
+    TrueCurve,
+    compare_fits,
+    extrapolate_curve,
+    fit_hardening,
+    n_value,
+    necking_point,
+    plastic_curve,
+    true_curve,
 )
 from crashmetrics.materials.specimens import (
     MeanCurve,
@@ -33,18 +51,31 @@ from crashmetrics.materials.tensile import (
 )
 
 __all__ = [
+    "LAWS",
+    "HardeningCurve",
+    "HardeningFit",
     "LudersPlateau",
     "MeanCurve",
+    "NValue",
+    "NeckingPoint",
     "PropertyScatter",
     "TensileProperties",
     "TensileTest",
+    "TrueCurve",
     "clean_tensile",
+    "compare_fits",
     "correct_compliance",
+    "extrapolate_curve",
+    "fit_hardening",
     "luders_plateau",
     "mean_curve",
+    "n_value",
+    "necking_point",
+    "plastic_curve",
     "property_scatter",
     "read_tensile",
     "scatter_summary",
     "smooth_luders",
     "tensile_properties",
+    "true_curve",
 ]
