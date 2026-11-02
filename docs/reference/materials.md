@@ -11,3 +11,9 @@
 ::: crashmetrics.materials.rate
 
 ::: crashmetrics.materials.card
+
+::: crashmetrics.materials.keyword
+
+::: crashmetrics.materials.verify
+
+::: crashmetrics.materials.library
