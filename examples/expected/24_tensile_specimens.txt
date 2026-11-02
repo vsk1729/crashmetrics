@@ -1,0 +1,22 @@
+MS-3 cross-head strain: measured E 94.8 GPa; machine compliance 18.52 µm/N removed
+
+Specimen   ReH    ReL    Ae
+MS-1      317.2  286.2  2.18 %
+MS-2      325.4  290.2  2.50 %
+MS-3      321.2  287.3  2.28 %
+
+MS-1 for a card: flat at ReL 286.2 MPa, or plateau removed (2.19 % strain taken out)
+
+Mean of 3 specimens up to 29.5 % strain
+  strain   1.0 %:  345.7 MPa ±  3.0 (min  342.8, max  348.9)
+  strain   5.0 %:  416.3 MPa ±  3.1 (min  413.6, max  419.6)
+  strain  15.0 %:  484.5 MPa ±  3.7 (min  481.3, max  488.5)
+  strain  25.0 %:  507.0 MPa ±  3.0 (min  504.2, max  510.2)
+
+Scatter of the tensile properties (curves with the plateau removed):
+           mean      std      CV       min       max
+E        209.90     0.11   0.05%    209.77    209.97  GPa
+Rp       315.37     3.69   1.17%    312.49    319.53  MPa
+Rm       511.32     4.42   0.86%    507.68    516.24  MPa
+Ag        28.89     0.16   0.57%     28.71     29.03  %
+A         29.42     0.17   0.57%     29.23     29.56  %

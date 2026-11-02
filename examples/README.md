@@ -36,6 +36,7 @@ python examples/07_bharat_ncap.py
 | `21_probabilistic_rating.py` | Bharat NCAP adult occupant rating under test scatter: Monte Carlo of the full scoring, probability of 5 stars and the criteria that decide it |
 | `22_bncap_channels_scorecard.py` | Bharat NCAP (AIS-197 2023) from unfiltered Hybrid III and ES-2 channels: criteria in one call, named modifiers, scorecard with point losses and the points to the next star |
 | `23_tensile_test.py` | Tensile test from a semicolon/decimal-comma machine export (kN, mm): read, cut after fracture, smooth, toe correction, E / Rp0.2 / Rm / Ag / A, compared with the exact values |
+| `24_tensile_specimens.py` | Three mild-steel specimens: machine compliance correction of a cross-head strain, Lüders plateau (ReH, ReL, Ae) found and replaced for a card, mean curve and property scatter |
 | `hic_convergence.py` | Grid search against the exact HIC maximum for several pulses (including a real LS-DYNA head drop), and run times |
 
 The full step-by-step explanations are in the documentation:

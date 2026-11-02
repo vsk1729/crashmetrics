@@ -16,6 +16,15 @@ follow [Semantic Versioning](https://semver.org/).
   (Savitzky-Golay) and corrects the toe region; `tensile_properties`
   gives E, Rp0.2, Rm, Ag/Agt and A/At (ISO 6892-1 definitions).
 - Guide "Material cards: tensile tests to *MAT_024" and example 23.
+- `crashmetrics.materials.corrections`: `luders_plateau` (ReH, ReL with
+  the ISO 6892-1 transient rule, yield point elongation Ae) and
+  `smooth_luders` (plateau flat at ReL, or removed so hardening starts at
+  the yield point); `correct_compliance` removes the machine compliance
+  from cross-head strains using the known Young's modulus.
+- `crashmetrics.materials.specimens`: `mean_curve` (mean, standard
+  deviation, minimum and maximum of several specimens at equal strain)
+  and `property_scatter` / `scatter_summary` (mean, std and CV of E,
+  Rp, Rm, Ag, A). Example 24.
 
 ## [0.17.0] - 2026-10-31
 

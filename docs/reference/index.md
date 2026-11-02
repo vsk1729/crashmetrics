@@ -34,5 +34,5 @@ dataclass, so `dataclasses.asdict(result)` turns it into a plain dict.
 | [`doe`](doe.md) | Latin hypercube, Halton, full factorial, Morris designs; LS-DYNA *PARAMETER cards |
 | [`sensitivity`](sensitivity.md) | PRCC, Spearman, SRC and Morris sensitivity ranking |
 | [`margins`](margins.md) | Distance to performance limits as continuous ML targets |
-| [`materials`](materials.md) | Tensile tests: read (CSV, text, xlsx), clean, properties (E, Rp0.2, Rm, Ag, A), towards `*MAT_024` cards |
+| [`materials`](materials.md) | Tensile tests: read (CSV, text, xlsx), clean, properties (E, Rp0.2, Rm, Ag, A); Lüders plateau, machine compliance; mean curve and scatter of several specimens; towards `*MAT_024` cards |
 | [`uncertainty`](uncertainty.md) | Monte Carlo scatter of inputs, probabilistic scores and star ratings |
