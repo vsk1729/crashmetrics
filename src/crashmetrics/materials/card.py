@@ -29,7 +29,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 import numpy as np
-from numpy.typing import NDArray
+from numpy.typing import ArrayLike, NDArray
 
 from crashmetrics.materials.hardening import HardeningCurve
 from crashmetrics.materials.rate import UNIT_SYSTEMS, RateTable, _grid
@@ -172,7 +172,7 @@ class Mat024:
     fail: float = 0.0
     """Plastic strain at failure (0: no failure)."""
     tdel: float = 0.0
-    """Minimum time step for element deletion, in the model's time unit."""
+    """Minimum time step for element deletion, s (converted on writing)."""
     curve_id: int | None = None
     """ID of the curve or table (default ``mid + 1000``)."""
     title: str = ""
@@ -217,12 +217,48 @@ class Mat024:
         """ID of the curve or table referenced as LCSS."""
         return self.curve_id if self.curve_id is not None else self.mid + 1000
 
-    def keyword(self, unit_system: str = "mm-ms-kg", *, points: int = 50,
+    def stress(self, plastic_strain: ArrayLike, rate: float | None = None
+               ) -> FloatArray:
+        """True stress (MPa) the card gives at plastic strains and a strain
+        rate (1/s).
+
+        - Curve: interpolated, the last segment extended linearly beyond
+          the end (as LS-DYNA extrapolates); with C and P, scaled by
+          ``1 + (rate / C)^(1/P)`` (no scaling for ``rate=None``).
+        - Table: the lowest-rate curve for ``rate=None``; otherwise
+          interpolated between the two neighbouring curves in ln(rate),
+          and the end curves beyond the table.
+        """
+        p = np.asarray(plastic_strain, dtype=float)
+        if self.curve is not None:
+            x, y = self.curve.plastic_strain, self.curve.stress
+            out = np.interp(p, x, y)
+            beyond = p > x[-1]
+            if np.any(beyond):
+                slope = (y[-1] - y[-2]) / (x[-1] - x[-2])
+                out = np.where(beyond, y[-1] + slope * (p - x[-1]), out)
+            if rate is not None and self.c > 0:
+                out = out * (1.0 + (rate / self.c) ** (1.0 / self.p))
+            return np.asarray(out)
+        assert self.table is not None
+        t = self.table
+        curves = [np.interp(p, t.plastic_strain, row) for row in t.stress]
+        if rate is None or rate <= t.rates[0] or len(t.rates) == 1:
+            return np.asarray(curves[0])
+        if rate >= t.rates[-1]:
+            return np.asarray(curves[-1])
+        k = int(np.searchsorted(t.rates, rate)) - 1
+        w = (math.log(rate) - math.log(t.rates[k])) / (
+            math.log(t.rates[k + 1]) - math.log(t.rates[k]))
+        return np.asarray(curves[k] + w * (curves[k + 1] - curves[k]))
+
+    def keyword(self, unit_system: str = "mm-ms-kg", *, points: int | None = 50,
                 log_rates: bool = True) -> str:
         """The material card and its curve or table, in ``unit_system``.
 
         A single curve is resampled at ``points`` plastic strains (denser
-        near yield, the necking point kept); a table keeps its own grid.
+        near yield, the necking point kept; ``None`` keeps the curve's own
+        points); a table keeps its own grid. TDEL is converted from s.
         ``log_rates`` applies to a table (ln of the rates).
         """
         if unit_system not in UNIT_SYSTEMS:
@@ -239,7 +275,8 @@ class Mat024:
             "      tdel",
             _int(self.mid) + n(self.density * DENSITY_SCALE[unit_system])
             + n(self.modulus * s_scale) + n(self.poisson)
-            + n(self.yield_stress * s_scale) + n(0.0) + n(self.fail) + n(self.tdel),
+            + n(self.yield_stress * s_scale) + n(0.0) + n(self.fail)
+            + n(self.tdel / t_scale),
             "$#       c         p      lcss      lcsr        vp",
             n(self.c * t_scale) + n(self.p) + _int(self.lcss) + _int(0)
             + n(float(self.vp)),
@@ -256,7 +293,10 @@ class Mat024:
                                              log_rates=log_rates,
                                              title=f"{self.title or self.mid} rates")
         assert self.curve is not None
-        strain, stress = _resample(self.curve, points)
+        if points is None:
+            strain, stress = self.curve.plastic_strain, self.curve.stress
+        else:
+            strain, stress = _resample(self.curve, points)
         curve = ["*DEFINE_CURVE_TITLE", f"{self.title or self.mid} hardening",
                  "$#    lcid      sidr       sfa       sfo      offa      offo",
                  _int(self.lcss) + _int(0) + n(1.0) + n(1.0) + n(0.0) + n(0.0),
@@ -265,7 +305,7 @@ class Mat024:
         return text + "\n".join(curve) + "\n"
 
     def write(self, path: str | Path, unit_system: str = "mm-ms-kg", *,
-              points: int = 50, log_rates: bool = True,
+              points: int | None = 50, log_rates: bool = True,
               date: dt.date | None = None) -> Path:
         """Write an include file: header, ``*KEYWORD``, the card, ``*END``.
 

@@ -28,7 +28,13 @@ test to a checked LS-DYNA `*MAT_PIECEWISE_LINEAR_PLASTICITY`
 | 19. Unit systems mm-ms-kg, mm-s-t, mm-s-kg, m-s-kg | `unit_system=` | ✅ |
 | 20. Simple failure strain (FAIL) with element size | `failure_strain`, `fracture_strain` | ✅ |
 | 21. Include file with a provenance header | `Mat024.write` | ✅ |
-| Checking and comparing existing cards; verification deck; library | | planned |
+| 22. Read `*MAT_024` cards with their curves and tables from a deck | `read_keyword`, `KeywordDeck.material` | ✅ |
+| 23. Card checker | `check_keyword` | ✅ |
+| 24. Convert cards to another unit system | `convert_keyword` | ✅ |
+| 25. Compare two cards | `compare_cards`, `Mat024.stress` | ✅ |
+| 26. Single-element tension test deck and its check | `single_element_deck`, `verify_single_element` | ✅ |
+| 27. Summary table | `card_summary`, `summary_markdown` | ✅ |
+| 28. Material library with provenance | `MaterialLibrary` | ✅ |
 
 Units: stress in **MPa**, force in **N**, lengths in **mm**, strain
 **dimensionless** (mm/mm, not %). E is in MPa (210 000 for steel).
@@ -398,6 +404,100 @@ uniformly strained material. `fracture_strain(Z)` gives the neck strain
 This ignores the stress state (triaxiality) and is meant for screening;
 use a damage model such as GISSMO for failure predictions.
 
+## Steps 22-28: existing cards, verification, library
+
+These work on any `*MAT_024` card, also without test data: a supplier's
+deck, an old project, a colleague's include.
+
+```python
+from crashmetrics.materials import (
+    MaterialLibrary, card_summary, check_keyword, compare_cards, convert_keyword,
+    read_keyword, single_element_deck, verify_single_element,
+)
+
+deck = read_keyword("supplier.k")               # *MAT_024 + curves + tables
+for result in check_keyword(deck):
+    print(result.summary())
+print(convert_keyword(deck, "mm-ms-kg"))        # same cards, other units
+
+supplier = deck.material(101)                   # Mat024 in kg/m³, MPa, 1/s
+print(compare_cards(supplier, ours).summary())
+
+Path("one_element.k").write_text(single_element_deck(ours, "mm-ms-kg"))
+# ... run LS-DYNA in that folder ...
+print(verify_single_element("run_dir", ours, "mm-ms-kg").summary())
+
+lib = MaterialLibrary("materials")
+lib.save(ours, "dp600")                          # JSON with provenance
+lib.export("dp600", "dp600.k", "mm-s-t")
+```
+
+### 22. Reading
+
+`read_keyword` reads `*MAT_PIECEWISE_LINEAR_PLASTICITY` / `*MAT_024`
+(with `_TITLE`), every `*DEFINE_CURVE` (SFA, SFO, OFFA, OFFO applied) and
+`*DEFINE_TABLE` (the curves right after it belong to it). Fixed 10/20
+character fields, long format (`*KEYWORD LONG=Y` or `+`) and
+comma-separated lines are understood; `&parameters` are recorded but not
+evaluated; `*INCLUDE` files are not followed (listed in `deck.notes`).
+`deck.material(mid)` turns a card into a `Mat024` in engineering units,
+with the unit system guessed from density and E (`guess_unit_system`).
+
+### 23. Checks
+
+| Check | Level |
+| --- | --- |
+| Density and E of different unit systems (7.85e-6 with 210000, the classic copy-paste mistake), or not of the given one | ❌ |
+| Poisson's ratio outside 0-0.5; LCSS not in the deck; no hardening at all | ❌ |
+| Curve not starting at zero plastic strain; strain not increasing; zero or negative stress | ❌ |
+| Hardening slope above E anywhere (unstable) | ❌ |
+| Rate table values not increasing, curves missing, curves crossing | ❌ |
+| SIGY not matching the curve's first stress | ⚠️ |
+| Softening | ⚠️ |
+| Curve detail lost when LS-DYNA re-samples it at LCINT (default 100) equal intervals | ⚠️ |
+| Curve ending below 50 % plastic strain (LS-DYNA extrapolates the last segment) | ⚠️ |
+| C and P together with a rate table; table rates implausible for the time unit; `&parameters` | ⚠️ |
+
+The LCINT check matters for long curves: a curve to 100 % plastic
+strain re-sampled at 100 equal intervals has its first point after the
+yield point at 1 %, so the bend between yield and 1 % strain is lost.
+
+### 24 and 25. Conversion and comparison
+
+`convert_keyword(deck, "mm-ms-kg")` rewrites the cards with their
+original points, IDs and titles in the new unit system (density, E,
+stresses, C, TDEL and table rates converted). `compare_cards(a, b)`
+lists density, E, PR, SIGY, C, P, FAIL and the stress at chosen plastic
+strains and rates, with the difference in %. `Mat024.stress(strain,
+rate)` gives the stress a card produces, with Cowper-Symonds scaling or
+table interpolation in ln(rate) and linear extrapolation beyond the last
+point.
+
+### 26. Single-element verification
+
+`single_element_deck(mat, unit_system, size=1.0, strain=0.5, rate=1.0)`
+writes a complete model: one fully integrated solid (ELFORM 2), a cube
+pulled in z at a constant nominal rate with a smooth start, symmetry
+constraints so the lateral faces are free (uniaxial stress), output
+`spcforc`, `nodout`, `glstat` and `d3plot`. The card is written without
+C and P unless `rate_effect=True`. After the run,
+`verify_single_element(run_dir, mat, unit_system)` reads the z reaction
+force and the top displacement, converts them to true stress against
+plastic strain, and compares with the card: within 2 % passes. A
+difference shows what the solver does with the card (re-discretisation,
+extrapolation, rate scaling, units).
+
+### 27 and 28. Summary and library
+
+`card_summary(cards)` gives one row per card (density, E, SIGY, stress
+at chosen strains, rate model, FAIL, provenance); `summary_markdown`
+makes a table of it. `MaterialLibrary(folder)` stores each card as a
+JSON file in engineering units with its curve or table, provenance, a
+note, the date and the crashmetrics version; `load`, `names`, `info`,
+`summary` and `export` (to a `.k` in any unit system) work on it. The
+files are plain JSON, so they can be compared and kept in version
+control.
+
 ## Complete example
 
 A semicolon-separated machine export with decimal commas, force in kN,
@@ -465,6 +565,19 @@ Output:
 
 ```text
 --8<-- "examples/expected/27_mat024_card.txt"
+```
+
+A supplier deck checked, converted, compared with your own card,
+verified with a single element, and stored in a library:
+
+```python
+--8<-- "examples/28_check_existing_cards.py"
+```
+
+Output:
+
+```text
+--8<-- "examples/expected/28_check_existing_cards.txt"
 ```
 
 ## References

@@ -290,9 +290,11 @@ class RateTable:
                 self.stress[k - 1])
             if np.any(lower):
                 at = self.plastic_strain[lower]
+                span = (f"{at.min():.4g}" if at.min() == at.max()
+                        else f"{at.min():.4g}-{at.max():.4g}")
                 issues.append(f"curve at {r[k]:g} /s is below the curve at "
-                              f"{r[k - 1]:g} /s at plastic strain "
-                              f"{at.min():.4g}-{at.max():.4g} (curves cross)")
+                              f"{r[k - 1]:g} /s at plastic strain {span} "
+                              "(curves cross)")
         for k in range(len(r)):
             if np.any(np.diff(self.stress[k]) < -1e-9 * np.abs(self.stress[k][1:])):
                 warnings.append(f"curve at {r[k]:g} /s softens (stress decreases)")

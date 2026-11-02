@@ -40,6 +40,7 @@ python examples/07_bharat_ncap.py
 | `25_hardening_curve.py` | DP steel test to the extrapolated `*MAT_024` hardening curve: necking, plastic strain from Rp0.2, four hardening laws compared with the known truth beyond necking, n and K |
 | `26_strain_rate_table.py` | Tests at four strain rates: Cowper-Symonds C and P and Johnson-Cook fits, a strain-rate `*DEFINE_TABLE` (ln rates, mm-ms-kg) that passes the checks, and one whose curves cross |
 | `27_mat024_card.py` | DP600 tensile test to a `*MAT_024` include file in mm-ms-kg (Swift-Voce curve, Cowper-Symonds, simple FAIL, provenance header), and the same material with a rate table in mm-s-t |
+| `28_check_existing_cards.py` | A supplier deck (mm-s-t) with a unit mix-up and crossing rate curves: read and check, convert to mm-ms-kg, compare with your own card, single-element verification deck and check, summary table, material library |
 | `hic_convergence.py` | Grid search against the exact HIC maximum for several pulses (including a real LS-DYNA head drop), and run times |
 
 The full step-by-step explanations are in the documentation:

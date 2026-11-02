@@ -34,6 +34,7 @@ its real output (the test suite checks that output on every change).
 | [Material cards](material-cards.md) | Build the `*MAT_024` hardening curve: true stress, necking, plastic strain, Swift / Voce / Hockett-Sherby / Swift-Voce extrapolation, n and K | `25_hardening_curve.py` |
 | [Material cards](material-cards.md) | Fit Cowper-Symonds and Johnson-Cook to tests at several strain rates, write a checked strain-rate `*DEFINE_TABLE`, find crossing curves | `26_strain_rate_table.py` |
 | [Material cards](material-cards.md) | Write the `*MAT_024` card with its curve or rate table in any LS-DYNA unit system, with a simple failure strain and a provenance header | `27_mat024_card.py` |
+| [Material cards](material-cards.md) | Read and check existing `*MAT_024` cards, convert their units, compare two cards, verify one with a single-element test, keep a material library | `28_check_existing_cards.py` |
 
 ## The general workflow
 

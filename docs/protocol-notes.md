@@ -193,6 +193,12 @@ Virtual Testing Protocol v1.0.2 and Frontal Impact Protocol v1.2.
 | SIGY with LCSS | The curve defines the yield stress | SIGY written as the curve's first stress anyway, so both agree | |
 | Curve points | LS-DYNA re-discretises curves internally | 50 points by default, geometric spacing (dense near yield), necking point kept, 8 significant digits | `points=` |
 | ⚠️ Simple failure strain | Not a protocol; FAIL is a single plastic strain | `uniform + (fracture − uniform) × min(1, neck / element)`; ignores triaxiality | Use GISSMO for predictions |
+| Unit system of a card | Not stored in the deck | Guessed from density (500-25 000 kg/m³) and E (500 MPa-1000 GPa) together; none or two plausible: unknown | `unit_system=` |
+| ⚠️ Curve re-discretisation | LS-DYNA re-samples curves at LCINT equal intervals (`*CONTROL_SOLUTION`, default 100) | Warning when that changes the curve by more than 1 % | `lcint=` |
+| `*DEFINE_CURVE` scaling | Abscissa `SFA a + OFFA`, ordinate `SFO o + OFFO`; SFA, SFO 0 mean 1 | As stated | |
+| Table membership | The curves of a `*DEFINE_TABLE` follow it directly | The next N `*DEFINE_CURVE` after the table, N = number of values | |
+| Stress lookup | LS-DYNA extrapolates beyond the last point | `Mat024.stress`: last segment extended linearly; tables interpolated in ln(rate), end curves beyond | |
+| Single-element stress | Element output | True stress from the reaction force with constant volume, `F (L + u) / (A L)` | |
 | ⚠️ Machine compliance | Use an extensometer (strain from cross-head not accepted for E) | Linear machine: strain − stress × (1/E_measured − 1/E) | `correct_compliance(modulus=)` |
 
 ## Homologation (UN R94, R95, R135, electrical safety)

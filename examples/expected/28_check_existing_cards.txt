@@ -1,0 +1,47 @@
+Read 3 *MAT_024 cards, 4 curves, 1 table
+MID 101 (mm-s-t): passed
+  warning: curve 201: re-sampled at 100 equal intervals (LCINT) the curve changes by up to 3.8 %; add points near yield, shorten the curve or raise LCINT
+MID 102 (unit system unknown): FAILED
+  error: RO 7.85e-06 and E 210000 do not belong to one unit system (mm-ms-kg: 7.85e-6 / 210; mm-s-t: 7.85e-9 / 210000)
+  warning: curve 201: re-sampled at 100 equal intervals (LCINT) the curve changes by up to 3.8 %; add points near yield, shorten the curve or raise LCINT
+MID 103 (mm-s-t): FAILED
+  error: table 300: curve 303 below curve 302 at plastic strain 1 (curves cross)
+
+MID 101 in mm-ms-kg:
+*MAT_PIECEWISE_LINEAR_PLASTICITY_TITLE
+DP600 supplier
+$#     mid        ro         e        pr      sigy      etan      fail      tdel
+       101   7.85e-6     210.0       0.3      0.38       0.0       0.0       0.0
+$#       c         p      lcss      lcsr        vp
+      0.04       5.0       201         0       0.0
+
+                                 supplier         ours   diff %
+density kg/m3                        7850         7850     0.00
+E MPa                             2.1e+05      2.1e+05     0.00
+PR                                    0.3          0.3     0.00
+SIGY MPa                              380          378    -0.53
+C 1/s                                  40         40.4     1.00
+P                                       5            5     0.00
+FAIL                                    0            0     0.00
+stress static @ 0 MPa                 380          378    -0.53
+stress static @ 0.05 MPa              590       569.78    -3.43
+stress static @ 0.2 MPa               710       707.89    -0.30
+stress static @ 0.5 MPa            786.67       787.22     0.07
+stress static @ 1 MPa                 855        852.4    -0.30
+stress 100/s @ 0 MPa               836.43       831.12    -0.63
+stress 100/s @ 0.05 MPa            1298.7       1252.8    -3.53
+stress 100/s @ 0.2 MPa             1562.8       1556.5    -0.41
+stress 100/s @ 0.5 MPa             1731.6       1730.9    -0.04
+stress 100/s @ 1 MPa                 1882       1874.2    -0.41
+
+single_element.k: 112 lines; run it, then verify_single_element(run_dir, ours, 'mm-ms-kg')
+Single element: max difference 0.00 %, RMS 0.00 % over plastic strain 0.00462-0.55 -> passed
+Single element: max difference 3.10 %, RMS 3.01 % over plastic strain 0.00456-0.55 -> CHECK (a 3 % stiffer response)
+
+| mid | title | density | E_GPa | sigy | stress@0.05 | stress@0.5 | rate | fail |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 101 | DP600 supplier | 7850 | 210 | 380 | 590 | 786.7 | Cowper-Symonds C 40/s P 5 | 0 |
+| 600 | DP600 ours | 7850 | 210 | 378 | 569.8 | 787.2 | Cowper-Symonds C 40.4/s P 5 | 0 |
+
+Library: ['dp600_ours', 'dp600_supplier']; dp600_ours saved 2026-11-02, provenance {'tests': 'DP600-L1..L3', 'hardening': 'Swift-Voce'}
+Exported dp600_ours in mm-s-t: 210000.0 MPa

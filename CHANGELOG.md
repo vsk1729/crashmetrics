@@ -45,6 +45,21 @@ follow [Semantic Versioning](https://semver.org/).
   mm-s-t, mm-s-kg or m-s-kg; `write` adds a provenance header;
   `failure_strain` / `fracture_strain` give a simple element-size
   dependent FAIL; `keyword_number` formats fixed fields. Example 27.
+- `Mat024.stress(strain, rate)`: the stress a card gives (Cowper-Symonds
+  scaling, table interpolation in ln(rate), linear extrapolation);
+  `keyword(points=None)` keeps the curve's own points; TDEL is given in
+  seconds and converted on writing.
+- `crashmetrics.materials.keyword`: `read_keyword` (*MAT_024 with its
+  curves and tables; fixed, long and comma formats), `guess_unit_system`,
+  `KeywordDeck.material`, `check_keyword` (unit mix-ups, curve and table
+  errors, slope above E, crossing rate curves, LCINT re-discretisation
+  loss and more), `convert_keyword`, `compare_cards`.
+- `crashmetrics.materials.verify`: `single_element_deck` (one-element
+  tension test model), `verify_single_element` (spcforc and nodout read
+  back and compared with the card), `compare_tension`.
+- `crashmetrics.materials.library`: `card_summary`, `summary_markdown`
+  and `MaterialLibrary` (JSON cards with provenance: save, load, info,
+  summary, export). Example 28.
 
 ## [0.17.0] - 2026-10-31
 
