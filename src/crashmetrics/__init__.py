@@ -45,6 +45,8 @@ crashmetrics.side
 crashmetrics.bncap
     Bharat NCAP (AIS-197, 2023 edition) adult occupant scoring and star
     rating.
+crashmetrics.materials
+    Tensile tests for material cards: read, clean, properties.
 crashmetrics.bncap_channels, crashmetrics.bncap_report
     Bharat NCAP occupants from dummy channels; adult occupant scorecard.
 """

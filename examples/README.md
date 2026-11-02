@@ -35,6 +35,7 @@ python examples/07_bharat_ncap.py
 | `20_doe_margins_sensitivity.py` | A 30-run Latin hypercube with LS-DYNA *PARAMETER cards, Euro NCAP points and margins to the limits per run, PRCC / Spearman / SRC ranking of three criteria and Morris screening |
 | `21_probabilistic_rating.py` | Bharat NCAP adult occupant rating under test scatter: Monte Carlo of the full scoring, probability of 5 stars and the criteria that decide it |
 | `22_bncap_channels_scorecard.py` | Bharat NCAP (AIS-197 2023) from unfiltered Hybrid III and ES-2 channels: criteria in one call, named modifiers, scorecard with point losses and the points to the next star |
+| `23_tensile_test.py` | Tensile test from a semicolon/decimal-comma machine export (kN, mm): read, cut after fracture, smooth, toe correction, E / Rp0.2 / Rm / Ag / A, compared with the exact values |
 | `hic_convergence.py` | Grid search against the exact HIC maximum for several pulses (including a real LS-DYNA head drop), and run times |
 
 The full step-by-step explanations are in the documentation:
