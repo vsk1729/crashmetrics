@@ -6,6 +6,8 @@ follow [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.19.0] - 2026-11-02
+
 ### Added
 
 - `crashmetrics.materials.gissmo`: GISSMO failure from fracture tests.
@@ -562,7 +564,8 @@ follow [Semantic Versioning](https://semver.org/).
 - `crashmetrics.pedestrian.calculate_hic` for HIC on a refined,
   linearly interpolated time grid.
 
-[Unreleased]: https://github.com/vsk1729/crashmetrics/compare/v0.18.0...main
+[Unreleased]: https://github.com/vsk1729/crashmetrics/compare/v0.19.0...main
+[0.19.0]: https://github.com/vsk1729/crashmetrics/compare/v0.18.0...v0.19.0
 [0.18.0]: https://github.com/vsk1729/crashmetrics/compare/v0.17.0...v0.18.0
 [0.17.0]: https://github.com/vsk1729/crashmetrics/compare/v0.16.0...v0.17.0
 [0.16.0]: https://github.com/vsk1729/crashmetrics/compare/v0.15.0...v0.16.0
