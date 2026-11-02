@@ -36,6 +36,10 @@ test to a checked LS-DYNA `*MAT_PIECEWISE_LINEAR_PLASTICITY`
 | 27. Summary table | `card_summary`, `summary_markdown` | ✅ |
 | 28. Material library with provenance | `MaterialLibrary` | ✅ |
 
+Failure beyond a single FAIL strain (stress state, element size,
+`*MAT_ADD_DAMAGE_GISSMO`) has its own guide:
+[Failure with GISSMO](gissmo.md).
+
 Units: stress in **MPa**, force in **N**, lengths in **mm**, strain
 **dimensionless** (mm/mm, not %). E is in MPa (210 000 for steel).
 
@@ -402,7 +406,9 @@ thickness long); an element larger than the neck averages it with the
 uniformly strained material. `fracture_strain(Z)` gives the neck strain
 `ln(1 / (1 − Z))` from the reduction of area Z of the broken specimen.
 This ignores the stress state (triaxiality) and is meant for screening;
-use a damage model such as GISSMO for failure predictions.
+use a damage model such as GISSMO for failure predictions
+([Failure with GISSMO](gissmo.md); `mat.write(..., damage=card)` puts
+the `*MAT_ADD_DAMAGE_GISSMO` card in the same include).
 
 ## Steps 22-28: existing cards, verification, library
 

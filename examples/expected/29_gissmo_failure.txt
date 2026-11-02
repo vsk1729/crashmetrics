@@ -1,0 +1,67 @@
+test               eta start  eta end  average  fracture
+shear                  0.030    0.080    0.055     0.510
+dogbone                0.333    0.450    0.380     0.519
+notch R5               0.400    0.500    0.467     0.452
+plane strain R2        0.530    0.570    0.559     0.368
+Nakajima biaxial       0.640    0.665    0.658     0.503
+
+Failure curve: hosford_coulomb a 1.467, b 0.5906, c 0.03169, n 0.1
+test                   eta  measured predicted   error
+shear                0.055    0.5100    0.5099   -0.0%
+dogbone              0.380    0.5190    0.5305    2.2%
+notch R5             0.467    0.4520    0.4378   -3.1%
+plane strain R2      0.559    0.3680    0.3773    2.5%
+Nakajima biaxial     0.658    0.5030    0.4940   -1.8%
+
+Failure curve: johnson_cook d1 0.4119, d2 0.1162, d3 -1.955
+test                   eta  measured predicted   error
+shear                0.055    0.5100    0.5161    1.2%
+dogbone              0.380    0.5190    0.4680   -9.8%
+notch R5             0.467    0.4520    0.4586    1.5%
+plane strain R2      0.559    0.3680    0.4507   22.5%
+Nakajima biaxial     0.658    0.5030    0.4441  -11.7%
+
+failure strain      eta      HC      JC   truth
+compression      -0.333   1.113   0.635   1.093
+shear             0.000   0.528   0.528   0.516
+uniaxial          0.333   0.591   0.472   0.600
+plane strain      0.577   0.374   0.449   0.372
+equibiaxial       0.667   0.591   0.443   0.600
+(compression is extrapolated: no test below shear)
+
+ECRIT from the FLC (triaxiality, critical strain):
+  (-0.333, 0.361)  (0.296, 0.361)  (0.363, 0.220)  (0.577, 0.162)  (0.653, 0.255)  (0.664, 0.362)  (0.667, 0.362)
+
+LCREGD estimate: 0.5 mm 1.000, 1 mm 1.000, 2.5 mm 0.522, 5 mm 0.363, 10 mm 0.283
+
+Card check: 0 errors, 1 warnings
+  warning: from element size 2.5 mm the regularised failure strain is at or below the critical strain (triaxiality -0.16 to 0.32, 0.613 to 0.64, 0.66 to 0.667): no fading there
+2.5 mm shell, uniaxial: failure strain 0.308 (x 0.522), coupling at 0.282, D_crit 0.839
+  strain       D       F  stress
+   0.100   0.105   0.125  100.0%
+   0.200   0.421   0.502  100.0%
+   0.270   0.767   0.914  100.0%
+   0.285   0.855   1.000   99.9%
+   0.295   0.916   1.000   89.1%
+   0.300   0.947   1.000   69.7%
+   0.305   0.979   1.000   34.2%
+   0.310   1.000   1.000    0.0%
+
+*MAT_ADD_DAMAGE_GISSMO
+$#     mid      dtyp     refsz    numfip
+       800       1.0       0.0       1.0
+$#   lcsdg     ecrit    dmgexp     dcrit    fadexp    lcregd
+      2800   -2900.0       2.0       0.0       3.0      3000
+$#   lcsrs      shrf     biaxf
+         0       0.0       0.0
+*DEFINE_CURVE_TITLE
+GISSMO 800 failure strain vs triaxiality
+$#    lcid      sidr       sfa       sfo      offa      offo
+      2800         0       1.0       1.0       0.0       0.0
+$#                a1                  o1
+         -0.66666667            1.113432
+         -0.63333333          0.81831472
+...
+MID 800 (mm-ms-kg): passed
+  warning: from element size 2.5 mm the regularised failure strain is at or below the critical strain (triaxiality -0.16 to 0.32, 0.613 to 0.64, 0.66 to 0.667): no fading there
+Read back: 4 curves, failure strain within 3.3e-08
