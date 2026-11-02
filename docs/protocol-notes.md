@@ -201,6 +201,28 @@ Virtual Testing Protocol v1.0.2 and Frontal Impact Protocol v1.2.
 | Single-element stress | Element output | True stress from the reaction force with constant volume, `F (L + u) / (A L)` | |
 | ⚠️ Machine compliance | Use an extensometer (strain from cross-head not accepted for E) | Linear machine: strain − stress × (1/E_measured − 1/E) | `correct_compliance(modulus=)` |
 
+## Materials: GISSMO failure
+
+| Topic | Source | crashmetrics | Change it |
+| --- | --- | --- | --- |
+| Damage | GISSMO: `dD = n D^(1−1/n) dεp / εf(η)`, failure at D = 1 | Integrated exactly along piecewise-linear paths: `D^(1/n) = ∫ dεp / εf` | |
+| Instability | F accumulates like D against ECRIT; D_crit is D when F reaches 1 | Same exponent DMGEXP for F | |
+| Fading | `σ* = σ (1 − ((D − D_crit) / (1 − D_crit))^FADEXP)` | As stated; DCRIT starts it when ECRIT is 0 | |
+| Failure curve fit | Not standardised | Least squares of `ln ∫ dεp / εf` along each test's path, so D = 1 at the measured fracture | `weight=`, `model` |
+| ⚠️ Hosford-Coulomb | Marcadet and Mohr: a function of triaxiality and Lode parameter | Plane stress: Lode parameter from the triaxiality (von Mises); exponent n fixed at 0.1 | `hc_exponent=` |
+| Stress states | Plane stress, von Mises, proportional loading | `triaxiality_from_strain_ratio`, `plane_stress_strains`, `lode_parameter` | |
+| ⚠️ ECRIT below uniaxial tension | An FLC covers uniaxial to equibiaxial tension only | FLC extended with constant values to −1/3 and 2/3 | `extend_to=` |
+| ⚠️ Regularisation estimate | Not defined; usually a mesh study of the tensile test | `ε(h) = εn + (εf − εn) min(1, L / h)`, factor relative to the reference size | Your own `RegularizationCurve` |
+| LCREGD | Scales the failure strain with element size (DYNAmore / Ansys GISSMO update 2020) | Failure strain only, the same factor at every triaxiality; ECRIT not scaled | |
+| ⚠️ SHRF, BIAXF | LS-DYNA: reduction factors of the regularisation in shear (η 0) and biaxial tension (η 2/3); Altair's documentation of the LS-DYNA format calls them triaxiality bounds | Written as given; not modelled in `failure_strain`, `damage` or `check` | |
+| LCREGD table | Newer versions: factors per triaxiality and element size | Not written; reported as an unsupported table when read | |
+| ⚠️ LCSRS | Positive ID: the rate factor also scales ECRIT, negative: failure strain only; rates read as ln when the first value is negative | `scale_instability_with_rate=`; ln(rate) in the model time unit by default | `log_rates=False` |
+| ⚠️ FADEXP blank | Default not stated consistently across documentation | Always written; a blank read as 1 and flagged | |
+| DMGEXP blank | Default 1 | Read as 1 and flagged | |
+| Failure curve range | LS-DYNA holds the end values beyond a curve | Written from −2/3 to 2/3 with 41 points | `triaxiality_range=`, `points=` |
+| Card layout | Cards 1-3 (MID ... LCREGD, INSTF; LCSRS, SHRF, BIAXF, LCDLIM, ...) | First three fields of card 3 written and read; later fields blank (defaults) | |
+| Curve IDs | Free | MID + 2000, then steps of 100 | `first_curve_id=` |
+
 ## Homologation (UN R94, R95, R135, electrical safety)
 
 | Topic | Source | crashmetrics | Change it |

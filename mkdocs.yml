@@ -116,6 +116,7 @@ nav:
       - Features for machine learning: guides/ml-features.md
       - DOE, sensitivity and probabilistic ratings: guides/doe-sensitivity.md
       - "Material cards: tensile tests to *MAT_024": guides/material-cards.md
+      - "Failure with GISSMO": guides/gissmo.md
       - Test-versus-CAE correlation: guides/test-cae-correlation.md
   - Protocol notes: protocol-notes.md
   - API reference:

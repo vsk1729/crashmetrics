@@ -20,15 +20,17 @@ from __future__ import annotations
 
 import re
 from collections.abc import Iterable, Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 
 import numpy as np
 from numpy.typing import NDArray
 
 from crashmetrics.materials.card import DENSITY_SCALE, Mat024
+from crashmetrics.materials.gissmo import GissmoCard, RegularizationCurve
 from crashmetrics.materials.hardening import HardeningCurve
 from crashmetrics.materials.rate import UNIT_SYSTEMS, RateTable
+from crashmetrics.materials.verify import LENGTH_SCALE
 
 __all__ = [
     "CardCheck",
@@ -37,6 +39,8 @@ __all__ = [
     "KeywordDeck",
     "KeywordTable",
     "Mat024Keyword",
+    "GissmoKeyword",
+    "check_gissmo",
     "check_keyword",
     "compare_cards",
     "convert_keyword",
@@ -50,6 +54,7 @@ _MAT024 = re.compile(r"^\*MAT_(PIECEWISE_LINEAR_PLASTICITY|024)(_TITLE)?(\+)?\s*
                      re.I)
 _CURVE = re.compile(r"^\*DEFINE_CURVE(_TITLE)?(\+)?\s*$", re.I)
 _TABLE = re.compile(r"^\*DEFINE_TABLE(_TITLE)?(\+)?\s*$", re.I)
+_GISSMO = re.compile(r"^\*MAT_ADD_DAMAGE_GISSMO(_TITLE)?(\+)?\s*$", re.I)
 
 
 # --- Data ------------------------------------------------------------------------
@@ -111,8 +116,30 @@ class Mat024Keyword:
 
 
 @dataclass(frozen=True)
+class GissmoKeyword:
+    """One ``*MAT_ADD_DAMAGE_GISSMO`` card as written (model units)."""
+
+    mid: int
+    dtyp: float
+    refsz: float
+    numfip: float
+    lcsdg: int
+    ecrit: float
+    dmgexp: float
+    dcrit: float
+    fadexp: float
+    lcregd: int
+    lcsrs: int
+    shrf: float
+    biaxf: float
+    line: int = 0
+    parameters: tuple[str, ...] = ()
+
+
+@dataclass(frozen=True)
 class KeywordDeck:
-    """``*MAT_024`` cards with their curves and tables."""
+    """``*MAT_024`` cards with their curves and tables, and
+    ``*MAT_ADD_DAMAGE_GISSMO`` cards."""
 
     materials: dict[int, Mat024Keyword]
     curves: dict[int, KeywordCurve]
@@ -120,6 +147,69 @@ class KeywordDeck:
     source: str = ""
     notes: tuple[str, ...] = ()
     """What the reader skipped (unsupported keywords, includes)."""
+    gissmo: dict[int, GissmoKeyword] = field(default_factory=dict)
+    """``*MAT_ADD_DAMAGE_GISSMO`` cards by MID."""
+
+    def _units(self, mid: int, unit_system: str | None) -> tuple[str, bool]:
+        """Unit system for a MID: given, else from its *MAT_024, else mm-ms-kg
+        (second value False when assumed)."""
+        if unit_system:
+            return unit_system, True
+        if mid in self.materials:
+            m = self.materials[mid]
+            guessed = guess_unit_system(m.ro, m.e)
+            if guessed:
+                return guessed, True
+        return "mm-ms-kg", False
+
+    def damage(self, mid: int, unit_system: str | None = None) -> GissmoCard:
+        """A ``*MAT_ADD_DAMAGE_GISSMO`` card as a `GissmoCard` (element
+        sizes in mm, rates in 1/s). The unit system comes from
+        ``unit_system``, else from the ``*MAT_024`` of the same MID, else
+        mm-ms-kg is assumed (length in mm)."""
+        if mid not in self.gissmo:
+            raise ValueError(f"No *MAT_ADD_DAMAGE_GISSMO with MID {mid}; MIDs: "
+                             f"{sorted(self.gissmo)}.")
+        g = self.gissmo[mid]
+        us, _ = self._units(mid, unit_system)
+        length = LENGTH_SCALE[us]
+        _, t_scale = UNIT_SYSTEMS[us]
+
+        def curve(lcid: int, what: str) -> KeywordCurve:
+            if lcid in self.tables:
+                raise ValueError(f"MID {mid}: {what} {lcid} is a table (Lode or "
+                                 "temperature dependent); not supported.")
+            if lcid not in self.curves:
+                raise ValueError(f"MID {mid}: {what} {lcid} is not in the deck.")
+            return self.curves[lcid]
+
+        fail = curve(g.lcsdg, "LCSDG")
+        instability: tuple[FloatArray, FloatArray] | float | None = None
+        if g.ecrit < 0:
+            c = curve(int(-g.ecrit), "ECRIT curve")
+            instability = (c.x, c.y)
+        elif g.ecrit > 0:
+            instability = g.ecrit
+        fadexp: float | tuple[FloatArray, FloatArray] = g.fadexp or 1.0
+        if g.fadexp < 0:
+            c = curve(int(-g.fadexp), "FADEXP curve")
+            fadexp = (c.x * length, c.y)
+        regularization = None
+        if g.lcregd:
+            c = curve(g.lcregd, "LCREGD")
+            regularization = RegularizationCurve(c.x * length, c.y)
+        rate = None
+        if g.lcsrs:
+            c = curve(abs(g.lcsrs), "LCSRS")
+            r = np.exp(c.x) if c.x[0] < 0 else c.x
+            rate = (r / t_scale, c.y)
+        return GissmoCard(
+            mid=mid, failure=(fail.x, fail.y), instability=instability,
+            dmgexp=g.dmgexp or 1.0, dcrit=g.dcrit, fadexp=fadexp,
+            regularization=regularization, rate_scaling=rate,
+            scale_instability_with_rate=g.lcsrs >= 0, dtyp=int(g.dtyp),
+            numfip=g.numfip or 1.0, refsz=g.refsz * length, shrf=g.shrf,
+            biaxf=g.biaxf, first_curve_id=g.lcsdg)
 
     def material(self, mid: int, unit_system: str | None = None) -> Mat024:
         """One card as a `Mat024` in engineering units (kg/m³, MPa, 1/s).
@@ -240,6 +330,7 @@ def read_keyword(source: str | Path) -> KeywordDeck:
     long_format = any(re.match(r"^\*KEYWORD.*LONG\s*=\s*[YS]", ln, re.I)
                       for ln in lines[:200])
     materials: dict[int, Mat024Keyword] = {}
+    gissmo: dict[int, GissmoKeyword] = {}
     curves: dict[int, KeywordCurve] = {}
     tables: dict[int, KeywordTable] = {}
     notes: list[str] = []
@@ -320,10 +411,29 @@ def read_keyword(source: str | Path) -> KeywordDeck:
             sfa = head[1] or 1.0
             pending_table = (int(head[0]), sfa * values + head[2], title, no,
                              len(values))
+        elif gm := _GISSMO.match(upper):
+            titled = bool(gm.group(1))
+            cards = data[1:] if titled else data
+            if len(cards) < 2:
+                notes.append(f"line {no}: incomplete *MAT_ADD_DAMAGE_GISSMO card")
+                continue
+            params = []
+            g1 = [_num(f, params, "gissmo") for f in _fields(cards[0][1], w10, 4)]
+            g2 = [_num(f, params, "gissmo") for f in _fields(cards[1][1], w10, 7)]
+            g3 = ([_num(f, params, "gissmo") for f in _fields(cards[2][1], w10, 3)]
+                  if len(cards) > 2 else [0.0, 0.0, 0.0])
+            gissmo[int(g1[0])] = GissmoKeyword(
+                mid=int(g1[0]), dtyp=g1[1], refsz=g1[2], numfip=g1[3],
+                lcsdg=int(g2[0]), ecrit=g2[1], dmgexp=g2[2], dcrit=g2[3],
+                fadexp=g2[4], lcregd=int(g2[5]), lcsrs=int(g3[0]), shrf=g3[1],
+                biaxf=g3[2], line=no, parameters=tuple(params))
+        elif upper.startswith("*MAT_ADD_EROSION"):
+            notes.append(f"line {no}: {upper} not read (GISSMO in *MAT_ADD_EROSION "
+                         "is the older form)")
         elif upper.startswith("*DEFINE_TABLE"):
             notes.append(f"line {no}: {upper} not supported")
     close_table()
-    return KeywordDeck(materials, curves, tables, name, tuple(notes))
+    return KeywordDeck(materials, curves, tables, name, tuple(notes), gissmo)
 
 
 # --- Unit system ----------------------------------------------------------------------
@@ -513,6 +623,57 @@ def check_keyword(
         if (m.c == 0) != (m.p == 0) and m.lcss not in deck.tables:
             warnings.append("only one of C and P is given: no rate effect")
         results.append(CardCheck(mid, us, tuple(issues), tuple(warnings)))
+    return results
+
+
+def check_gissmo(
+    deck: KeywordDeck,
+    *,
+    unit_system: str | None = None,
+    mids: Sequence[int] | None = None,
+) -> list[CardCheck]:
+    """Check every ``*MAT_ADD_DAMAGE_GISSMO`` card of a deck (or ``mids``).
+
+    Errors: curves referenced by LCSDG, ECRIT, FADEXP, LCREGD or LCSRS
+    missing; Lode- or temperature-dependent tables (not checked); and
+    the errors of `GissmoCard.check`. Warnings: no ``*MAT_024`` with
+    the same MID in the deck; DMGEXP or FADEXP left blank (LS-DYNA
+    default used); element sizes assumed in mm; the warnings of
+    `GissmoCard.check` (failure curve range, critical strain above the
+    failure strain, no coupling, DMGEXP below 1, regularisation rising
+    with size).
+    """
+    results = []
+    for mid in (mids if mids is not None else sorted(deck.gissmo)):
+        g = deck.gissmo[mid]
+        issues: list[str] = []
+        warnings: list[str] = []
+        us, known = deck._units(mid, unit_system)
+        if mid not in deck.materials:
+            warnings.append("no *MAT_024 with this MID in the deck (another "
+                            "material, or in an include)")
+        if not known:
+            warnings.append("unit system unknown: element sizes taken as mm")
+        if g.dmgexp == 0:
+            warnings.append("DMGEXP blank: LS-DYNA default 1 used")
+        if g.fadexp == 0:
+            warnings.append("FADEXP blank: 1 assumed here; check your LS-DYNA "
+                            "version's default")
+        if g.parameters:
+            warnings.append("fields given as parameters, not checked: "
+                            + ", ".join(g.parameters))
+        try:
+            card = deck.damage(mid, us)
+        except ValueError as exc:
+            issues.append(str(exc).split(": ", 1)[-1])
+            results.append(CardCheck(mid, us if known else None, tuple(issues),
+                                     tuple(warnings)))
+            continue
+        errs, warns = card.check()
+        issues += list(errs)
+        warnings += list(warns)
+        results.append(CardCheck(mid, us if known else None, tuple(issues),
+                                 tuple(warnings)))
     return results
 
 

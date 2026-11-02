@@ -6,6 +6,27 @@ follow [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- `crashmetrics.materials.gissmo`: GISSMO failure from fracture tests.
+  Stress states (`TRIAXIALITY`, `triaxiality_from_strain_ratio`,
+  `plane_stress_strains`, `lode_parameter`, `average_triaxiality`);
+  `FractureTest` with the loading path of each test; `fit_failure_curve`
+  (Hosford-Coulomb, Johnson-Cook or tabulated, fitted so that the damage
+  reaches 1 at every measured fracture along its path);
+  `instability_from_flc` (ECRIT from a forming limit curve);
+  `regularization_estimate` and `RegularizationCurve` (LCREGD);
+  `integrate_damage` (D, instability, stress fading along a path).
+- `GissmoCard`: the `*MAT_ADD_DAMAGE_GISSMO` card with its failure,
+  instability, regularisation, fading and rate curves in mm-ms-kg,
+  mm-s-t, mm-s-kg or m-s-kg; `check` (including large elements that
+  fail without fading); `damage` along a path with the card's curves.
+- `Mat024.write(..., damage=card)` writes the `*MAT_024` and its GISSMO
+  card into one include file.
+- `read_keyword` reads `*MAT_ADD_DAMAGE_GISSMO` (`KeywordDeck.gissmo`,
+  `KeywordDeck.damage`); `check_gissmo` checks the cards of a deck.
+- Guide "Failure with GISSMO" and example 29.
+
 ## [0.18.0] - 2026-11-02
 
 ### Added

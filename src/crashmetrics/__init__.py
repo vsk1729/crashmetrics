@@ -46,7 +46,9 @@ crashmetrics.bncap
     Bharat NCAP (AIS-197, 2023 edition) adult occupant scoring and star
     rating.
 crashmetrics.materials
-    Tensile tests for material cards: read, clean, properties.
+    Tensile tests to LS-DYNA ``*MAT_024`` cards (hardening, strain rate,
+    unit systems), GISSMO failure (``*MAT_ADD_DAMAGE_GISSMO``), and
+    reading, checking and converting existing cards.
 crashmetrics.bncap_channels, crashmetrics.bncap_report
     Bharat NCAP occupants from dummy channels; adult occupant scorecard.
 """

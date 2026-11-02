@@ -27,12 +27,21 @@ import math
 from collections.abc import Mapping
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import Protocol
 
 import numpy as np
 from numpy.typing import ArrayLike, NDArray
 
 from crashmetrics.materials.hardening import HardeningCurve
 from crashmetrics.materials.rate import UNIT_SYSTEMS, RateTable, _grid
+
+
+class _Damage(Protocol):
+    """A damage card that can follow the material (GissmoCard)."""
+
+    mid: int
+
+    def keyword(self, unit_system: str = ...) -> str: ...
 
 __all__ = [
     "DENSITY_SCALE",
@@ -306,12 +315,17 @@ class Mat024:
 
     def write(self, path: str | Path, unit_system: str = "mm-ms-kg", *,
               points: int | None = 50, log_rates: bool = True,
-              date: dt.date | None = None) -> Path:
+              date: dt.date | None = None, damage: _Damage | None = None) -> Path:
         """Write an include file: header, ``*KEYWORD``, the card, ``*END``.
 
         The header names crashmetrics and its version, the unit system,
         the date (``date``, default today) and every ``provenance`` entry.
+        ``damage`` (a `crashmetrics.materials.GissmoCard` with the same MID)
+        is written after the card.
         """
+        if damage is not None and damage.mid != self.mid:
+            raise ValueError(f"The damage card is for MID {damage.mid}, the "
+                             f"material is MID {self.mid}.")
         from crashmetrics import __version__
 
         units = {"mm-ms-kg": "mm, ms, kg, kN, GPa", "mm-s-t": "mm, s, t, N, MPa",
@@ -323,9 +337,12 @@ class Mat024:
             f"$ Units: {unit_system} ({units.get(unit_system, '')})",
         ]
         header += [f"$ {k}: {v}" for k, v in self.provenance.items()]
+        extra = damage.keyword(unit_system) if damage is not None else ""
+        if damage is not None:
+            header.append(f"$ Failure: *MAT_ADD_DAMAGE_GISSMO, MID {self.mid}")
         text = ("\n".join(header) + "\n*KEYWORD\n"
                 + self.keyword(unit_system, points=points, log_rates=log_rates)
-                + "*END\n")
+                + extra + "*END\n")
         out = Path(path)
         out.write_text(text)
         return out

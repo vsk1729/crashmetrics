@@ -15,9 +15,13 @@
 - `crashmetrics.materials.card`: the ``*MAT_PIECEWISE_LINEAR_PLASTICITY``
   card with its curve or table in any LS-DYNA unit system; simple
   failure strain.
-- `crashmetrics.materials.keyword`: read existing ``*MAT_024`` cards with
-  their curves and tables, check them, convert their unit system,
-  compare two cards.
+- `crashmetrics.materials.gissmo`: failure with GISSMO: stress states,
+  failure curve fits from fracture tests (Hosford-Coulomb, Johnson-Cook,
+  tabulated), instability from the forming limit, element size
+  regularisation, damage along a path, ``*MAT_ADD_DAMAGE_GISSMO``.
+- `crashmetrics.materials.keyword`: read existing ``*MAT_024`` and
+  ``*MAT_ADD_DAMAGE_GISSMO`` cards with their curves and tables, check
+  them, convert their unit system, compare two cards.
 - `crashmetrics.materials.verify`: single-element tension test deck and
   the comparison of its result with the card.
 - `crashmetrics.materials.library`: summary table of cards and a
@@ -39,6 +43,23 @@ from crashmetrics.materials.corrections import (
     luders_plateau,
     smooth_luders,
 )
+from crashmetrics.materials.gissmo import (
+    FAILURE_MODELS,
+    TRIAXIALITY,
+    DamageHistory,
+    FailureFit,
+    FractureTest,
+    GissmoCard,
+    RegularizationCurve,
+    average_triaxiality,
+    fit_failure_curve,
+    instability_from_flc,
+    integrate_damage,
+    lode_parameter,
+    plane_stress_strains,
+    regularization_estimate,
+    triaxiality_from_strain_ratio,
+)
 from crashmetrics.materials.hardening import (
     LAWS,
     HardeningCurve,
@@ -57,10 +78,12 @@ from crashmetrics.materials.hardening import (
 from crashmetrics.materials.keyword import (
     CardCheck,
     CardComparison,
+    GissmoKeyword,
     KeywordCurve,
     KeywordDeck,
     KeywordTable,
     Mat024Keyword,
+    check_gissmo,
     check_keyword,
     compare_cards,
     convert_keyword,
@@ -106,11 +129,18 @@ from crashmetrics.materials.verify import (
 
 __all__ = [
     "DENSITY_SCALE",
+    "FAILURE_MODELS",
     "LAWS",
+    "TRIAXIALITY",
     "UNIT_SYSTEMS",
     "CardCheck",
     "CardComparison",
     "CowperSymonds",
+    "DamageHistory",
+    "FailureFit",
+    "FractureTest",
+    "GissmoCard",
+    "GissmoKeyword",
     "HardeningCurve",
     "HardeningFit",
     "JohnsonCookRate",
@@ -127,11 +157,14 @@ __all__ = [
     "PropertyScatter",
     "RateCheck",
     "RateTable",
+    "RegularizationCurve",
     "SingleElementCheck",
     "TensileProperties",
     "TensileTest",
     "TrueCurve",
+    "average_triaxiality",
     "card_summary",
+    "check_gissmo",
     "check_keyword",
     "clean_tensile",
     "compare_cards",
@@ -142,26 +175,33 @@ __all__ = [
     "extrapolate_curve",
     "failure_strain",
     "fit_cowper_symonds",
+    "fit_failure_curve",
     "fit_hardening",
     "fit_johnson_cook_rate",
     "fracture_strain",
     "guess_unit_system",
+    "instability_from_flc",
+    "integrate_damage",
     "keyword_number",
+    "lode_parameter",
     "luders_plateau",
     "mean_curve",
     "n_value",
     "necking_point",
+    "plane_stress_strains",
     "plastic_curve",
     "property_scatter",
     "rate_table_from_curves",
     "rate_table_from_model",
     "read_keyword",
     "read_tensile",
+    "regularization_estimate",
     "scatter_summary",
     "single_element_deck",
     "smooth_luders",
     "summary_markdown",
     "tensile_properties",
+    "triaxiality_from_strain_ratio",
     "true_curve",
     "verify_single_element",
 ]

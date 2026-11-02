@@ -12,6 +12,8 @@
 
 ::: crashmetrics.materials.card
 
+::: crashmetrics.materials.gissmo
+
 ::: crashmetrics.materials.keyword
 
 ::: crashmetrics.materials.verify
