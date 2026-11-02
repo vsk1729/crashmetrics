@@ -6,6 +6,17 @@ follow [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- `crashmetrics.materials` (first steps towards LS-DYNA `*MAT_024`
+  cards): `read_tensile` reads tensile tests from CSV / text (any
+  separator, decimal commas) and `.xlsx`, as force-elongation with the
+  specimen size or as stress-strain, with columns and units from the
+  headers; `clean_tensile` cuts after fracture, smooths
+  (Savitzky-Golay) and corrects the toe region; `tensile_properties`
+  gives E, Rp0.2, Rm, Ag/Agt and A/At (ISO 6892-1 definitions).
+- Guide "Material cards: tensile tests to *MAT_024" and example 23.
+
 ## [0.17.0] - 2026-10-31
 
 ### Added

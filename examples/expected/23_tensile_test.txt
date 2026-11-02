@@ -1,0 +1,16 @@
+Read 1582 points of DP-L01: columns {'force': 'DP-L01 Force kN', 'elongation': 'Elongation mm'}, units {'force': 'kN', 'elongation': 'mm'}
+Cut after fracture at 29.14 % strain (2 points), smoothed over 21 points, toe: strain shifted by 0.250 % and 13 points replaced by the origin
+
+Tensile properties of DP-L01
+  E           209.7 GPa   (R² 0.9999)
+  Rp0.2       416.7 MPa
+  Rm          627.2 MPa   (Rp/Rm 0.664)
+  Ag          18.35 %     (Agt 18.65 %)
+  A           28.59 %     (At 28.89 %)
+
+              exact     raw   cleaned
+Rp0.2 MPa     417.2   413.5     416.7
+Rm MPa        624.5   635.1     627.2
+Agt %         18.40   20.64     18.65
+Raw: the toe adds strain and the noise moves the maximum on the flat top;
+the cleaned curve gives the material's values.

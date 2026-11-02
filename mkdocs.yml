@@ -115,6 +115,7 @@ nav:
       - Batch runs, analytics and ML: guides/batch-analytics.md
       - Features for machine learning: guides/ml-features.md
       - DOE, sensitivity and probabilistic ratings: guides/doe-sensitivity.md
+      - "Material cards: tensile tests to *MAT_024": guides/material-cards.md
       - Test-versus-CAE correlation: guides/test-cae-correlation.md
   - Protocol notes: protocol-notes.md
   - API reference:
@@ -145,6 +146,7 @@ nav:
       - sensitivity: reference/sensitivity.md
       - margins: reference/margins.md
       - uncertainty: reference/uncertainty.md
+      - materials: reference/materials.md
       - correlation: reference/correlation.md
       - intrusion: reference/intrusion.md
       - homologation: reference/homologation.md

@@ -165,6 +165,17 @@ Virtual Testing Protocol v1.0.2 and Frontal Impact Protocol v1.2.
 | ⚠️ Two-seater stars | 6.1.2.2: the 22-point score "is scaled to be equivalent" to 49; Annexure VIII 4.3 gives 22-point thresholds 20 / 17 / 13 / 9 / 5 | Annexure VIII thresholds (they differ from scaling 41/49 × 22 = 18.4) | |
 | CRS installation formula | 3.7.2 image: CRSi = (Ti − Fi) / Ti | As written; reproduces Table 1 (9.143) | |
 
+## Materials (tensile tests)
+
+| Topic | Source | crashmetrics | Change it |
+| --- | --- | --- | --- |
+| Modulus range | ISO 6892-1 leaves the fit range to the laboratory | Linear least squares between 10 and 40 % of Rm on the loading branch | `modulus_window=`, `modulus_stress=` |
+| Toe correction | ISO 6892-1: extend the linear part to zero stress | Strain shifted so the fitted line passes the origin; points below the fit range replaced by the origin | `toe=False` |
+| Rp0.2 | Stress at 0.2 % non-proportional extension | First crossing with the fitted line moved by 0.2 % strain (keeping its intercept), linear interpolation | `offset=` |
+| Ag, A | Plastic extension at maximum force, after fracture | Total strain minus stress / E at the maximum and at the last point | |
+| ⚠️ Fracture point | Not defined for digital data | First drop larger than 10 % of Rm between two samples after Rm, or stress below 10 % of Rm | `fracture_drop=`, `cut_fracture=False` |
+| Smoothing | Not specified | Savitzky-Golay, quadratic, window given in points; off by default | `smooth=` |
+
 ## Homologation (UN R94, R95, R135, electrical safety)
 
 | Topic | Source | crashmetrics | Change it |
