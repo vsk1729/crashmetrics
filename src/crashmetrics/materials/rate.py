@@ -50,7 +50,7 @@ FloatArray = NDArray[np.float64]
 UNIT_SYSTEMS: dict[str, tuple[float, float]] = {
     "mm-ms-kg": (1e-3, 1e-3),
     "mm-s-t": (1.0, 1.0),
-    "mm-s-kg": (1e-3, 1.0),
+    "mm-s-kg": (1e3, 1.0),
     "m-s-kg": (1e6, 1.0),
 }
 """LS-DYNA unit system -> (stress per MPa, time per s). Stress units:
@@ -342,14 +342,14 @@ class RateTable:
             lines.append(title[:80])
         lines += ["$#    tbid       sfa      offa", f"{table_id:10d}{1.0:10.1f}"
                   f"{0.0:10.1f}", "$#             value"]
-        lines += [f"{v:20.12g}" for v in values]
+        lines += [f"{v:20.8g}" for v in values]
         for k, rate in enumerate(self.rates):
             lines += ["*DEFINE_CURVE_TITLE", f"strain rate {rate:g} /s",
                       "$#    lcid      sidr       sfa       sfo      offa      offo",
                       f"{first + k:10d}{0:10d}{1.0:10.1f}{1.0:10.1f}{0.0:10.1f}"
                       f"{0.0:10.1f}",
                       "$#                a1                  o1"]
-            lines += [f"{e:20.12g}{s * s_scale:20.12g}"
+            lines += [f"{e:20.8g}{s * s_scale:20.8g}"
                       for e, s in zip(self.plastic_strain, self.stress[k])]
         return "\n".join(lines) + "\n"
 
