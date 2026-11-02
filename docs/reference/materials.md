@@ -7,3 +7,5 @@
 ::: crashmetrics.materials.specimens
 
 ::: crashmetrics.materials.hardening
+
+::: crashmetrics.materials.rate

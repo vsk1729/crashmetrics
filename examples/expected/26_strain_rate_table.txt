@@ -1,0 +1,34 @@
+rate /s   SIGY MPa  necking eps_p  Swift-Voce RMS MPa
+   0.001      450.1         0.1481                0.81
+       1      592.5         0.1317                0.74
+     100      883.6         0.1449                0.85
+     500     1063.4         0.1437                0.82
+
+Cowper-Symonds: C = 40.2 /s (0.0402 /ms), P = 5.01 (truth 40.4, 5); RMS of the stress ratio 0.0020
+Johnson-Cook:   c = 0.0887 with rate0 = 0.001 /s; RMS 0.2094
+Dynamic / quasi-static stress:
+       1 /s: Cowper-Symonds 1.319, Johnson-Cook 1.613
+      10 /s: Cowper-Symonds 1.569, Johnson-Cook 1.817
+     100 /s: Cowper-Symonds 1.963, Johnson-Cook 2.021
+    1000 /s: Cowper-Symonds 2.588, Johnson-Cook 2.225
+
+Table from Cowper-Symonds: 8 rates x 40 points
+Rate table check: passed
+*DEFINE_TABLE_TITLE
+steel rate table
+$#    tbid       sfa      offa
+      2000       1.0       0.0
+$#             value
+       -13.815510558
+       -11.512925465
+      -9.21034037198
+      -6.90775527898
+      -4.60517018599
+      -2.30258509299
+      -0.69314718056
+                   0
+... 373 lines
+
+Table from curves extrapolated separately (100 /s Swift, 500 /s Voce):
+Rate table check: FAILED
+  error: curve at 500 /s is below the curve at 100 /s at plastic strain 0.5199-1 (curves cross)
