@@ -31,6 +31,7 @@ its real output (the test suite checks that output on every change).
 | [Bharat NCAP star rating](bharat-ncap.md) | Go from unfiltered dummy channels to the Bharat NCAP scores and a scorecard with point losses and the next star | `22_bncap_channels_scorecard.py` |
 | [Material cards](material-cards.md) | Read a tensile test from a machine export, clean the curve and get E, Rp0.2, Rm, Ag and A (first steps to a `*MAT_024` card) | `23_tensile_test.py` |
 | [Material cards](material-cards.md) | Handle Lüders plateaus and cross-head strains, and combine several specimens into a mean curve with scatter | `24_tensile_specimens.py` |
+| [Material cards](material-cards.md) | Build the `*MAT_024` hardening curve: true stress, necking, plastic strain, Swift / Voce / Hockett-Sherby / Swift-Voce extrapolation, n and K | `25_hardening_curve.py` |
 
 ## The general workflow
 

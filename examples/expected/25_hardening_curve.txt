@@ -1,0 +1,23 @@
+Necking: engineering strain 18.31 %, Rm 622.0 MPa; true strain 0.1681, true stress 735.9 MPa (Considère ratio 0.97)
+Plastic curve: 1221 points, yield (SIGY) 409.7 MPa, measured up to plastic strain 0.1626, E 209.8 GPa
+
+Fits to the measured part, and their stress (MPa) at plastic strain:
+law              RMS MPa       R2 Considere     @0.1     @0.3     @0.5       @1
+swift               2.08  0.99938     1.131    677.6    830.1    914.5   1043.9
+voce                3.80  0.99793     0.640    682.9    758.4    762.8    763.1
+hockett_sherby      0.68  0.99993     0.896    679.9    791.2    817.6    829.3
+swift_voce          0.58  0.99995     0.923    679.8    798.5    845.6    911.7
+truth                                          679.6    801.1    853.4    930.7
+  swift         K 1042, eps0 0.007432, n 0.1931
+  voce          sigma0 430, Q 333.1, beta 14.24
+  hockett_sherby sigma0 404.9, sigma_s 830.4, a 5.919, m 0.7554
+  swift_voce    alpha 0.7361, K 994.7, eps0 0.006789, n 0.1374, sigma0 155.6, Q 522.1, beta 12.99
+
+Card curve (swift_voce): 1251 points from 0.0 to 1.0 plastic strain
+  eps_p  0.000:   409.7 MPa (truth   410.0)
+  eps_p  0.050:   601.1 MPa (truth   600.7)
+  eps_p  0.150:   727.6 MPa (truth   726.9)
+  eps_p  0.498:   846.9 MPa (truth   852.9)
+  eps_p  1.000:   913.5 MPa (truth   930.7)
+
+n10-Ag = 0.172, K = 1001 MPa (R² 0.9983, 544 points)

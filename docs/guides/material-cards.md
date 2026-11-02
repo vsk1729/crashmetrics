@@ -14,7 +14,11 @@ test to a checked LS-DYNA `*MAT_PIECEWISE_LINEAR_PLASTICITY`
 | 4. Lüders plateau: ReH, ReL, Ae; flat or removed for the card | `luders_plateau`, `smooth_luders` | ✅ |
 | 5. Several specimens: mean curve and scatter | `mean_curve`, `property_scatter` | ✅ |
 | 6. Machine compliance (cross-head strain) | `correct_compliance` | ✅ |
-| True stress-strain, necking, extrapolation (Swift, Voce, ...) | | planned |
+| 7. True stress-strain | `true_curve` | ✅ |
+| 8. Necking (Considère) | `necking_point` | ✅ |
+| 9. Effective plastic strain from the yield point | `plastic_curve` | ✅ |
+| 10. Extrapolation: Swift, Voce, Hockett-Sherby, Swift-Voce | `fit_hardening`, `compare_fits`, `extrapolate_curve` | ✅ |
+| 11. n and K values | `n_value` | ✅ |
 | Strain-rate fits and `*DEFINE_TABLE` | | planned |
 | Card writing, unit systems; checking existing cards | | planned |
 
@@ -179,6 +183,77 @@ assumes a linear (elastic) machine. Apply it before `clean_tensile`;
 strains after necking are local and are not made right by this. Use an
 extensometer when you can.
 
+## Steps 7-11: the hardening curve
+
+`*MAT_024` needs **true stress against effective plastic strain**, from
+the yield point to large strains (crash elements reach 50-100 % plastic
+strain), but a tensile test is valid only up to necking. The chain:
+
+```python
+from crashmetrics.materials import (
+    compare_fits, extrapolate_curve, fit_hardening, n_value, necking_point,
+    plastic_curve, true_curve,
+)
+
+neck = necking_point(clean)            # at Rm; Considère ratio ~ 1
+curve = plastic_curve(clean)           # (eps_p, true stress) from Rp0.2 to necking
+fits = fit_hardening(curve)            # Swift, Voce, Hockett-Sherby, Swift-Voce
+print(compare_fits(fits, strains=(0.1, 0.3, 0.5, 1.0)))
+card_curve = extrapolate_curve(curve, fits["swift_voce"], strain_max=1.0)
+nv = n_value(clean)                    # n10-Ag and K
+```
+
+### 7-9. True stress, necking, plastic strain
+
+| Step | Formula | Notes |
+| --- | --- | --- |
+| True strain and stress | `eps = ln(1 + e)`, `sigma = s (1 + e)` | Constant volume, uniform deformation: valid up to necking (`true_curve` stops there) |
+| Necking | Maximum engineering stress, located by a parabola over ±1 % strain | Equivalent to Considère, `d sigma / d eps = sigma`; the Considère ratio of the data is reported as a check |
+| Effective plastic strain | `eps_p = eps - sigma / E` | E fitted on the curve, or given |
+
+`plastic_curve(start=...)` chooses where the card curve starts:
+
+| `start` | First point | Use |
+| --- | --- | --- |
+| `"offset"` (default) | `(0, Rp0.2)`: plastic strain counted from 0.2 % | The usual `*MAT_024` convention: SIGY = Rp0.2 |
+| `"zero"` | Where the plastic strain becomes positive (end of the linear part) | Keeps the elastic-plastic transition below Rp0.2 |
+
+### 10. Extrapolation beyond necking
+
+| Law | Equation | Large-strain behaviour |
+| --- | --- | --- |
+| Swift | `K (eps0 + eps_p)^n` | Keeps hardening (power law): the highest stress at large strain |
+| Voce | `sigma0 + Q (1 - exp(-beta eps_p))` | Saturates: the lowest |
+| Hockett-Sherby | `sigma_s - (sigma_s - sigma0) exp(-a eps_p^m)` | Saturates more slowly |
+| Swift-Voce | `alpha Swift + (1 - alpha) Voce` | In between; often the best compromise for AHSS |
+
+Each law is fitted by least squares (Levenberg-Marquardt, NumPy only) to
+the measured part, and reported with:
+
+- **RMS error and R²** on the measured part: all laws usually fit it well.
+- **Considère ratio** at necking: `(d sigma / d eps) / sigma` of the
+  law. A law that reproduces the test necks at the measured strain
+  (ratio 1). Below 1 it hardens too little and a simulation of the
+  tensile test necks too early; above 1, too late.
+- **Stress at large strain** (`compare_fits`): the laws agree up to
+  necking and part beyond it. That spread is what the choice decides;
+  without data past necking (DIC, shear or bulge tests, or an inverse
+  simulation of the tensile test) it is an engineering judgement.
+
+`extrapolate_curve` keeps the measured points up to necking and adds
+`points` law points up to `strain_max`, shifting the law by the small
+stress difference at necking so the curve has no step. `fit_range=`
+restricts the fit (for example from 2 % plastic strain to necking, when
+the yield region does not follow the law).
+
+### 11. n and K values
+
+`n_value` fits `ln(true stress) = ln K + n ln(true strain)` over an
+engineering strain range, by default from 10 % to Ag ("n10-Ag"); use
+`strain_range=(0.10, 0.20)` for n10-20, and `strain="plastic"` for the
+true plastic strain. For certificates, ISO 10275 and ASTM E646 define
+the exact procedure.
+
 ## Complete example
 
 A semicolon-separated machine export with decimal commas, force in kN,
@@ -209,10 +284,35 @@ Output:
 --8<-- "examples/expected/24_tensile_specimens.txt"
 ```
 
+From a noisy DP steel test to the card curve, with the four laws
+compared against the known "true" hardening of the synthetic material:
+
+```python
+--8<-- "examples/25_hardening_curve.py"
+```
+
+Output:
+
+```text
+--8<-- "examples/expected/25_hardening_curve.txt"
+```
+
 ## References
 
 - ISO 6892-1:2019. Metallic materials — Tensile testing — Part 1:
   Method of test at room temperature.
+- H. W. Swift (1952). Plastic instability under plane stress. *Journal
+  of the Mechanics and Physics of Solids* 1(1), 1-18.
+- E. Voce (1948). The relationship between stress and strain for
+  homogeneous deformation. *Journal of the Institute of Metals* 74,
+  537-562.
+- J. E. Hockett, O. D. Sherby (1975). Large strain deformation of
+  polycrystalline metals at low homologous temperatures. *Journal of
+  the Mechanics and Physics of Solids* 23(2), 87-98.
+- A. Considère (1885). Mémoire sur l'emploi du fer et de l'acier dans
+  les constructions. *Annales des Ponts et Chaussées* 9, 574-775.
+- J. H. Hollomon (1945). Tensile deformation. *Transactions of AIME*
+  162, 268-290.
 - A. Savitzky, M. J. E. Golay (1964). Smoothing and differentiation of
   data by simplified least squares procedures. *Analytical Chemistry*
   36(8), 1627-1639.

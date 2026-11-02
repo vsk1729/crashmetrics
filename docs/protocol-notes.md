@@ -180,6 +180,11 @@ Virtual Testing Protocol v1.0.2 and Frontal Impact Protocol v1.2.
 | ⚠️ End of the Lüders plateau | Start of uniform work hardening (no numerical rule) | Last point from which the stress stays above ReL × 1.02 up to Rm | `band=` |
 | Plateau for a card | Not covered | `smooth_luders`: flat at ReL, or the plateau strain removed | `mode=` |
 | Mean of several specimens | Not covered | Linear interpolation at equal engineering strain, up to the shortest curve; sample standard deviation | `strain_max=`, `points=` |
+| True stress-strain | Constant volume, uniform deformation | `ln(1 + e)`, `s (1 + e)` up to the maximum engineering stress; later points dropped | `true_curve(after_necking=True)` |
+| Necking | Considère: `d sigma / d eps = sigma`, i.e. maximum force | Maximum of a parabola fitted over ±1 % engineering strain around the largest stress | `necking_point(window=)` |
+| Start of the card curve | `*MAT_024`: first point at zero plastic strain, the yield stress | Rp0.2 point with plastic strain counted from 0.2 % (default), or the end of the linear part | `plastic_curve(start=)` |
+| ⚠️ Extrapolation beyond necking | No test data | Law fitted to the measured part (yield to necking); measured points kept, law added beyond with a shift to close the step | `fit_range=`, law choice |
+| ⚠️ n-value | ISO 10275 / ASTM E646 define strain measure and range | Log-log least squares of true stress against total true strain, 10 % to Ag by default | `strain=`, `strain_range=` |
 | ⚠️ Machine compliance | Use an extensometer (strain from cross-head not accepted for E) | Linear machine: strain − stress × (1/E_measured − 1/E) | `correct_compliance(modulus=)` |
 
 ## Homologation (UN R94, R95, R135, electrical safety)
