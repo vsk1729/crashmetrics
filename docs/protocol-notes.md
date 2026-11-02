@@ -175,6 +175,12 @@ Virtual Testing Protocol v1.0.2 and Frontal Impact Protocol v1.2.
 | Ag, A | Plastic extension at maximum force, after fracture | Total strain minus stress / E at the maximum and at the last point | |
 | ⚠️ Fracture point | Not defined for digital data | First drop larger than 10 % of Rm between two samples after Rm, or stress below 10 % of Rm | `fracture_drop=`, `cut_fracture=False` |
 | Smoothing | Not specified | Savitzky-Golay, quadratic, window given in points; off by default | `smooth=` |
+| ReH | ISO 6892-1: stress at the first decrease in force | Running maximum before the first drop of more than 1 % below it (ignoring loading below 10 % of Rm) | `drop=` |
+| ReL | Lowest stress during plastic yielding, initial transient ignored | Initial transient = the dip straight after ReH up to the median plateau stress; ignored only when the plateau dips below that median later | |
+| ⚠️ End of the Lüders plateau | Start of uniform work hardening (no numerical rule) | Last point from which the stress stays above ReL × 1.02 up to Rm | `band=` |
+| Plateau for a card | Not covered | `smooth_luders`: flat at ReL, or the plateau strain removed | `mode=` |
+| Mean of several specimens | Not covered | Linear interpolation at equal engineering strain, up to the shortest curve; sample standard deviation | `strain_max=`, `points=` |
+| ⚠️ Machine compliance | Use an extensometer (strain from cross-head not accepted for E) | Linear machine: strain − stress × (1/E_measured − 1/E) | `correct_compliance(modulus=)` |
 
 ## Homologation (UN R94, R95, R135, electrical safety)
 

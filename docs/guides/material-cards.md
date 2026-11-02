@@ -11,6 +11,9 @@ test to a checked LS-DYNA `*MAT_PIECEWISE_LINEAR_PLASTICITY`
 | 1. Read the test (CSV, text, `.xlsx`; force-elongation or stress-strain) | `read_tensile`, `TensileTest` | ✅ |
 | 2. Clean the curve (fracture cut, smoothing, toe correction) | `clean_tensile` | ✅ |
 | 3. Tensile properties (E, Rp0.2, Rm, Ag, A) | `tensile_properties` | ✅ |
+| 4. Lüders plateau: ReH, ReL, Ae; flat or removed for the card | `luders_plateau`, `smooth_luders` | ✅ |
+| 5. Several specimens: mean curve and scatter | `mean_curve`, `property_scatter` | ✅ |
+| 6. Machine compliance (cross-head strain) | `correct_compliance` | ✅ |
 | True stress-strain, necking, extrapolation (Swift, Voce, ...) | | planned |
 | Strain-rate fits and `*DEFINE_TABLE` | | planned |
 | Card writing, unit systems; checking existing cards | | planned |
@@ -98,6 +101,84 @@ print(p.summary("DP-L01"))
     along it: Rm comes out slightly high and Agt can shift by a percent
     or more. Smooth the curve first (step 2).
 
+## Step 4: Lüders plateau (discontinuous yielding)
+
+Mild and some micro-alloyed steels yield with a drop of stress (upper
+yield strength ReH) and then a plateau (around the lower yield strength
+ReL) while Lüders bands cross the specimen, before uniform hardening
+starts. A `*MAT_024` element cannot reproduce this, so the plateau is
+measured and then replaced:
+
+```python
+from crashmetrics.materials import luders_plateau, smooth_luders
+
+p = luders_plateau(clean)          # None if the material yields continuously
+p.upper_yield, p.lower_yield       # ReH, ReL (MPa)
+p.elongation                       # Ae, yield point elongation (-)
+
+card_curve = smooth_luders(clean, mode="remove")   # or mode="flat"
+```
+
+| Item | Definition |
+| --- | --- |
+| ReH | Stress before the first drop of more than `drop` (1 %) below the running maximum |
+| ReL | Lowest stress on the plateau; the transient dip straight after ReH is ignored when the plateau dips again later (ISO 6892-1) |
+| End of plateau | From here on the stress stays above ReL × (1 + `band`), `band` = 2 % |
+| Ae | Strain from ReH to the end of the plateau |
+
+| `smooth_luders` mode | Result | Use |
+| --- | --- | --- |
+| `"flat"` | Spike and oscillations replaced by a line at ReL; the plateau strain stays | Keeps the measured strain at a given stress |
+| `"remove"` | Plateau strain taken out; hardening starts at ReL on the elastic line | Common for crash cards: the plateau is a band-propagation effect, not a material law for one element |
+
+Smooth noisy data only lightly (a short `smooth=` window) before
+`luders_plateau`: smoothing rounds the ReH spike. Noise lowers the
+measured ReL slightly (it is a minimum).
+
+## Step 5: several specimens
+
+Clean every specimen first (toe correction aligns them at the origin),
+then:
+
+```python
+from crashmetrics.materials import mean_curve, property_scatter, scatter_summary
+
+mean = mean_curve(cleaned, points=300)     # common strain grid up to the shortest curve
+mean.mean, mean.std, mean.minimum, mean.maximum
+card_input = mean.as_test("DP600 mean")    # continue the chain with the mean curve
+
+print(scatter_summary(property_scatter(cleaned)))   # E, Rp, Rm, Ag, A: mean, std, CV
+```
+
+- The mean is taken at equal strains, linearly interpolated, up to the
+  end of the shortest curve (or `strain_max`).
+- After necking the strain is local to the neck and differs between
+  specimens; for a card, use the mean up to the uniform elongation and
+  extrapolate from there.
+- `property_scatter` reports the sample standard deviation and the
+  coefficient of variation; typical CVs for sheet steel are about 1-3 %
+  for Rp and Rm.
+
+## Step 6: machine compliance (no extensometer)
+
+Strain from the cross-head travel includes the deflection of the frame,
+load cell and grips: the elastic slope comes out far too low (often
+50-150 GPa for steel), and every strain is too large. With the
+material's real Young's modulus:
+
+```python
+from crashmetrics.materials import correct_compliance
+
+fixed = correct_compliance(test, modulus=210_000.0)   # MPa
+fixed.info["compliance"]["measured_modulus"]          # slope before, MPa
+fixed.info["compliance_mm_per_n"]                     # machine compliance, mm/N
+```
+
+Every strain is reduced by `stress × (1/E_measured − 1/E)`, which
+assumes a linear (elastic) machine. Apply it before `clean_tensile`;
+strains after necking are local and are not made right by this. Use an
+extensometer when you can.
+
 ## Complete example
 
 A semicolon-separated machine export with decimal commas, force in kN,
@@ -112,6 +193,20 @@ Output:
 
 ```text
 --8<-- "examples/expected/23_tensile_test.txt"
+```
+
+Three mild-steel specimens with Lüders plateaus, one measured with the
+cross-head: compliance correction, ReH / ReL / Ae, the plateau replaced,
+the mean curve and the scatter:
+
+```python
+--8<-- "examples/24_tensile_specimens.py"
+```
+
+Output:
+
+```text
+--8<-- "examples/expected/24_tensile_specimens.txt"
 ```
 
 ## References

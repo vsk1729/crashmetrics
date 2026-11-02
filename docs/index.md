@@ -29,7 +29,7 @@ pip install crashmetrics
 | Bharat NCAP | AIS-197 (2023 edition, ratings to September 2027) adult occupant scoring (ODB frontal, MDB side), pole test, star rating; scores from dummy channels or ISO-MME, named modifiers, scorecard; child occupant protection; safety assist star qualifiers | [Bharat NCAP](guides/bharat-ncap.md), [Child occupant and rating](guides/bharat-ncap-cop.md) |
 | Intrusion | Pedal, steering column, A-pillar and footwell intrusion relative to the vehicle; dynamic and static; survival space | [Intrusion](guides/intrusion.md) |
 | Vehicle | OLC, delta-V, rebound, dynamic crush, crash box energy, CFE, SEA | [Pulse and energy](guides/pulse-energy.md) |
-| Materials | Tensile tests from machine exports: cleaning and E, Rp0.2, Rm, Ag, A — first steps to `*MAT_024` cards | [Material cards](guides/material-cards.md) |
+| Materials | Tensile tests from machine exports: cleaning and E, Rp0.2, Rm, Ag, A; Lüders plateau, machine compliance, mean curve of several specimens — first steps to `*MAT_024` cards | [Material cards](guides/material-cards.md) |
 | Data formats | ISO-MME (ISO/TS 13499) read and write | [Virtual testing](guides/euroncap-virtual-testing.md) |
 | LS-DYNA | ASCII output readers (nodout, rcforc, sleout, secforc, rwforc, sbtout, abstat and more), `crashmetrics-ascii` to CSV; glstat / matsum energy balance checks, d3hsp run summary, `crashmetrics-energy` command | [ASCII output](guides/lsdyna-ascii.md), [LS-DYNA energy](guides/lsdyna-energy.md) |
 | Test vs CAE | ISO/TS 18571 rating and grade, corridor and cross-correlation (CC) rating, peak, timing and RMSE errors | [Test-versus-CAE correlation](guides/test-cae-correlation.md) |

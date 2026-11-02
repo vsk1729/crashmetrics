@@ -42,7 +42,7 @@ Python 3.10 or later; the only dependency is NumPy 1.24 or later.
 | Bharat NCAP | AIS-197 (2023 edition, ratings to September 2027) ODB frontal and MDB side scores, ES-2 criteria, pole test, star rating; scores straight from dummy channels or ISO-MME; named modifiers; scorecard with point losses and the next star; child occupant protection (Q1.5/Q3 dynamic, CRS installation, vehicle based); safety assist star qualifiers | [Bharat NCAP](https://vsk1729.github.io/crashmetrics/guides/bharat-ncap/), [Child occupant and rating](https://vsk1729.github.io/crashmetrics/guides/bharat-ncap-cop/) |
 | Intrusion | Pedal, steering column, A-pillar, footwell intrusion relative to the vehicle (best-fit frame of reference nodes), one node or ground; dynamic and static; survival space between nodes | [Intrusion](https://vsk1729.github.io/crashmetrics/guides/intrusion/) |
 | Vehicle | OLC, delta-V, rebound, crush, absorbed energy, CFE, SEA | [Pulse and energy](https://vsk1729.github.io/crashmetrics/guides/pulse-energy/) |
-| Materials | Tensile tests from machine exports (CSV, text, xlsx): fracture cut, smoothing, toe correction; E, Rp0.2, Rm, Ag, A — first steps to LS-DYNA `*MAT_024` cards | [Material cards](https://vsk1729.github.io/crashmetrics/guides/material-cards/) |
+| Materials | Tensile tests from machine exports (CSV, text, xlsx): fracture cut, smoothing, toe correction; E, Rp0.2, Rm, Ag, A; Lüders plateau, machine compliance, mean curve and scatter of several specimens — first steps to LS-DYNA `*MAT_024` cards | [Material cards](https://vsk1729.github.io/crashmetrics/guides/material-cards/) |
 | Data formats | ISO-MME (ISO/TS 13499) read and write for test and simulation channels | [Virtual testing](https://vsk1729.github.io/crashmetrics/guides/euroncap-virtual-testing/), [Loading data](https://vsk1729.github.io/crashmetrics/getting-started/loading-data/) |
 | LS-DYNA | ASCII output readers (nodout, rcforc, sleout, secforc, rwforc, sbtout, deforc, jntforc, abstat, rbdout, spcforc, swforc), `crashmetrics-ascii` to CSV; glstat / matsum energy checks, d3hsp run summary, `crashmetrics-energy` command | [ASCII output](https://vsk1729.github.io/crashmetrics/guides/lsdyna-ascii/), [LS-DYNA energy](https://vsk1729.github.io/crashmetrics/guides/lsdyna-energy/) |
 | Test vs CAE | ISO/TS 18571 rating (corridor, phase, magnitude, slope) and grade, corridor and cross-correlation (CC) rating, peak / timing / RMSE / Sprague & Geers / Russell errors | [Test-versus-CAE correlation](https://vsk1729.github.io/crashmetrics/guides/test-cae-correlation/) |
@@ -77,8 +77,8 @@ are in the [guides](https://vsk1729.github.io/crashmetrics/guides/).
 ## Runnable examples
 
 The [`examples/`](https://github.com/vsk1729/crashmetrics/tree/main/examples)
-folder has twenty-three scripts, one per topic, from `01_signals_hic.py` to
-`23_tensile_test.py`, with synthetic data except the two LS-DYNA
+folder has twenty-four scripts, one per topic, from `01_signals_hic.py` to
+`24_tensile_specimens.py`, with synthetic data except the two LS-DYNA
 examples, which read real output files. The test suite checks that
 each one still prints exactly its documented output.
 
