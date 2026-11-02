@@ -190,6 +190,9 @@ Virtual Testing Protocol v1.0.2 and Frontal Impact Protocol v1.2.
 | Johnson-Cook below rate0 | Formula gives a factor below 1 | Factor 1 below the reference rate (usual cut-off) | |
 | ⚠️ ln-rate tables | LS-DYNA reads a `*DEFINE_TABLE` as ln(rate) when its first value is negative | `keyword(log_rates=True)` writes ln of the rate in the model's time unit; `check` refuses a first value ≥ 0 | |
 | Table curves | Curves follow `*DEFINE_TABLE` directly | Written in ascending rate order with consecutive IDs after the table | `first_curve_id=` |
+| SIGY with LCSS | The curve defines the yield stress | SIGY written as the curve's first stress anyway, so both agree | |
+| Curve points | LS-DYNA re-discretises curves internally | 50 points by default, geometric spacing (dense near yield), necking point kept, 8 significant digits | `points=` |
+| ⚠️ Simple failure strain | Not a protocol; FAIL is a single plastic strain | `uniform + (fracture − uniform) × min(1, neck / element)`; ignores triaxiality | Use GISSMO for predictions |
 | ⚠️ Machine compliance | Use an extensometer (strain from cross-head not accepted for E) | Linear machine: strain − stress × (1/E_measured − 1/E) | `correct_compliance(modulus=)` |
 
 ## Homologation (UN R94, R95, R135, electrical safety)
