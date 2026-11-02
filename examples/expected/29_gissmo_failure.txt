@@ -64,4 +64,4 @@ $#                a1                  o1
 ...
 MID 800 (mm-ms-kg): passed
   warning: from element size 2.5 mm the regularised failure strain is at or below the critical strain (triaxiality -0.16 to 0.32, 0.613 to 0.64, 0.66 to 0.667): no fading there
-Read back: 4 curves, failure strain within 3.3e-08
+Read back: 4 curves; failure strain equal to 1e-6: yes

@@ -142,4 +142,5 @@ print(check_gissmo(deck)[0].summary())
 back = deck.damage(800)
 x = np.linspace(-1 / 3, 2 / 3, 7)
 diff = np.max(np.abs(back.failure_strain(x, 2.5) / card.failure_strain(x, 2.5) - 1))
-print(f"Read back: {len(deck.curves)} curves, failure strain within {diff:.1e}")
+same = "yes" if diff < 1e-6 else f"no ({diff:.1e})"
+print(f"Read back: {len(deck.curves)} curves; failure strain equal to 1e-6: {same}")
