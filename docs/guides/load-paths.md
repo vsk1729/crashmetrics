@@ -251,7 +251,7 @@ rear rails crush, which is where cabin intrusion would start.
 - **Real LS-DYNA output (MIT licence, in the repository):** two runs of
   a helmet study's neck section (secforc; the main load found on z, run
   1 against run 0 rated 0.91), and a drop test matsum in mm-ton-s.
-- **A crush test of a hat section** from the qd-cae-python test data
-  (BSD licence, checked locally, not included): 9 parts, 3201 states,
-  load on the y axis found and its sign reversed, unevenly spaced MPP
-  output resampled before CFC 60 and 180.
+- **A crush test of a hat section** found in a public repository
+  (checked locally only; its licence is unclear, so it is not included):
+  9 parts, 3201 states, the load on the y axis found and its sign
+  reversed, unevenly spaced MPP output resampled before CFC 60 and 180.

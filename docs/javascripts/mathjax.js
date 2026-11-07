@@ -1,3 +1,5 @@
+// MathJax set-up from the Material for MkDocs documentation
+// (squidfunk/mkdocs-material, MIT licence, Martin Donath).
 window.MathJax = {
   tex: {
     inlineMath: [["\\(", "\\)"]],

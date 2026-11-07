@@ -66,18 +66,19 @@ parser:
 - [praveenvenky110395/LS-DYNA-Crimping-Simulation](https://github.com/praveenvenky110395/LS-DYNA-Crimping-Simulation)
   (R16.1): `rcforc`, `sleout`.
 - MPP binout files converted with LS-DYNA's `l2a`:
-  [qd-cae/qd-cae-python](https://github.com/qd-cae/qd-cae-python)
-  test data (`secforc`, `sleout`, `swforc`),
+  binout files in [qd-cae/qd-cae-python](https://github.com/qd-cae/qd-cae-python)
+  (`secforc`, `sleout`, `swforc`; they sit in the repository's copy of
+  LSTC's lsda library, so their licence is unclear),
   [hu-shuhan/editOpeniGame](https://github.com/hu-shuhan/editOpeniGame)
   (`rcforc`, `sleout`, `spcforc`) and
   [PallavME/binout-extraction-lassodyna](https://github.com/PallavME/binout-extraction-lassodyna)
   (a full-width frontal crash with a THOR dummy: `abstat`, `deforc`,
   `swforc`).
-- A crush test of a hat section from the qd-cae-python test data (BSD
-  licence; binout converted with `l2a`): `matsum` (9 parts, 3201 states)
-  and `secforc` (one section, unevenly spaced MPP output), read with
-  `crashmetrics.loadpath`: energy ranking, automatic load axis (y) and
-  sign, CFC 60 / 180 filtering after resampling.
+- A crush test of a hat section, the large binout in the same
+  qd-cae-python folder (licence unclear, see above): `matsum` (9 parts,
+  3201 states) and `secforc` (one section, unevenly spaced MPP output),
+  read with `crashmetrics.loadpath`: energy ranking, automatic load axis
+  (y) and sign, CFC 60 / 180 filtering after resampling.
 - All 36 runs of the helmet study: HIC, BrIC and neck moment from the
   readers' arrays equal `master.csv` to 1e-15.
 

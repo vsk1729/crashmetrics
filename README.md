@@ -133,3 +133,7 @@ LS-DYNA code or documentation is included.
 ## License
 
 MIT. See the [LICENSE](https://github.com/vsk1729/crashmetrics/blob/main/LICENSE) file.
+
+The real LS-DYNA and ISO-MME files in `tests/data/` come from other
+MIT-licensed projects and keep their own copyright notices: each folder
+has its licence file and a README naming the source and commit.
