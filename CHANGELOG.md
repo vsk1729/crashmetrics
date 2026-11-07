@@ -6,6 +6,17 @@ follow [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Changed
+
+- README and documentation home start with who the package is for and an
+  overview figure (HIC window, Bharat NCAP point losses, `*MAT_024` curve,
+  GISSMO failure curves), made from the examples by
+  `tools/make_readme_images.py`.
+- Documentation pages carry share-card metadata (Open Graph, X) with a
+  social preview image, and a hook for the Google Search Console
+  verification tag (`extra.google_site_verification` in `mkdocs.yml`).
+- Package summary on PyPI names what the package covers.
+
 ## [0.19.0] - 2026-11-02
 
 ### Added
