@@ -6,6 +6,27 @@ follow [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- `crashmetrics.loadpath`: load paths and energy from matsum and
+  secforc. `load_run`, `select_parts` / `select_sections` (IDs or title
+  patterns); `energy_ranking` (absorbed energy per part and group, share,
+  cumulative share, 10 / 50 / 90 % times, hourglass share) and
+  `energy_history`; `section_forces` (component, consistent sign, CFC
+  filter with resampling of uneven MPP output) and `force_metrics`;
+  `load_split` (share of each load path against a target, over time);
+  `crush_sequence` (order of chains of parts); `compare_runs` (energy and
+  section changes, culprit parts, ISO/TS 18571 similarity of force
+  curves); `energy_matrix` (runs side by side, CSV); `loadpath_report`
+  (Markdown). Results in kJ, kN and ms for any unit system.
+- `crashmetrics.synthetic`: a toy full-width frontal crash with upper,
+  middle and lower load paths that writes LS-DYNA-style matsum and
+  secforc (`write_matsum`, `write_secforc`), with variants of known
+  cause (weak front rail, no lower load path).
+- Guide "Load paths and energy across runs", examples 30 and 31.
+- Test data: a second helmet study secforc (MIT) to compare two real
+  runs.
+
 ## [0.19.1] - 2026-11-07
 
 ### Changed

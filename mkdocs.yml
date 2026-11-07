@@ -120,6 +120,7 @@ nav:
       - Intrusion measurement: guides/intrusion.md
       - LS-DYNA energy checks: guides/lsdyna-energy.md
       - LS-DYNA ASCII output: guides/lsdyna-ascii.md
+      - Load paths and energy across runs: guides/load-paths.md
       - Batch runs, analytics and ML: guides/batch-analytics.md
       - Features for machine learning: guides/ml-features.md
       - DOE, sensitivity and probabilistic ratings: guides/doe-sensitivity.md
@@ -149,6 +150,8 @@ nav:
       - energy: reference/energy.md
       - energy_check and lsdyna: reference/lsdyna.md
       - lsdyna_ascii: reference/lsdyna_ascii.md
+      - loadpath: reference/loadpath.md
+      - synthetic: reference/synthetic.md
       - isomme: reference/isomme.md
       - features: reference/features.md
       - doe: reference/doe.md

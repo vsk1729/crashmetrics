@@ -34,6 +34,9 @@ precision, mm, ms, kg, kN.
   centre of gravity node 22626, drop test).
 - `pendulum/secforc`: unchanged copy of `bo-runs/run0/pendulum/secforc`
   (upper neck section, pendulum test).
+- `pendulum_run1/secforc`: unchanged copy of `bo-runs/run1/pendulum/secforc`
+  (the same test with helmet scale 1.025 and slack -6; used to compare two
+  runs in `crashmetrics.loadpath`).
 
 The study's `bo-runs/master.csv` gives, for run 0, HIC 195.2436, BrIC
 0.38819 (drop) and a peak neck moment of 58.271 (pendulum), computed
@@ -70,6 +73,11 @@ parser:
   [PallavME/binout-extraction-lassodyna](https://github.com/PallavME/binout-extraction-lassodyna)
   (a full-width frontal crash with a THOR dummy: `abstat`, `deforc`,
   `swforc`).
+- A crush test of a hat section from the qd-cae-python test data (BSD
+  licence; binout converted with `l2a`): `matsum` (9 parts, 3201 states)
+  and `secforc` (one section, unevenly spaced MPP output), read with
+  `crashmetrics.loadpath`: energy ranking, automatic load axis (y) and
+  sign, CFC 60 / 180 filtering after resampling.
 - All 36 runs of the helmet study: HIC, BrIC and neck moment from the
   readers' arrays equal `master.csv` to 1e-15.
 
