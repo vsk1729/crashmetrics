@@ -6,6 +6,8 @@ follow [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.20.0] - 2026-11-07
+
 ### Added
 
 - `crashmetrics.loadpath`: load paths and energy from matsum and
@@ -598,7 +600,8 @@ follow [Semantic Versioning](https://semver.org/).
 - `crashmetrics.pedestrian.calculate_hic` for HIC on a refined,
   linearly interpolated time grid.
 
-[Unreleased]: https://github.com/vsk1729/crashmetrics/compare/v0.19.1...main
+[Unreleased]: https://github.com/vsk1729/crashmetrics/compare/v0.20.0...main
+[0.20.0]: https://github.com/vsk1729/crashmetrics/compare/v0.19.1...v0.20.0
 [0.19.1]: https://github.com/vsk1729/crashmetrics/compare/v0.19.0...v0.19.1
 [0.19.0]: https://github.com/vsk1729/crashmetrics/compare/v0.18.0...v0.19.0
 [0.18.0]: https://github.com/vsk1729/crashmetrics/compare/v0.17.0...v0.18.0
