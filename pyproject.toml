@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "crashmetrics"
 dynamic = ["version"]
-description = "Python tools for automotive crash engineering metrics"
+description = "Python for crash CAE engineers: Euro NCAP and Bharat NCAP scoring, injury criteria (HIC, Nij, BrIC), LS-DYNA outputs, *MAT_024 and GISSMO material cards"
 readme = "README.md"
 requires-python = ">=3.10"
 license = "MIT"

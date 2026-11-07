@@ -1,5 +1,9 @@
 # crashmetrics
 
+**For crash CAE engineers: Euro NCAP and Bharat NCAP scores, dummy injury criteria and LS-DYNA material cards, in Python.**
+
+![Four results from the crashmetrics examples: the HIC15 window of a headform pulse, where a car loses Bharat NCAP points, a tensile test turned into a *MAT_024 curve, and Hosford-Coulomb against Johnson-Cook GISSMO failure curves](assets/overview.png)
+
 **Open-source Python for automotive crash safety calculations:** injury
 criteria, Euro NCAP and Bharat NCAP scoring, pedestrian protection,
 homologation checks, test-versus-CAE correlation, LS-DYNA output readers

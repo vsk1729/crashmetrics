@@ -1,5 +1,8 @@
 site_name: crashmetrics
-site_description: Open-source Python for automotive crash safety calculations
+site_description: >-
+  Python for crash CAE engineers: Euro NCAP and Bharat NCAP scoring, dummy
+  injury criteria (HIC, Nij, BrIC), LS-DYNA output readers, *MAT_024 and GISSMO
+  material cards. Open source, MIT.
 site_url: https://vsk1729.github.io/crashmetrics/
 repo_url: https://github.com/vsk1729/crashmetrics
 repo_name: vsk1729/crashmetrics
@@ -8,6 +11,7 @@ copyright: MIT licence · crashmetrics contributors · not affiliated with Euro 
 
 theme:
   name: material
+  custom_dir: overrides
   features:
     - navigation.tabs
     - navigation.sections
@@ -36,6 +40,10 @@ theme:
         name: Switch to light mode
   icon:
     repo: fontawesome/brands/github
+
+extra:
+  # Google Search Console: paste the content="..." value of the HTML tag here.
+  google_site_verification: ""
 
 markdown_extensions:
   - admonition
