@@ -42,6 +42,8 @@ python examples/07_bharat_ncap.py
 | `27_mat024_card.py` | DP600 tensile test to a `*MAT_024` include file in mm-ms-kg (Swift-Voce curve, Cowper-Symonds, simple FAIL, provenance header), and the same material with a rate table in mm-s-t |
 | `28_check_existing_cards.py` | A supplier deck (mm-s-t) with a unit mix-up and crossing rate curves: read and check, convert to mm-ms-kg, compare with your own card, single-element verification deck and check, summary table, material library |
 | `29_gissmo_failure.py` | GISSMO for a DP800 sheet: five fracture tests with their triaxiality paths, Hosford-Coulomb and Johnson-Cook failure curves, ECRIT from the forming limit curve, regularisation estimate, damage and fading of a 2.5 mm shell, `*MAT_024` + `*MAT_ADD_DAMAGE_GISSMO` include read back and checked |
+| `30_load_paths.py` | Load paths of a synthetic 56 km/h full-width frontal run (matsum + secforc): parts and groups ranked by absorbed energy and when they absorb it, section forces at CFC 60, load split against a target, crush sequence of the main rails |
+| `31_compare_runs.py` | Baseline, a thinner LH front rail and a car without its lower load path: culprit parts and wrong crush order, where the load went, energy matrix of all runs (CSV), Markdown report |
 | `hic_convergence.py` | Grid search against the exact HIC maximum for several pulses (including a real LS-DYNA head drop), and run times |
 
 The full step-by-step explanations are in the documentation:

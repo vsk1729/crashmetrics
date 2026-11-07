@@ -1,0 +1,69 @@
+weak_front_rail_lh against baseline: absorbed energy 176.5 -> 176.3 kJ (-0.185)
+Parts that explain most of the change:
+  Front rail LH (120): 32.65 -> 17.41 kJ (-15.2, 50 % of all change)
+  Rear rail LH (130): 2.02 -> 6.92 kJ (+4.90, 16 % of all change)
+  Rear rail RH (131): 2.02 -> 6.92 kJ (+4.90, 16 % of all change)
+Groups:
+  crash boxes: 29.81 -> 29.81 kJ (-0.001)
+  front rails: 65.31 -> 50.07 kJ (-15.2)
+  rear rails: 4.04 -> 13.84 kJ (+9.80)
+  upper rails: 32.62 -> 34.68 kJ (+2.06)
+  lower path: 41.11 -> 44.31 kJ (+3.20)
+Sections, most changed first:
+  Rear rail LH (15): peak 241.0 -> 247.1 kN, impulse -12.2 %, ISO 18571 0.81
+  Front rail LH (13): peak 248.9 -> 255.3 kN, impulse -12.0 %, ISO 18571 0.81
+  Crash box LH (11): peak 249.6 -> 256.1 kN, impulse -12.0 %, ISO 18571 0.81
+  Subframe extension LH (31): peak 85.84 -> 90.04 kN, impulse +5.7 %, ISO 18571 0.90
+
+main rail LH: OUT OF ORDER
+  Bumper beam 0.287 ms -> Crash box LH 19.9 ms -> Front rail LH 3.99 ms -> Rear rail LH 38.3 ms
+  violation: Front rail LH starts at 3.99 ms, before Crash box LH (19.9 ms)
+main rail RH: in order
+  Bumper beam 0.287 ms -> Crash box RH 3.59 ms -> Front rail RH 15.5 ms -> Rear rail RH 38.3 ms
+
+no_lower_path against baseline: absorbed energy 176.5 -> 176.6 kJ (+0.122)
+Parts that explain most of the change:
+  Subframe (152): 31.48 -> removed kJ (-31.5, 38 % of all change)
+  Rear rail LH (130): 2.02 -> 19.28 kJ (+17.3, 21 % of all change)
+  Rear rail RH (131): 2.02 -> 19.28 kJ (+17.3, 21 % of all change)
+Groups:
+  crash boxes: 29.81 -> 29.81 kJ (+0)
+  front rails: 65.31 -> 65.31 kJ (+0)
+  rear rails: 4.04 -> 38.56 kJ (+34.5)
+  upper rails: 32.62 -> 39.33 kJ (+6.72)
+  lower path: 41.11 -> 0 kJ (-41.1)
+Sections, most changed first:
+  Rear rail LH (15): peak 241.0 -> 249.6 kN, impulse +36.2 %
+  Rear rail RH (16): peak 241.0 -> 249.6 kN, impulse +36.2 %
+  Front rail LH (13): peak 248.9 -> 257.1 kN, impulse +35.7 %
+Note: parts only in baseline: [150, 151, 152]
+Note: group lower path: no parts in no_lower_path
+Note: sections only in baseline: [31, 32]
+
+load split              upper   middle    lower
+baseline                16.7%    59.3%    24.0%
+weak_front_rail_lh      16.7%    58.1%    25.3%
+no_lower_path           19.3%    80.7%        -
+
+Absorbed energy, kJ (change against the baseline):
+| Part | baseline | weak_front_rail_lh | no_lower_path |
+| --- | --- | --- | --- |
+| Subframe (152) | 31.48 | 34.68 (+3.20) | - |
+| Front rail LH (120) | 32.65 | 17.41 (-15.2) | 32.65 (+0) |
+| Front rail RH (121) | 32.65 | 32.65 (+0) | 32.65 (+0) |
+| Upper rail LH (140) | 16.31 | 17.34 (+1.03) | 19.67 (+3.36) |
+| Upper rail RH (141) | 16.31 | 17.34 (+1.03) | 19.67 (+3.36) |
+| Rear rail LH (130) | 2.02 | 6.92 (+4.90) | 19.28 (+17.3) |
+| Rear rail RH (131) | 2.02 | 6.92 (+4.90) | 19.28 (+17.3) |
+| Crash box LH (110) | 14.91 | 14.91 (-0.001) | 14.91 (+0) |
+
+# Load paths: weak_front_rail_lh
+
+Source: `runs/weak_front_rail_lh`
+
+## Energy absorption
+
+Absorbed energy, weak_front_rail_lh, at 100 ms: 176.3 kJ
+
+| # | Part | kJ | Share | Cumulative | 10/50/90 % at ms | Hourglass |
+... 59 lines of Markdown

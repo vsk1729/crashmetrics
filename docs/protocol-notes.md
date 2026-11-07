@@ -283,6 +283,25 @@ Virtual Testing Protocol v1.0.2 and Frontal Impact Protocol v1.2.
 | `swforc` | Trailing columns depend on the weld type | Length, resultant moment and torsion read for spotweld beams, solids and assemblies only; `failure` is 1.0 when printed as `failure` | |
 | ⚠️ `rwforc`, `sbtout`, `jntforc`, `rbdout` | No public real file with data was found | Written to the layout of LS-DYNA's l2a converter | Please report a file that is not read correctly |
 
+## Load paths and energy (matsum, secforc)
+
+| Topic | Source | crashmetrics | Change it |
+| --- | --- | --- | --- |
+| Absorbed energy | matsum internal energy per part | Internal energy plus the internal energy of eroded elements, at the end of the run | `include_eroded=False`, `time=` |
+| Hourglass | matsum `hgeng` (not part of the internal energy) | Reported as a share of the part's absorbed energy, not added | |
+| Section force component | Not defined | Per section the axis with the largest impulse | `component=` |
+| ⚠️ Section sign | The section normal decides the sign | Sections whose impulse is negative are reversed, so the main load is positive | `orientation="as_written"` |
+| Filtering | SAE J211 classes; none is prescribed for section forces | No filter by default; with `cfc=`, unevenly spaced output resampled at its median step first | `cfc=60` or `180` |
+| Impulse, mean force | Not defined | Impulse of the positive force; mean = impulse / time from the first to the last point above 10 % of the peak | `onset=`, `window=` |
+| Load split | Design choice, no protocol | Share of the summed impulse of each path's sections; history where the total exceeds 5 % of its peak | `target=`, `tolerance=` |
+| ⚠️ Sections in series | They carry the same load | Not detected; give each path one cut. A section in two paths is reported | |
+| Crush onset | Not defined | 10 % of the stage's final energy | `onset=` |
+| Crush order | Design intent | Violation if a stage starts before the one in front; warning if the one in front has absorbed less than half its energy | `overlap=` |
+| Stage not crushed | — | Below 2 % of the chain's energy: left out of the order check | `min_energy=` |
+| Culprit parts | Not defined | The fewest parts (largest change first) explaining 80 % of the summed absolute energy change | `explain=` |
+| Curve similarity | ISO/TS 18571 rates CAE against test | Used for run against run (baseline as reference) | `rate=False` |
+| ⚠️ Synthetic runs | Not LS-DYNA output | A lumped teaching model in the LS-DYNA ASCII layout; the header says so | |
+
 ## Found something else?
 
 If a protocol you use reads differently, or a newer version changes a

@@ -16,6 +16,11 @@ crashmetrics.lsdyna, crashmetrics.d3hsp
 crashmetrics.lsdyna_ascii
     LS-DYNA ASCII output readers (nodout, rcforc, sleout, secforc, rwforc,
     sbtout, deforc, jntforc, abstat, rbdout, spcforc, swforc).
+crashmetrics.loadpath
+    Load paths from matsum and secforc: energy ranking, load split, crush
+    sequence, culprit parts between runs.
+crashmetrics.synthetic
+    A toy frontal crash writing LS-DYNA-style matsum and secforc.
 crashmetrics.energy_check
     Simulation energy checks for any load case.
 crashmetrics.pulse

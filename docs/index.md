@@ -6,8 +6,8 @@
 
 **Open-source Python for automotive crash safety calculations:** injury
 criteria, Euro NCAP and Bharat NCAP scoring, pedestrian protection,
-homologation checks, test-versus-CAE correlation, LS-DYNA output readers
-and energy checks, all in one package.
+homologation checks, test-versus-CAE correlation, LS-DYNA output readers,
+energy checks and load path analysis across runs, all in one package.
 
 ```bash
 pip install crashmetrics
@@ -36,6 +36,7 @@ pip install crashmetrics
 | Materials | Tensile tests from machine exports: cleaning and E, Rp0.2, Rm, Ag, A; Lüders plateau, machine compliance, mean curve of several specimens; necking and extrapolated hardening curve (Swift, Voce, ...), n and K; strain-rate fits and checked `*DEFINE_TABLE`; the complete `*MAT_024` card in any unit system; GISSMO failure from fracture tests (Hosford-Coulomb failure curve, FLC instability, element size regularisation) and `*MAT_ADD_DAMAGE_GISSMO`; checking, converting and comparing existing cards; material library | [Material cards](guides/material-cards.md), [GISSMO](guides/gissmo.md) |
 | Data formats | ISO-MME (ISO/TS 13499) read and write | [Virtual testing](guides/euroncap-virtual-testing.md) |
 | LS-DYNA | ASCII output readers (nodout, rcforc, sleout, secforc, rwforc, sbtout, abstat and more), `crashmetrics-ascii` to CSV; glstat / matsum energy balance checks, d3hsp run summary, `crashmetrics-energy` command | [ASCII output](guides/lsdyna-ascii.md), [LS-DYNA energy](guides/lsdyna-energy.md) |
+| Load paths | Part energies and section forces: energy ranking, load split, crush sequence, culprit parts between runs; synthetic frontal runs to try it | [Load paths](guides/load-paths.md) |
 | Test vs CAE | ISO/TS 18571 rating and grade, corridor and cross-correlation (CC) rating, peak, timing and RMSE errors | [Test-versus-CAE correlation](guides/test-cae-correlation.md) |
 | Analytics and ML | Batch runs into tables; signal shape features, criteria and design parameters per run as a training set; DOE sampling, margins as targets, sensitivity ranking, probabilistic star ratings | [Batch and analytics](guides/batch-analytics.md), [ML features](guides/ml-features.md), [DOE and sensitivity](guides/doe-sensitivity.md) |
 
