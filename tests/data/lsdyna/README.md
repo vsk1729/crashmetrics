@@ -32,7 +32,8 @@ the LSTC 50th percentile Hybrid III model, LS-DYNA R16.0 SMP single
 precision, mm, ms, kg, kN.
 
 - `drop/nodout`: unchanged copy of `bo-runs/run0/drop/nodout` (head
-  centre of gravity node 22626, drop test).
+  centre of gravity node 22626, drop test; also used to test the headform
+  impact reading of `crashmetrics.pedestrian.clearance`).
 - `pendulum/secforc`: unchanged copy of `bo-runs/run0/pendulum/secforc`
   (upper neck section, pendulum test).
 - `pendulum_run1/secforc`: unchanged copy of `bo-runs/run1/pendulum/secforc`

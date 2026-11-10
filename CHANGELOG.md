@@ -6,6 +6,30 @@ follow [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- `crashmetrics.pedestrian.clearance`: why a headform point is red.
+  `clearance` (free space under each impact point to the hard parts, a
+  165 mm sphere swept along the impact direction and along the surface
+  normal), `clearance_map`, `required_clearance` and `clearance_table`
+  (deformation space a HIC15 target needs for a pulse shape),
+  `head_impact` (the headform's motion from nodout, CFC 1000),
+  `assess_impact` (HIC15, first peak, plateau, penetration, bottoming
+  out from the geometry and the pulse with its time, residual speed and
+  energy, extra space needed, diagnosis), `assess_grid` (map, table,
+  points lost per cause, head score, CSV), `compare_grids`,
+  `read_impact_points`, `HEADFORMS`, `impact_direction`.
+- `crashmetrics.mesh`: `read_mesh` (nodes, shell, solid and beam
+  elements and part titles of a keyword file, fixed, long and comma
+  formats), `Mesh` (node coordinates per part, find parts by title,
+  merge), `write_mesh`.
+- `crashmetrics.pedestrian.synthetic`: a bonnet over hard parts and a
+  headform impact at each of 130 grid points, writing a keyword mesh,
+  the grid points and a nodout per impact; variants `lower_engine` and
+  `stiff_inner`, with the truth of every impact.
+- `crashmetrics.synthetic.write_nodout`.
+- Guide "Bonnet clearance and bottoming out" and example 34.
+
 ## [0.21.0] - 2026-11-10
 
 ### Added

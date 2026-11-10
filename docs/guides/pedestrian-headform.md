@@ -114,6 +114,12 @@ of the highest speed it passes: 20 km/h with HIC15 < 1000 → 1 point,
     score predicted from your CAE HIC15 values alone. That is the quickest
     way to track the pedestrian head score during development.
 
+!!! tip "Why is a point red?"
+    [Bonnet clearance and bottoming out](bonnet-clearance.md) finds,
+    for every point, whether the head bottomed out on a hard part (and
+    when, on which part, with how much energy left) or whether the
+    bonnet itself is too stiff, from the mesh and each impact's nodout.
+
 ## Verified against the protocols
 
 The tests reproduce the worked examples of both protocols: 10.554 of 18

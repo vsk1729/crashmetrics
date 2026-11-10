@@ -10,6 +10,7 @@ its real output (the test suite checks that output on every change).
 | [HIC accuracy and performance](hic-accuracy.md) | Choose between the grid search and the exact HIC maximum, with verification, accuracy and run times | `hic_convergence.py` |
 | [Pedestrian headform](pedestrian-headform.md) | Score a Euro NCAP headform grid from CAE predictions and verification tests | `02_headform_grid.py` |
 | [Pedestrian legforms and VRU score](pedestrian-legforms.md) | Score aPLI and upper legform grids and combine the total VRU score | `03_legform_vru.py` |
+| [Bonnet clearance and bottoming out](bonnet-clearance.md) | Measure the free space under every headform point from the mesh, read each impact's nodout, find when and on which hard part the head bottoms out, and why each point is red | `34_bonnet_clearance.py` |
 | [Flex-PLI and AIS-100](flexpli-ais100.md) | Process Flex-PLI signals and check AIS-100 compliance | `04_flexpli_ais100.py` |
 | [Frontal dummy criteria](frontal-dummy-criteria.md) | Calculate head, neck, chest, abdomen, pelvis and leg criteria for the Hybrid III and THOR | `05_frontal_dummy_criteria.py` |
 | [Euro NCAP MPDB and full width](euroncap-frontal.md) | Score the 2026 frontal tests with modifiers and compatibility | `06_euroncap_mpdb_fwdb.py` |

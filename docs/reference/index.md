@@ -9,6 +9,8 @@ dataclass, so `dataclasses.asdict(result)` turns it into a plain dict.
 | [`signals`](signals.md) | CFC filter, resultant, unit conversion, resampling |
 | [`acceleration`](acceleration.md) | Peak, 3 ms clip, exceedance curves and force–duration limits |
 | [`pedestrian`](pedestrian.md) | HIC, headform and legform grid scoring, Flex-PLI, AIS-100 |
+| [`pedestrian.clearance`](clearance.md) | Bonnet clearance to the hard parts, deformation space needed, headform impacts from nodout: bottoming out, its time and cause, why a point is red; a synthetic bonnet and its impacts (`pedestrian.synthetic`) |
+| [`mesh`](mesh.md) | Nodes, elements and part titles of an LS-DYNA keyword file; node coordinates per part |
 | [`head`](head.md) | DAMAGE, BrIC, loading phase |
 | [`neck`](neck.md) | Neck loads, occipital condyle moment, R94 limits, Nij |
 | [`thorax`](thorax.md) | Chest deflection, VC, THOR Rmax and abdomen, CTI |
@@ -27,7 +29,7 @@ dataclass, so `dataclasses.asdict(result)` turns it into a plain dict.
 | [`loadpath`](loadpath.md) | Load paths from matsum and secforc: energy ranking and groups, section forces, load split, crush sequence, run comparison with culprit parts, energy matrix, Markdown report |
 | [`spotweld`](spotweld.md) | Spot weld failure from swforc: peak forces and utilisation of every weld, failed and critical welds, failure sequence and bursts, baseline against variant |
 | [`quality`](quality.md) | Model quality check sheet of a run: termination, mass and centre of gravity, added mass, time step, energy balance, contact energies; several runs side by side |
-| [`synthetic`](synthetic.md) | A toy full-width frontal crash with upper, middle and lower load paths and spot welds that writes LS-DYNA-style matsum, secforc, swforc, glstat, sleout and d3hsp; variants with known causes |
+| [`synthetic`](synthetic.md) | A toy full-width frontal crash with upper, middle and lower load paths and spot welds that writes LS-DYNA-style matsum, secforc, swforc, glstat, sleout and d3hsp; variants with known causes; a nodout writer |
 | [`side_scoring`](side_scoring.md) | Euro NCAP 2026 side impact: AE-MDB, pole and far side scoring |
 | [`whiplash`](whiplash.md) | BioRID NIC and Nkm, 2026 rear impact score |
 | [`bncap_cop` and `bncap_rating`](bncap_cop.md) | Bharat NCAP child occupant protection and complete rating with safety assist |

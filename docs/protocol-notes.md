@@ -30,6 +30,23 @@ and how to change it. If your organisation reads a rule differently, the
 | Correction factor outside 0.85–1.15 | Prediction is reviewed with Euro NCAP | Factor still applied; `correction.accepted` is `False` | Check `accepted` |
 | Verification tolerance | Tabulated ranges | Uses the protocols' table exactly (e.g. green < 722.22) | |
 
+## Pedestrian: bonnet clearance and bottoming out
+
+| Topic | Source | crashmetrics | Change it |
+| --- | --- | --- | --- |
+| Headforms | Euro NCAP / UN GTR 9: child 3.5 kg at 50°, adult 4.5 kg at 65°, both 165 mm at 40 km/h | `HEADFORMS`; direction rearward and down at that angle, x rearward and z up | `Headform(...)`, `impact_direction(rearward=, up=)` |
+| ⚠️ Free space | Not defined by any protocol | A rigid 165 mm sphere touching the bonnet at the point (centre on the surface normal), swept along the impact direction until it touches a node of a hard part | `radius=`, `max_distance=`, `surface=` |
+| ⚠️ No bonnet surface given | — | The headform is taken to hit head-on (the point is the sphere's leading point), which underestimates the space under a sloping bonnet | Give `surface=` |
+| ⚠️ Hard parts | The user's choice | Only the parts given; their nodes, not their faces | Refine coarse meshes |
+| Space needed | Not defined | The stopping distance of a pulse shape scaled to stop the head with exactly that HIC15; the square wave is the physical lower limit | `shape=`, `speed=`, `window_ms=` |
+| Filtering | Euro NCAP: CFC 1000 for the headform | CFC 1000 on the three axes, then the resultant; uneven output resampled first | `cfc=` |
+| First contact | Not defined | The unfiltered resultant reaches 2 g; penetration is measured from then | `contact_g=` |
+| ⚠️ Bottoming out (geometry) | Not defined | Penetration reaches the free space minus the crushed bonnet stack (5 mm) plus the headform skin compression (3 mm) | `stack=`, `skin=` |
+| ⚠️ Bottoming out (pulse) | Not defined | A later peak at least 1.25 × the first contact peak after a dip; onset where it starts to rise. The geometric time wins when both exist | `rise=`, `first_fraction=` |
+| Extra space | Estimate | v² / (2 a) with the residual speed and the plateau before bottoming out | |
+| ⚠️ Diagnosis | Not defined | Against a target colour (yellow): bottoming if ≥ 25 % of the HIC window comes after it; first peak if the first contact phase alone gives ≥ 70 % of the HIC; else stiff | `target=` |
+| ⚠️ Synthetic bonnet | Not LS-DYNA output | A lumped teaching model per point in the keyword and nodout layouts; the header says so | |
+
 ## Pedestrian: legforms (Euro NCAP)
 
 | Topic | Source | crashmetrics | Change it |

@@ -1,4 +1,10 @@
-"""Pedestrian and cyclist (vulnerable road user) protection metrics."""
+"""Pedestrian and cyclist (vulnerable road user) protection metrics.
+
+Submodules not imported here: `crashmetrics.pedestrian.clearance`
+(bonnet clearance, bottoming out and why a headform point is red) and
+`crashmetrics.pedestrian.synthetic` (a synthetic bonnet and its headform
+impacts).
+"""
 
 from crashmetrics.pedestrian.ais100 import (
     Check,
