@@ -302,6 +302,23 @@ Virtual Testing Protocol v1.0.2 and Frontal Impact Protocol v1.2.
 | Curve similarity | ISO/TS 18571 rates CAE against test | Used for run against run (baseline as reference) | `rate=False` |
 | ⚠️ Synthetic runs | Not LS-DYNA output | A lumped teaching model in the LS-DYNA ASCII layout; the header says so | |
 
+## Spot welds (swforc)
+
+| Topic | Source | crashmetrics | Change it |
+| --- | --- | --- | --- |
+| Failure time | swforc prints `failure` in the failure column from the state a connection has failed | First state with `failure` (or the printed `failure time`, if earlier); so at most one output interval late | Shorter swforc interval |
+| Failure criterion | `*CONSTRAINED_SPOTWELD`: `(fn/Sn)^n + (fs/Ss)^m ≥ 1` | `WeldLimits`, n = m = 2 by default | `n=`, `m=` |
+| ⚠️ Axial compression | The criterion is written with the normal force | Only tension counts | `compression=True` |
+| ⚠️ Limits | Not in swforc | Given by the user; none: no utilisation | `limits=` |
+| ⚠️ Other failure models | `*MAT_SPOTWELD` can fail on stress, resultants with moments or damage | Failures are found from the file; the force criterion is only a comparison; moments and torsion are not used | |
+| Utilisation | Not defined | 1 / the factor by which both forces can grow until the criterion is met | |
+| File's failure measure | Some weld materials print a value between 0 and 1 | Used as utilisation when no limits are given | |
+| Forces before failure | — | The last output state before the failure state | |
+| Burst (unzipping) | Not defined | 3 or more welds of a group, each within 1 ms of the one before | `burst_size=`, `burst_window=` |
+| Earlier / later failure | Not defined | Failure time moved by more than 0.5 ms | `time_tolerance=` |
+| Groups | swforc has no titles | Name → IDs from the user, or from the numbering | `groups_by_id(divisor=)` |
+| ⚠️ Synthetic welds | Not LS-DYNA output | A teaching model: shear share of the path force, peel with folding, partial load redistribution, strength loss of the part | |
+
 ## Found something else?
 
 If a protocol you use reads differently, or a newer version changes a

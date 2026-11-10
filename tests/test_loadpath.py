@@ -30,10 +30,11 @@ from crashmetrics.loadpath import (
     select_parts,
     select_sections,
 )
-from crashmetrics.synthetic import VARIANTS, frontal_model, simulate
+from crashmetrics.synthetic import frontal_model, simulate
 
 DATA = Path(__file__).parent / "data" / "lsdyna"
 _trapz = getattr(np, "trapezoid", None) or getattr(np, "trapz")
+VARIANTS = ("baseline", "weak_front_rail_lh", "no_lower_path")
 GROUPS = {"crash boxes": "Crash box*", "front rails": "Front rail*",
           "rear rails": "Rear rail*", "upper rails": "Upper rail*",
           "lower path": "Subframe*", "bumper": "Bumper*"}

@@ -44,6 +44,7 @@ python examples/07_bharat_ncap.py
 | `29_gissmo_failure.py` | GISSMO for a DP800 sheet: five fracture tests with their triaxiality paths, Hosford-Coulomb and Johnson-Cook failure curves, ECRIT from the forming limit curve, regularisation estimate, damage and fading of a 2.5 mm shell, `*MAT_024` + `*MAT_ADD_DAMAGE_GISSMO` include read back and checked |
 | `30_load_paths.py` | Load paths of a synthetic 56 km/h full-width frontal run (matsum + secforc): parts and groups ranked by absorbed energy and when they absorb it, section forces at CFC 60, load split against a target, crush sequence of the main rails |
 | `31_compare_runs.py` | Baseline, a thinner LH front rail and a car without its lower load path: culprit parts and wrong crush order, where the load went, energy matrix of all runs (CSV), Markdown report |
+| `32_spot_weld_failure.py` | Spot welds of two synthetic frontal runs (swforc): utilisation against limits and critical welds in the baseline; failed welds, failure sequence and unzipping bursts in a variant with weak front rail welds; new failures against the baseline and their effect on the load path |
 | `hic_convergence.py` | Grid search against the exact HIC maximum for several pulses (including a real LS-DYNA head drop), and run times |
 
 The full step-by-step explanations are in the documentation:

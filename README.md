@@ -14,7 +14,7 @@
 Open-source Python for automotive crash safety calculations: injury
 criteria, Euro NCAP and Bharat NCAP scoring, pedestrian protection,
 homologation checks, test-versus-CAE correlation, LS-DYNA output readers,
-energy checks and load path analysis across runs.
+energy checks, load path and spot weld analysis across runs.
 
 **Documentation: <https://vsk1729.github.io/crashmetrics/>**, with
 step-by-step guides, runnable examples, the full API reference and the
@@ -49,7 +49,8 @@ Python 3.10 or later; the only dependency is NumPy 1.24 or later.
 | Materials | Tensile tests from machine exports (CSV, text, xlsx): fracture cut, smoothing, toe correction; E, Rp0.2, Rm, Ag, A; Lüders plateau, machine compliance, mean curve and scatter of several specimens; true stress, necking, Swift / Voce / Hockett-Sherby / Swift-Voce extrapolation, n and K; Cowper-Symonds / Johnson-Cook rate fits and checked strain-rate `*DEFINE_TABLE`; the complete `*MAT_024` card in mm-ms-kg, mm-s-t, mm-s-kg or m-s-kg; GISSMO failure: failure strain against triaxiality from fracture tests and their paths (Hosford-Coulomb, Johnson-Cook, tabulated), instability from the FLC, element size regularisation, `*MAT_ADD_DAMAGE_GISSMO` written, read and checked; read, check, convert and compare existing cards, single-element verification, material library | [Material cards](https://vsk1729.github.io/crashmetrics/guides/material-cards/), [GISSMO](https://vsk1729.github.io/crashmetrics/guides/gissmo/) |
 | Data formats | ISO-MME (ISO/TS 13499) read and write for test and simulation channels | [Virtual testing](https://vsk1729.github.io/crashmetrics/guides/euroncap-virtual-testing/), [Loading data](https://vsk1729.github.io/crashmetrics/getting-started/loading-data/) |
 | LS-DYNA | ASCII output readers (nodout, rcforc, sleout, secforc, rwforc, sbtout, deforc, jntforc, abstat, rbdout, spcforc, swforc), `crashmetrics-ascii` to CSV; glstat / matsum energy checks, d3hsp run summary, `crashmetrics-energy` command | [ASCII output](https://vsk1729.github.io/crashmetrics/guides/lsdyna-ascii/), [LS-DYNA energy](https://vsk1729.github.io/crashmetrics/guides/lsdyna-energy/) |
-| Load paths | Energy absorbed per part and group (matsum), section forces (secforc), load split between upper, middle and lower paths, crush sequence check, baseline against variant with the culprit parts, energy matrix of many runs; a synthetic frontal crash to try it without a solver | [Load paths](https://vsk1729.github.io/crashmetrics/guides/load-paths/) |
+| Load paths | Energy absorbed per part and group (matsum), section forces (secforc), load split between upper, middle and lower paths, crush sequence check, baseline against variant with the culprit parts, energy matrix of many runs; a synthetic frontal crash (matsum, secforc, swforc) to try it without a solver | [Load paths](https://vsk1729.github.io/crashmetrics/guides/load-paths/) |
+| Spot welds | Failed and critical welds from swforc, utilisation against force limits, failure sequence and unzipping bursts, new and earlier failures against a baseline | [Spot weld failure](https://vsk1729.github.io/crashmetrics/guides/spot-welds/) |
 | Test vs CAE | ISO/TS 18571 rating (corridor, phase, magnitude, slope) and grade, corridor and cross-correlation (CC) rating, peak / timing / RMSE / Sprague & Geers / Russell errors | [Test-versus-CAE correlation](https://vsk1729.github.io/crashmetrics/guides/test-cae-correlation/) |
 | Analytics and ML | Batch runs into tables; signal shape features, criteria and design parameters per run as a training set; DOE sampling (Latin hypercube, Halton, Morris) with LS-DYNA parameters; margins to limits as targets; sensitivity ranking (PRCC, Morris); probabilistic star ratings (Monte Carlo) | [Batch and analytics](https://vsk1729.github.io/crashmetrics/guides/batch-analytics/), [ML features](https://vsk1729.github.io/crashmetrics/guides/ml-features/), [DOE and sensitivity](https://vsk1729.github.io/crashmetrics/guides/doe-sensitivity/) |
 
@@ -82,8 +83,8 @@ are in the [guides](https://vsk1729.github.io/crashmetrics/guides/).
 ## Runnable examples
 
 The [`examples/`](https://github.com/vsk1729/crashmetrics/tree/main/examples)
-folder has thirty-one scripts, one per topic, from `01_signals_hic.py` to
-`31_compare_runs.py`, with synthetic data except the two LS-DYNA
+folder has thirty-two scripts, one per topic, from `01_signals_hic.py` to
+`32_spot_weld_failure.py`, with synthetic data except the two LS-DYNA
 examples, which read real output files. The test suite checks that
 each one still prints exactly its documented output.
 
