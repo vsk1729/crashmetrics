@@ -25,7 +25,8 @@ dataclass, so `dataclasses.asdict(result)` turns it into a plain dict.
 | [`isomme`](isomme.md) | ISO-MME (ISO/TS 13499) test data: read and write |
 | [`lsdyna_ascii`](lsdyna_ascii.md) | nodout, rcforc, sleout, secforc, rwforc, sbtout, deforc, jntforc, abstat, rbdout, spcforc, swforc readers |
 | [`loadpath`](loadpath.md) | Load paths from matsum and secforc: energy ranking and groups, section forces, load split, crush sequence, run comparison with culprit parts, energy matrix, Markdown report |
-| [`synthetic`](synthetic.md) | A toy full-width frontal crash with upper, middle and lower load paths that writes LS-DYNA-style matsum and secforc; variants with known causes |
+| [`spotweld`](spotweld.md) | Spot weld failure from swforc: peak forces and utilisation of every weld, failed and critical welds, failure sequence and bursts, baseline against variant |
+| [`synthetic`](synthetic.md) | A toy full-width frontal crash with upper, middle and lower load paths and spot welds that writes LS-DYNA-style matsum, secforc and swforc; variants with known causes |
 | [`side_scoring`](side_scoring.md) | Euro NCAP 2026 side impact: AE-MDB, pole and far side scoring |
 | [`whiplash`](whiplash.md) | BioRID NIC and Nkm, 2026 rear impact score |
 | [`bncap_cop` and `bncap_rating`](bncap_cop.md) | Bharat NCAP child occupant protection and complete rating with safety assist |

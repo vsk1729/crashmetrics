@@ -79,6 +79,10 @@ parser:
   3201 states) and `secforc` (one section, unevenly spaced MPP output),
   read with `crashmetrics.loadpath`: energy ranking, automatic load axis
   (y) and sign, CFC 60 / 180 filtering after resampling.
+- `crashmetrics.spotweld` on the `swforc` of the full-width frontal crash
+  above (394 connections of three types, 32 failed, 30 of them in one
+  burst) and of the PILLARS bolted joint (one spot weld beam, no
+  failure).
 - All 36 runs of the helmet study: HIC, BrIC and neck moment from the
   readers' arrays equal `master.csv` to 1e-15.
 

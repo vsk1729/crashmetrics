@@ -1,0 +1,71 @@
+Spot welds, baseline: 84 welds, 0 failed
+
+| Group | Welds | Failed | First failure ms | Highest utilisation |
+| --- | --- | --- | --- | --- |
+| Crash box LH | 8 | 0 | - | 85 % |
+| Crash box RH | 8 | 0 | - | 85 % |
+| Front rail LH | 14 | 0 | - | 74 % |
+| Front rail RH | 14 | 0 | - | 74 % |
+| Rear rail LH | 10 | 0 | - | 59 % |
+| Rear rail RH | 10 | 0 | - | 59 % |
+| Upper rail LH | 10 | 0 | - | 66 % |
+| Upper rail RH | 10 | 0 | - | 66 % |
+
+| Critical weld (holds) | Group | Utilisation | At ms | Peak axial | Peak shear |
+| --- | --- | --- | --- | --- | --- |
+| 110001 | Crash box LH | 85 % | 42.5 | 3.94 | 8.75 |
+| 111001 | Crash box RH | 85 % | 42.5 | 3.94 | 8.75 |
+
+Spot welds, weak_welds_front_rail_lh: 84 welds, 14 failed
+
+| Group | Welds | Failed | First failure ms | Highest utilisation |
+| --- | --- | --- | --- | --- |
+| Crash box LH | 8 | 0 | - | 85 % |
+| Crash box RH | 8 | 0 | - | 85 % |
+| Front rail LH | 14 | 14 | 14.5 | 36 % |
+| Front rail RH | 14 | 0 | - | 74 % |
+| Rear rail LH | 10 | 0 | - | 59 % |
+| Rear rail RH | 10 | 0 | - | 59 % |
+| Upper rail LH | 10 | 0 | - | 66 % |
+| Upper rail RH | 10 | 0 | - | 66 % |
+
+| Failed weld | Group | At ms | Axial kN before | Shear kN before | Peak axial | Peak shear |
+| --- | --- | --- | --- | --- | --- | --- |
+| 120001 | Front rail LH | 14.5 | 0 | 4.40 | 0 | 4.40 |
+| 120002 | Front rail LH | 24.5 | 1.66 | 4.32 | 1.66 | 4.62 |
+| 120003 | Front rail LH | 25.0 | 1.75 | 4.39 | 1.75 | 4.45 |
+| 120004 | Front rail LH | 30.5 | 2.24 | 4.04 | 2.24 | 4.30 |
+| 120005 | Front rail LH | 30.5 | 2.15 | 3.88 | 2.15 | 4.13 |
+| 120006 | Front rail LH | 31.5 | 2.34 | 4.05 | 2.34 | 4.05 |
+| ... 8 more | | | | | | |
+
+| Critical weld (holds) | Group | Utilisation | At ms | Peak axial | Peak shear |
+| --- | --- | --- | --- | --- | --- |
+| 110001 | Crash box LH | 85 % | 41.5 | 3.94 | 8.75 |
+| 111001 | Crash box RH | 85 % | 41.5 | 3.94 | 8.75 |
+
+Weld failures, weak_welds_front_rail_lh: 14, first at 14.5 ms (weld 120001, Front rail LH)
+  Front rail LH: 14 failed, first weld 120001 at 14.5 ms
+  burst: 3 welds of Front rail LH between 30.5 and 31.5 ms
+  burst: 8 welds of Front rail LH between 39.0 and 39.5 ms
+Failed welds over time: 10 ms: 0, 20 ms: 1, 30 ms: 3, 35 ms: 6, 40 ms: 14, 50 ms: 14
+Weld 120001 failed at 31 % of its design load: look at the weld definition, not at the load
+
+weak_welds_front_rail_lh against baseline: failed welds 0 -> 14 (+14); 14 new, 0 no longer fail, 0 earlier, 0 later
+Groups that changed:
+  Front rail LH: 0 -> 14 of 14 welds failed
+New failures, first first:
+  weld 120001 (Front rail LH) at 14.5 ms (74 % of its limit in baseline)
+  weld 120002 (Front rail LH) at 24.5 ms (71 % of its limit in baseline)
+  weld 120003 (Front rail LH) at 25.0 ms (69 % of its limit in baseline)
+  ... 11 more
+
+weak_welds_front_rail_lh against baseline: absorbed energy 176.5 -> 176.3 kJ (-0.120)
+Parts that explain most of the change:
+  Front rail LH (120): 32.65 -> 29.63 kJ (-3.03, 51 % of all change)
+  Rear rail LH (130): 2.02 -> 2.97 kJ (+0.948, 16 % of all change)
+  Rear rail RH (131): 2.02 -> 2.97 kJ (+0.948, 16 % of all change)
+Sections, most changed first:
+  Rear rail LH (15): peak 264.1 -> 265.4 kN, impulse -4.1 %
+  Front rail LH (13): peak 272.6 -> 273.9 kN, impulse -4.0 %
+  Crash box LH (11): peak 273.4 -> 274.7 kN, impulse -4.0 %

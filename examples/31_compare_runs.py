@@ -19,10 +19,10 @@ from crashmetrics.loadpath import (
     loadpath_report,
     section_forces,
 )
-from crashmetrics.synthetic import VARIANTS, frontal_model, simulate
+from crashmetrics.synthetic import frontal_model, simulate
 
 runs = {}
-for variant in VARIANTS:
+for variant in ("baseline", "weak_front_rail_lh", "no_lower_path"):
     simulate(frontal_model(variant)).write(f"runs/{variant}")
     runs[variant] = load_run(f"runs/{variant}")
 base = runs["baseline"]

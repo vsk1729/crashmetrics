@@ -19,8 +19,11 @@ crashmetrics.lsdyna_ascii
 crashmetrics.loadpath
     Load paths from matsum and secforc: energy ranking, load split, crush
     sequence, culprit parts between runs.
+crashmetrics.spotweld
+    Spot weld failure from swforc: failed and critical welds, failure
+    sequence, bursts, comparison between runs.
 crashmetrics.synthetic
-    A toy frontal crash writing LS-DYNA-style matsum and secforc.
+    A toy frontal crash writing LS-DYNA-style matsum, secforc and swforc.
 crashmetrics.energy_check
     Simulation energy checks for any load case.
 crashmetrics.pulse

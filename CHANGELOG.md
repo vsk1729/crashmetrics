@@ -6,6 +6,22 @@ follow [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- `crashmetrics.spotweld`: spot weld and connection failure from swforc.
+  `load_welds` (kN and ms for any unit system, failure time of each
+  weld); `WeldLimits` (force criterion and utilisation); `weld_summary`
+  (peak forces, forces before failure, utilisation; failed and critical
+  welds; per group); `failure_history` (failed welds over time, failure
+  sequence, first failure per group, unzipping bursts); `compare_welds`
+  (new, recovered, earlier and later failures, utilisation increases);
+  `groups_by_id`; `weld_report` (Markdown).
+- `crashmetrics.synthetic`: spot weld lines (`WeldLine`) on the crash
+  boxes and rails that can fail and weaken their part; `swforc` written
+  with `matsum` and `secforc` (`write_swforc`); variant
+  `weak_welds_front_rail_lh`.
+- Guide "Spot weld failure" and example 32.
+
 ## [0.20.0] - 2026-11-07
 
 ### Added
