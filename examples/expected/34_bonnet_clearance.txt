@@ -1,0 +1,78 @@
+Deformation space needed at 40 km/h, mm:
+
+| HIC15 limit | square | half_sine | triangle |
+| --- | --- | --- | --- |
+| 650 (green) | 88 | 108 | 114 |
+| 1000 (yellow) | 68 | 81 | 85 |
+| 1350 (orange) | 56 | 66 | 70 |
+| 1700 (brown) | 48 | 57 | 60 |
+
+HIC 1000 with a half-sine pulse needs 86 mm of free space.
+
+row     -6   -5   -4   -3   -2   -1    0    1    2    3    4    5    6
+  1   266  239     - 118   98  100  100  100  110   46!  36!  67! 266 
+  2   107   84! 183   47!  38!  43!  45!  43!  90   59!  45!  82! 107 
+  3     7!  12!  69!  67!  58!  63!  65!  63!  84!  84!  68!  12!   7!
+  4     6!  27!  71!  97  106  112  113  112  106  115   71!  27!   6!
+  5      -    -    - 119  128  134  136  134  128  138     -    -    -
+  6      -    -    - 119  127  132  133  132  127  135     -    -    -
+  7      -    -    - 143  152  158  160  158  152  165     -    -    -
+  8      -    -    -    -    -    -    -    -    -    -    -    -    -
+  9    27!  64!    -    -    -    -    -    -    -    -    -  64!  27!
+ 10     0!   0!  49!  58!  64!  67!  69!  67!  64!  58!  49!   0!   0!
+Free space along the impact direction, mm;  -: no hard part within reach;  !: less than 86 mm
+
+row    -6  -5  -4  -3  -2  -1   0   1   2   3   4   5   6
+  1    O^  Y   Y   Y   Y   B^  B^  B^  Y   R*  R*  O*  O^
+  2    O^  Y   Y   R*  R*  R*  R*  R*  Y   R*  R*  Y   O^
+  3    R*  R*  O*  O*  R*  B*  O*  B*  Y   Y   O*  R*  R*
+  4    R*  R*  O*  Y   Y   Y   Y   Y   Y   Y   O*  R*  R*
+  5    O^  Y   Y   Y   Y   Y   Y   Y   Y   Y   Y   Y   O^
+  6    Y   G   G   G   G   G   G   G   G   G   G   G   Y 
+  7    Y   G   G   G   G   G   G   G   G   G   G   G   Y 
+  8    Y   G   G   G   G   G   G   G   G   G   G   G   Y 
+  9    R*  R*  G   G   G   G   G   G   G   G   G   R*  R*
+ 10    R*  R*  R*  R*  R*  R*  R*  R*  R*  R*  R*  R*  R*
+G Y O B R: colour;  *: bottoms out;  ^: stiff bonnet (first peak or plateau)
+
+130 impact points: 42 green, 35 yellow, 13 orange, 5 brown, 35 red
+Head score 5.85 of 10 (58.5 %, euroncap_2026)
+  bottoming: 44 points, 40.00 grid points lost
+  first_peak: 3 points, 2.25 grid points lost
+  stiff: 6 points, 3.00 grid points lost
+
+| Point | HIC15 | Colour | Penetration mm | Clearance mm | Bottoms out | Cause |
+| --- | --- | --- | --- | --- | --- | --- |
+| (4, -6) | 8856 | red | 19 | 6 | 1.4 ms, 10.6 m/s | bottoms out on Strut tower RH at 1.4 ms with 10.6 m/s left (91 % of the energy); about 24 mm more space needed |
+| (4, 6) | 8856 | red | 19 | 6 | 1.4 ms, 10.6 m/s | bottoms out on Strut tower LH at 1.4 ms with 10.6 m/s left (91 % of the energy); about 24 mm more space needed |
+| (10, -6) | 8678 | red | 19 | 0 | 0.8 ms, 11.1 m/s | bottoms out on Hinge RH at 0.8 ms with 11.1 m/s left (100 % of the energy); about 13 mm more space needed |
+| (10, -5) | 8678 | red | 19 | 0 | 0.8 ms, 11.1 m/s | bottoms out on Hinge RH at 0.8 ms with 11.1 m/s left (100 % of the energy); about 13 mm more space needed |
+| (10, 5) | 8678 | red | 19 | 0 | 0.8 ms, 11.1 m/s | bottoms out on Hinge LH at 0.8 ms with 11.1 m/s left (100 % of the energy); about 13 mm more space needed |
+| (10, 6) | 8678 | red | 19 | 0 | 0.8 ms, 11.1 m/s | bottoms out on Hinge LH at 0.8 ms with 11.1 m/s left (100 % of the energy); about 13 mm more space needed |
+
+Point (2, 0): HIC 3698 (red), bottoming
+  free space 45 mm to the Intake plenum, the head travels 52 mm
+  first peak 217 g at 1.4 ms, plateau 84 g
+  bottoms out at 6.0 ms (both) with 6.7 m/s, 78 J (36 % of the impact energy) left
+  HIC window 6.4 to 8.8 ms: 100 % of it after bottoming out
+  about 27 mm more space would stop the head on the plateau
+
+lower_engine against baseline: head score 5.85 -> 6.19 (+0.35); grid points 76.00 -> 80.50
+  5 points no longer bottom out, 0 start to
+  10 points change colour:
+    (3, -2): red -> yellow (HIC 1997 -> 697)
+    (2, -3): red -> orange (HIC 3422 -> 1056)
+    (2, -1): red -> orange (HIC 3929 -> 1224)
+    (2, 0): red -> orange (HIC 3698 -> 1142)
+    ... 6 more
+  points per cause: bottoming 44 -> 39, first_peak 3 -> 3, stiff 6 -> 6
+
+stiff_inner against baseline: head score 5.85 -> 4.29 (-1.56); grid points 76.00 -> 55.75
+  7 points no longer bottom out, 0 start to
+  94 points change colour:
+    (10, -1): red -> orange (HIC 2066 -> 1242)
+    (10, 0): red -> orange (HIC 1968 -> 1194)
+    (10, 1): red -> orange (HIC 2066 -> 1242)
+    (2, 3): red -> brown (HIC 1877 -> 1387)
+    ... 90 more
+  points per cause: bottoming 44 -> 37, first_peak 3 -> 3, stiff 6 -> 48

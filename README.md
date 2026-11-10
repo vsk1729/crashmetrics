@@ -12,8 +12,8 @@
 [![Four results from the crashmetrics examples: the HIC15 window of a headform pulse, where a car loses Bharat NCAP points, a tensile test turned into a *MAT_024 curve, and Hosford-Coulomb against Johnson-Cook GISSMO failure curves](https://raw.githubusercontent.com/vsk1729/crashmetrics/main/docs/assets/overview.png)](https://vsk1729.github.io/crashmetrics/)
 
 Open-source Python for automotive crash safety calculations: injury
-criteria, Euro NCAP and Bharat NCAP scoring, pedestrian protection,
-homologation checks, test-versus-CAE correlation, LS-DYNA output readers,
+criteria, Euro NCAP and Bharat NCAP scoring, pedestrian protection
+(with bonnet clearance and bottoming out), homologation checks, test-versus-CAE correlation, LS-DYNA output readers,
 energy and model quality checks, load path and spot weld analysis across runs.
 
 **Documentation: <https://vsk1729.github.io/crashmetrics/>**, with
@@ -38,6 +38,7 @@ Python 3.10 or later; the only dependency is NumPy 1.24 or later.
 | --- | --- | --- |
 | Signals | SAE J211 CFC filter, resultants, unit conversion, HIC (grid search or exact maximum, [verified](https://vsk1729.github.io/crashmetrics/guides/hic-accuracy/)), peak, 3 ms clip, exceedance curves | [Signals](https://vsk1729.github.io/crashmetrics/guides/signals/) |
 | Pedestrian (Euro NCAP) | Headform grid with correction factor, blue / default-red / A-pillar points; aPLI, upper legform, total VRU score | [Headform](https://vsk1729.github.io/crashmetrics/guides/pedestrian-headform/), [Legforms](https://vsk1729.github.io/crashmetrics/guides/pedestrian-legforms/) |
+| Bonnet clearance | Free space under every headform point to the hard parts, from the keyword mesh; space a HIC target needs; each impact's nodout: bottoming out, its time, hard part and residual energy, or a stiff bonnet; a map of why each point is red, points lost per cause, two design loops compared | [Bonnet clearance](https://vsk1729.github.io/crashmetrics/guides/bonnet-clearance/) |
 | Pedestrian (India) | AIS-100 compliance: Flex-PLI and legacy legform, upper legform, HIC1000 / HIC1700 zones; Flex-PLI assessment interval and Euro NCAP Flex-PLI score | [Flex-PLI and AIS-100](https://vsk1729.github.io/crashmetrics/guides/flexpli-ais100/) |
 | Frontal dummies | DAMAGE, BrIC, neck loads, Nij, R94 limits, chest deflection, VC, CTI, THOR Rmax and abdomen, acetabulum, iliac force drop, femur, Tibia Index, knee slider | [Frontal criteria](https://vsk1729.github.io/crashmetrics/guides/frontal-dummy-criteria/) |
 | Euro NCAP 2026 | MPDB (20 points) and full width (10 points) with modifiers and the compatibility penalty; sled and virtual testing (VTC: model quality, ISO/TS 18571 validation, 10 points); side impact AE-MDB (15), pole (10) and far side (10) | [MPDB and full width](https://vsk1729.github.io/crashmetrics/guides/euroncap-frontal/), [Virtual testing](https://vsk1729.github.io/crashmetrics/guides/euroncap-virtual-testing/), [Side and far side](https://vsk1729.github.io/crashmetrics/guides/euroncap-side/) |
@@ -84,8 +85,8 @@ are in the [guides](https://vsk1729.github.io/crashmetrics/guides/).
 ## Runnable examples
 
 The [`examples/`](https://github.com/vsk1729/crashmetrics/tree/main/examples)
-folder has thirty-three scripts, one per topic, from `01_signals_hic.py` to
-`33_model_quality.py`, with synthetic data except the two LS-DYNA
+folder has thirty-four scripts, one per topic, from `01_signals_hic.py` to
+`34_bonnet_clearance.py`, with synthetic data except the two LS-DYNA
 examples, which read real output files. The test suite checks that
 each one still prints exactly its documented output.
 

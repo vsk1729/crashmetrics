@@ -7,6 +7,11 @@ crashmetrics.signals
 crashmetrics.pedestrian
     HIC, Euro NCAP pedestrian scoring (headform, legforms, total),
     Flex-PLI criteria and scoring, and AIS-100 compliance checks.
+crashmetrics.pedestrian.clearance
+    Bonnet clearance to the hard parts and headform impacts from nodout:
+    bottoming out, its time and cause, why a point is red.
+crashmetrics.mesh
+    Nodes, elements and part titles of an LS-DYNA keyword file.
 crashmetrics.acceleration
     Peak acceleration and the 3 ms clip.
 crashmetrics.energy
@@ -27,7 +32,8 @@ crashmetrics.quality
     time step, energy balance, contact energies.
 crashmetrics.synthetic
     A toy frontal crash writing LS-DYNA-style matsum, secforc, swforc,
-    glstat, sleout and d3hsp.
+    glstat, sleout and d3hsp (crashmetrics.pedestrian.synthetic: a bonnet
+    and its headform impacts, writing a keyword mesh and nodout).
 crashmetrics.energy_check
     Simulation energy checks for any load case.
 crashmetrics.pulse

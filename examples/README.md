@@ -46,6 +46,7 @@ python examples/07_bharat_ncap.py
 | `31_compare_runs.py` | Baseline, a thinner LH front rail and a car without its lower load path: culprit parts and wrong crush order, where the load went, energy matrix of all runs (CSV), Markdown report |
 | `32_spot_weld_failure.py` | Spot welds of two synthetic frontal runs (swforc): utilisation against limits and critical welds in the baseline; failed welds, failure sequence and unzipping bursts in a variant with weak front rail welds; new failures against the baseline and their effect on the load path |
 | `33_model_quality.py` | Model quality check sheet of synthetic frontal runs (d3hsp, glstat, matsum, sleout): a well prepared model against targets, a poorly prepared one (added mass, hourglass, negative contact energy, tiny elements), both side by side, an error termination, and stricter team limits |
+| `34_bonnet_clearance.py` | Headform study of a synthetic bonnet (keyword mesh, grid points CSV, a nodout per impact): free space under every point and the space HIC targets need, HIC, bottoming out and its cause for all 130 points, one red point explained, the engine 20 mm lower and a stiffer inner panel compared |
 | `hic_convergence.py` | Grid search against the exact HIC maximum for several pulses (including a real LS-DYNA head drop), and run times |
 
 The full step-by-step explanations are in the documentation:

@@ -107,6 +107,7 @@ nav:
       - HIC accuracy and performance: guides/hic-accuracy.md
       - Pedestrian headform (Euro NCAP): guides/pedestrian-headform.md
       - Pedestrian legforms and VRU score: guides/pedestrian-legforms.md
+      - Bonnet clearance and bottoming out: guides/bonnet-clearance.md
       - Flex-PLI and AIS-100 compliance: guides/flexpli-ais100.md
       - Frontal dummy criteria: guides/frontal-dummy-criteria.md
       - Euro NCAP MPDB and full width: guides/euroncap-frontal.md
@@ -135,6 +136,8 @@ nav:
       - signals: reference/signals.md
       - acceleration: reference/acceleration.md
       - pedestrian: reference/pedestrian.md
+      - pedestrian.clearance: reference/clearance.md
+      - mesh: reference/mesh.md
       - head: reference/head.md
       - neck: reference/neck.md
       - thorax: reference/thorax.md

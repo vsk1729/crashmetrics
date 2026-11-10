@@ -5,8 +5,8 @@
 ![Four results from the crashmetrics examples: the HIC15 window of a headform pulse, where a car loses Bharat NCAP points, a tensile test turned into a *MAT_024 curve, and Hosford-Coulomb against Johnson-Cook GISSMO failure curves](assets/overview.png)
 
 **Open-source Python for automotive crash safety calculations:** injury
-criteria, Euro NCAP and Bharat NCAP scoring, pedestrian protection,
-homologation checks, test-versus-CAE correlation, LS-DYNA output readers,
+criteria, Euro NCAP and Bharat NCAP scoring, pedestrian protection
+(with bonnet clearance and bottoming out), homologation checks, test-versus-CAE correlation, LS-DYNA output readers,
 energy and model quality checks, load path and spot weld analysis across runs, all in one package.
 
 ```bash
@@ -25,6 +25,7 @@ pip install crashmetrics
 | --- | --- | --- |
 | Signals | SAE J211 CFC filtering, resultants, unit conversion, resampling, HIC (grid search or exact maximum, [verified](guides/hic-accuracy.md)), peak, 3 ms clip | [Signals](guides/signals.md) |
 | Pedestrian (Euro NCAP) | Headform grid score with correction factor, blue / default-red / A-pillar points; aPLI and upper legform grids; total VRU score | [Headform](guides/pedestrian-headform.md), [Legforms](guides/pedestrian-legforms.md) |
+| Bonnet clearance | Free space under every headform point from the mesh; bottoming out, its time and hard part, or a stiff bonnet, from each impact's nodout; why each point is red | [Bonnet clearance](guides/bonnet-clearance.md) |
 | Pedestrian (India) | AIS-100 compliance: Flex-PLI and legacy legform limits, upper legform, HIC1000 / HIC1700 zones; Flex-PLI assessment interval and Euro NCAP Flex-PLI score | [Flex-PLI and AIS-100](guides/flexpli-ais100.md) |
 | Frontal dummies | DAMAGE, BrIC, neck loads, Nij, R94 limits, chest deflection, VC, CTI, THOR Rmax and abdomen, acetabulum, iliac force drop, femur, Tibia Index, knee slider | [Frontal criteria](guides/frontal-dummy-criteria.md) |
 | Euro NCAP 2026 | MPDB (20 points) and full width (10 points) scores with modifiers and the compatibility penalty; sled and virtual testing (VTC, 10 points); side impact AE-MDB (15), pole (10) and far side (10) | [MPDB and full width](guides/euroncap-frontal.md), [Virtual testing](guides/euroncap-virtual-testing.md), [Side and far side](guides/euroncap-side.md) |

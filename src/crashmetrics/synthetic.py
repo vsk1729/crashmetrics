@@ -31,8 +31,9 @@ analysis looks for:
 forces), ``glstat`` (global energies), ``sleout`` (contact energies) and
 a short ``d3hsp`` in the LS-DYNA ASCII format, so every reader and
 analysis of crashmetrics can be tried without a solver. `write_matsum`,
-`write_secforc`, `write_swforc`, `write_glstat`, `write_sleout` and
-`write_d3hsp` write any data in those formats.
+`write_secforc`, `write_swforc`, `write_glstat`, `write_sleout`,
+`write_d3hsp` and `write_nodout` (nodal time histories, used by
+`crashmetrics.pedestrian.synthetic`) write any data in those formats.
 
 Units: mm, ms, kg (force kN, energy J = kN mm). The model is a teaching
 model, not a vehicle simulation; the files say so in their header.
@@ -67,6 +68,7 @@ __all__ = [
     "write_d3hsp",
     "write_glstat",
     "write_matsum",
+    "write_nodout",
     "write_secforc",
     "write_sleout",
     "write_swforc",
@@ -807,6 +809,43 @@ def write_matsum(path: str | Path, time: ArrayLike, part_ids: Sequence[int] | Ar
                 "", "",
             ]
         out += ["", ""]
+    target = Path(path)
+    target.write_text("\n".join(out) + "\n")
+    return target
+
+
+_NODOUT_HEADER = (" nodal point  x-disp     y-disp      z-disp      x-vel       y-vel"
+                  "       z-vel      x-accl      y-accl      z-accl      x-coor"
+                  "      y-coor      z-coor")
+
+
+def write_nodout(path: str | Path, time: ArrayLike, node_ids: Sequence[int] | ArrayLike,
+                 displacement: ArrayLike, velocity: ArrayLike, acceleration: ArrayLike,
+                 coordinates: ArrayLike | None = None, *,
+                 names: dict[int, str] | None = None, title: str = "",
+                 date: dt.date | None = None) -> Path:
+    """Write nodal displacements, velocities and accelerations (each
+    (time, node, 3)) and optionally current coordinates in the LS-DYNA
+    nodout layout (translational block only)."""
+    t = np.asarray(time, dtype=float)
+    ids = [int(i) for i in np.asarray(node_ids)]
+    arrays = [np.asarray(a, dtype=float)
+              for a in (displacement, velocity, acceleration)]
+    coords = (np.zeros_like(arrays[0]) if coordinates is None
+              else np.asarray(coordinates, dtype=float))
+    shape = (len(t), len(ids), 3)
+    if any(a.shape != shape for a in [*arrays, coords]):
+        raise ValueError(f"Arrays must have shape (time, node, 3) = {shape}.")
+    out = _header(title, date) + _legend(names or {}, ids)
+    for i, ti in enumerate(t):
+        out += [f" n o d a l   p r i n t   o u t   f o r   t i m e  s t e p{i + 1:8d}"
+                f"                              ( at time {ti:.7E} )", "",
+                _NODOUT_HEADER]
+        for j, nid in enumerate(ids):
+            values = [*arrays[0][i, j], *arrays[1][i, j], *arrays[2][i, j],
+                      *coords[i, j]]
+            out.append(f"{nid:9d}" + "".join(f"{v + 0.0:12.5E}" for v in values))
+        out += ["", "", ""]
     target = Path(path)
     target.write_text("\n".join(out) + "\n")
     return target
