@@ -62,6 +62,10 @@ report = check_energies(read_glstat("run01/glstat"), read_matsum("run01/matsum")
   defaults are common rules of thumb. Use your company's guideline
   values in `EnergyLimits` or on the command line.
 
+For the full pre-flight check of a run (termination, mass, added mass,
+time step and contacts as well as these energy checks), see the
+[Model quality check sheet](model-quality.md).
+
 ## Run information from d3hsp
 
 ```python
@@ -81,7 +85,7 @@ run.elapsed_seconds, run.memory
 | `model` | Nodes, elements by type, materials, contacts |
 | `parameters` | Every echoed `label..... value` setting |
 | `keyword_counts` | Keywords in the deck |
-| `part_masses`, `rigid_parts`, `total_mass` | Mass summary |
+| `part_masses`, `rigid_parts`, `total_mass`, `mass_center` | Mass summary and the mass centre of the model |
 | `smallest_timesteps`, `min_timestep` | The 100 smallest time steps |
 | `problem_time`, `problem_cycles`, `cpu_seconds`, `elapsed_seconds`, `workers`, `worker_type`, `timing`, `memory` | Timing and memory |
 

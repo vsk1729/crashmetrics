@@ -1,0 +1,64 @@
+Model quality, baseline: PASSED, 1 skipped
+Run:
+  PASS Termination                        normal  [normal]
+  PASS End time reached                   100.0 of 100.0 ms (100.0 %)  [≥ 99.5 %]
+  PASS Errors                             0  [0]
+  INFO Warnings                           2  (most frequent: 41123 x1, 40538 x1)
+Mass:
+  PASS Total mass                         1500.0 kg (+0.00 % of target 1500.0)  [± 1 %]
+  PASS Centre of gravity                  (1310, 2.00, 545.0) mm, 7.35 mm from target  [≤ 10 mm]
+  PASS Added mass, start                  0.40 %  [≤ 5 %]
+  PASS Added mass, peak                   0.60 % (9.00 kg)  [≤ 5 %]
+  PASS Added mass, growth                 +0.20 % points  [≤ 1 % points]
+  SKIP Added mass per part                -  (no added mass in matsum)
+Time step:
+  PASS Time step                          1.00 µs, lowest 1.00 µs (-0.0 %)  [≤ 10 % drop]
+  INFO Mass scaling                       dt2ms -0.0011111: time step 1.000 µs  (negative dt2ms: mass added only where needed)
+  PASS Smallest elements                  0.900 µs: shell 110000 of part 110; mass factor 1.23  [≤ 4 x mass]  (in the table: part 110 x6, part 120 x4)
+Energy:
+  PASS Energy ratio                       1.009  [0.95 to 1.05]
+  PASS Hourglass energy                   2.2 %  [≤ 10 %]
+  PASS Negative contact energy            0.0 %  [≤ 5 %]
+  PASS Damping energy                     0.0 %  [≤ 5 %]
+  PASS Hourglass energy per part          3.1 %  [≤ 10 %]  (part 110 (Crash box LH))
+  PASS Negative internal energy per part  0.0 %  [≤ 1 %]
+Contacts:
+  PASS Negative energy per contact        none (3 contacts)  [≤ 1 % of internal energy]
+
+Model quality, poor_model_quality: FAILED (4 checks), 2 warnings, 1 skipped
+  FAIL Added mass, start: 5.80 %, limit ≤ 5 %
+  FAIL Added mass, peak: 7.90 % (118 kg), limit ≤ 5 %
+  FAIL Hourglass energy per part: 18.8 %, limit ≤ 10 % (part 110 (Crash box LH); over the limit: part 110, 111)
+  FAIL Negative energy per contact: 4.43 % (-7.69 kJ) in contact 2 (Front end self contact), limit ≤ 1 % of internal energy (over the limit: contact 2)
+  WARN Added mass, growth: +2.10 % points, limit ≤ 1 % points (elements deform into smaller time steps)
+  WARN Smallest elements: 0.210 µs: shell 150000 of part 150; mass factor 22.7, limit ≤ 4 x mass (in the table: part 150 x6, part 120 x4)
+
+| Group | Check | baseline | poor_model_quality |
+| --- | --- | --- | --- |
+| Run | Termination | ✅ | ✅ |
+| Run | End time reached | ✅ 100 | ✅ 100 |
+| Run | Errors | ✅ 0 | ✅ 0 |
+| Run | Warnings | ℹ️ 2 | ℹ️ 37 |
+| Mass | Total mass | ✅ 1500 | ✅ 1500 |
+| Mass | Centre of gravity | ✅ 7.35 | ✅ 7.35 |
+| Mass | Added mass, start | ✅ 0.400 | ❌ 5.80 |
+| Mass | Added mass, peak | ✅ 0.600 | ❌ 7.90 |
+| Mass | Added mass, growth | ✅ 0.200 | ⚠️ 2.10 |
+| Mass | Added mass per part | ➖ | ➖ |
+| Time step | Time step | ✅ 0 | ✅ 0 |
+| Time step | Mass scaling | ℹ️ | ℹ️ |
+| Time step | Smallest elements | ✅ 1.23 | ⚠️ 22.7 |
+| Energy | Energy ratio | ✅ 1.01 | ✅ 0.964 |
+| Energy | Hourglass energy | ✅ 2.24 | ✅ 4.59 |
+| Energy | Negative contact energy | ✅ 0 | ✅ 3.68 |
+| Energy | Damping energy | ✅ 0 | ✅ 0 |
+| Energy | Hourglass energy per part | ✅ 3.06 | ❌ 18.8 |
+| Energy | Negative internal energy per part | ✅ 0 | ✅ 0 |
+| Contacts | Negative energy per contact | ✅ 0 | ❌ 4.43 |
+| | **Verdict** | **PASSED** | **FAILED** |
+
+FAIL Termination: error
+FAIL End time reached: 38.00 of 100.0 ms (38.0 %)
+FAIL Errors: 1 (40509: Negative volume in a solid element (synthetic).)
+WARN Time step: 1.00 µs, lowest 0.750 µs (-25.0 %)
+Baseline with stricter limits: FAILED (1 check), 1 skipped: Hourglass energy per part 3.1 % (limit ≤ 3 %)

@@ -8,6 +8,21 @@ follow [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- `crashmetrics.quality`: model quality check sheet of a run from
+  d3hsp, glstat, matsum and sleout. `check_model` / `check_model_data`
+  (termination, end time, errors and warnings; total mass and centre of
+  gravity against targets; added mass at the start, at its peak, its
+  growth and per part; time step, mass scaling and the smallest
+  elements; the energy checks; negative energy per contact), each with
+  PASS / FAIL / WARN / INFO / SKIP; `QualityLimits`; `QualitySheet`
+  (summary, Markdown table, failures); `quality_matrix` for several runs.
+- `read_d3hsp` reads the mass centre of the model (`D3hsp.mass_center`).
+- `crashmetrics.synthetic`: `ModelQuality` (added mass, time step,
+  contact energies, warnings, error termination) and the files `glstat`,
+  `sleout` and `d3hsp` (`write_glstat`, `write_sleout`, `write_d3hsp`);
+  variant `poor_model_quality`.
+- Guide "Model quality check sheet" and example 33.
+
 - `crashmetrics.spotweld`: spot weld and connection failure from swforc.
   `load_welds` (kN and ms for any unit system, failure time of each
   weld); `WeldLimits` (force criterion and utilisation); `weld_summary`

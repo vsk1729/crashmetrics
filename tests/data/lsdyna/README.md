@@ -17,7 +17,8 @@ R14.1.1 SMP single precision, 4 CPUs.
   `skills/lsdyna-kfile/template_build/cold_start/d3hsp` that the reader
   uses: run information fields, command line, keyword counts (non-zero
   ones and two long names), selected model-size and control settings,
-  the mass summary, memory, the smallest time steps table, termination
+  the mass summary with the model's mass centre, memory, the smallest
+  time steps table, termination
   lines and timing. All descriptive text printed by LS-DYNA (banner,
   legal notice, option descriptions, notes, mass property blocks) was
   removed and the host name replaced with `HOSTNAME`.
@@ -83,6 +84,10 @@ parser:
   above (394 connections of three types, 32 failed, 30 of them in one
   burst) and of the PILLARS bolted joint (one spot weld beam, no
   failure).
+- `crashmetrics.quality` on whole run folders: the K-agent ball drop
+  (all files), the PILLARS bolted joint, the crimping run (very heavy
+  mass scaling) and the pladebuk run (a `glstat` with one state:
+  reported as unreadable).
 - All 36 runs of the helmet study: HIC, BrIC and neck moment from the
   readers' arrays equal `master.csv` to 1e-15.
 

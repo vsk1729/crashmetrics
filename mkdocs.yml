@@ -122,6 +122,7 @@ nav:
       - LS-DYNA ASCII output: guides/lsdyna-ascii.md
       - Load paths and energy across runs: guides/load-paths.md
       - Spot weld failure: guides/spot-welds.md
+      - Model quality check sheet: guides/model-quality.md
       - Batch runs, analytics and ML: guides/batch-analytics.md
       - Features for machine learning: guides/ml-features.md
       - DOE, sensitivity and probabilistic ratings: guides/doe-sensitivity.md
@@ -153,6 +154,7 @@ nav:
       - lsdyna_ascii: reference/lsdyna_ascii.md
       - loadpath: reference/loadpath.md
       - spotweld: reference/spotweld.md
+      - quality: reference/quality.md
       - synthetic: reference/synthetic.md
       - isomme: reference/isomme.md
       - features: reference/features.md
