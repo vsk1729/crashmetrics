@@ -22,8 +22,12 @@ crashmetrics.loadpath
 crashmetrics.spotweld
     Spot weld failure from swforc: failed and critical welds, failure
     sequence, bursts, comparison between runs.
+crashmetrics.quality
+    Model quality check sheet of a run: termination, mass, added mass,
+    time step, energy balance, contact energies.
 crashmetrics.synthetic
-    A toy frontal crash writing LS-DYNA-style matsum, secforc and swforc.
+    A toy frontal crash writing LS-DYNA-style matsum, secforc, swforc,
+    glstat, sleout and d3hsp.
 crashmetrics.energy_check
     Simulation energy checks for any load case.
 crashmetrics.pulse

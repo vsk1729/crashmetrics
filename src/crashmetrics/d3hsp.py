@@ -16,7 +16,8 @@ What is read
 - Model size (nodes, elements by type, materials, contacts) and every
   ``label.......  value`` setting echoed by LS-DYNA (``parameters``),
   plus the keyword counts (``total # of *KEYWORD....  n``).
-- Mass summary: mass of each part (rigid bodies marked) and total mass.
+- Mass summary: mass of each part (rigid bodies marked), total mass and
+  the mass centre of the model.
 - The smallest time steps table: element type, element, part, time step.
 - Timing: problem time and cycles, CPU and elapsed time, threads or
   processes, the CPU/clock breakdown by solver phase, and memory.
@@ -76,6 +77,9 @@ _PART_MASS = re.compile(
 )
 _TOTAL_MASS = re.compile(
     rf"^\s*t\s+o\s+t\s+a\s+l\s+m\s+a\s+s\s+s\s*=\s*(?P<mass>{_NUMBER})"
+)
+_MASS_CENTER = re.compile(
+    rf"^\s*(?P<axis>[xyz])-coordinate of mass center\s*=\s*(?P<value>{_NUMBER})"
 )
 _TIMESTEP_ROW = re.compile(
     rf"^\s*(?P<type>[A-Za-z][\w-]*)\s+(?P<eid>\d+)\s+(?P<pid>\d+)\s+(?P<dt>{_NUMBER})\s*$"
@@ -194,6 +198,8 @@ class D3hsp:
     part_masses: dict[int, float] = field(default_factory=dict)
     rigid_parts: tuple[int, ...] = ()
     total_mass: float | None = None
+    mass_center: tuple[float, float, float] | None = None
+    """Mass centre of the whole model (the lines after the total mass)."""
 
     smallest_timesteps: tuple[TimestepElement, ...] = ()
 
@@ -360,6 +366,11 @@ def parse_d3hsp(text: str) -> D3hsp:
             elif m := _TOTAL_MASS.match(line):
                 info["total_mass"] = _number(m.group("mass"))
                 in_mass_summary = False
+                centre = [_MASS_CENTER.match(x) for x in lines[i + 1:i + 4]]
+                if all(centre) and [c.group("axis") for c in centre if c] == [
+                        "x", "y", "z"]:
+                    info["mass_center"] = tuple(
+                        _number(c.group("value")) for c in centre if c)
 
         if "smallest timesteps" in stripped.lower():
             in_timesteps = True
@@ -460,6 +471,7 @@ def parse_d3hsp(text: str) -> D3hsp:
         part_masses=part_masses,
         rigid_parts=tuple(rigid),
         total_mass=info.get("total_mass"),
+        mass_center=info.get("mass_center"),
         smallest_timesteps=tuple(timesteps),
         problem_time=info.get("problem_time"),
         problem_cycles=info.get("problem_cycles"),

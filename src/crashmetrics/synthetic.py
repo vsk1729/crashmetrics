@@ -21,12 +21,18 @@ analysis looks for:
   Ss)^2`` reaches 1; its neighbours take part of its load, and the part
   loses strength as its welds fail.
 
+- **Model quality** (`ModelQuality`): mass scaling (added mass), time
+  step, contact friction and negative contact energy, warnings and the
+  termination, as a solver would report them.
+
 `frontal_model` gives a reference car and variants with known causes
 (`VARIANTS`); `simulate` runs it; `FrontalRun.write` writes ``matsum``
-(part energies), ``secforc`` (section forces) and ``swforc`` (spot weld
-forces) in the LS-DYNA ASCII format, so every reader and analysis of
-crashmetrics can be tried without a solver. `write_matsum`,
-`write_secforc` and `write_swforc` write any data in those formats.
+(part energies), ``secforc`` (section forces), ``swforc`` (spot weld
+forces), ``glstat`` (global energies), ``sleout`` (contact energies) and
+a short ``d3hsp`` in the LS-DYNA ASCII format, so every reader and
+analysis of crashmetrics can be tried without a solver. `write_matsum`,
+`write_secforc`, `write_swforc`, `write_glstat`, `write_sleout` and
+`write_d3hsp` write any data in those formats.
 
 Units: mm, ms, kg (force kN, energy J = kN mm). The model is a teaching
 model, not a vehicle simulation; the files say so in their header.
@@ -44,7 +50,7 @@ from typing import Any
 import numpy as np
 from numpy.typing import ArrayLike, NDArray
 
-from crashmetrics.energy_check import PartEnergies
+from crashmetrics.energy_check import GlobalEnergies, PartEnergies
 from crashmetrics.lsdyna_ascii import AsciiOutput
 
 __all__ = [
@@ -53,12 +59,16 @@ __all__ = [
     "FrontalModel",
     "FrontalRun",
     "LoadPath",
+    "ModelQuality",
     "Section",
     "WeldLine",
     "frontal_model",
     "simulate",
+    "write_d3hsp",
+    "write_glstat",
     "write_matsum",
     "write_secforc",
+    "write_sleout",
     "write_swforc",
 ]
 
@@ -178,6 +188,36 @@ class LoadPath:
 
 
 @dataclass(frozen=True)
+class ModelQuality:
+    """What a solver would report about the model itself (it does not
+    change the crash): mass scaling, time step, contacts, messages and
+    termination."""
+
+    added_mass: float = 0.004
+    """Mass added by mass scaling at the start, share of the model mass."""
+    added_mass_growth: float = 0.002
+    """Further share added by the time of maximum crush."""
+    timestep: float = 1.0e-3
+    """Time step, ms (``dt2ms`` is written as its negative over 0.9)."""
+    mass_scaled: bool = True
+    timestep_drop: float = 0.0
+    """Share by which the time step falls at maximum crush (without mass
+    scaling)."""
+    friction: float = 0.008
+    """Contact friction energy, share of the absorbed energy."""
+    contact_loss: float = 0.0
+    """Negative energy of the self contact, share of the absorbed energy."""
+    smallest_timestep: float = 0.9e-3
+    """Smallest element time step before mass scaling, ms."""
+    smallest_part: int = 110
+    warnings: int = 2
+    error_at: float | None = None
+    """ms at which the run stops with an error termination."""
+    mass_center: tuple[float, float, float] = (1310.0, 2.0, 545.0)
+    """mm."""
+
+
+@dataclass(frozen=True)
 class FrontalModel:
     """A vehicle mass on parallel load paths, against a rigid wall."""
 
@@ -188,6 +228,7 @@ class FrontalModel:
     speed: float = 56.0
     """km/h."""
     body_part: tuple[int, str] = (200, "Body and rest of vehicle")
+    quality: ModelQuality = field(default_factory=ModelQuality)
 
     def replace_element(self, part_id: int, path: str | None = None,
                         **changes: Any) -> FrontalModel:
@@ -301,6 +342,13 @@ def _variant(name: str) -> FrontalModel:
     if name == "weak_welds_front_rail_lh":
         return replace(car.replace_welds("Front rail LH flange", shear_strength=5.0,
                                          axial_strength=4.0), name=name)
+    if name == "poor_model_quality":
+        # The same crash, reported by a poorly prepared model.
+        for pid in (110, 111):
+            car = car.replace_element(pid, hourglass=0.16)
+        return replace(car, name=name, quality=ModelQuality(
+            added_mass=0.058, added_mass_growth=0.021, contact_loss=0.045,
+            smallest_timestep=0.21e-3, smallest_part=150, warnings=37))
     raise ValueError(f"Unknown variant {name!r}; known: {list(VARIANTS)}.")
 
 
@@ -314,6 +362,10 @@ VARIANTS: dict[str, str] = {
     "weak_welds_front_rail_lh": "LH front rail flange welds at 40 % strength: they "
                                 "unzip while the rail crushes, and the rail "
                                 "loses strength",
+    "poor_model_quality": "The baseline crash from a poorly prepared model: 5.8 % "
+                          "added mass rising to 7.9 %, 16 % hourglass energy in "
+                          "the crash boxes, negative contact energy, very small "
+                          "elements",
 }
 """Variants of `frontal_model` and what changes."""
 
@@ -444,6 +496,65 @@ class FrontalRun:
         return AsciiOutput("secforc", t, ids, data, names=names,
                            title=self._title(), version=_VERSION_LINE)
 
+    def part_masses(self) -> dict[int, float]:
+        """Part ID -> mass, kg (the body takes the rest of the model mass)."""
+        out: dict[int, float] = {}
+        for p in self.model.paths:
+            for e in p.elements:
+                out[e.part_id] = out.get(e.part_id, 0.0) + e.mass
+        out[self.model.body_part[0]] = self.model.mass - sum(out.values())
+        return dict(sorted(out.items()))
+
+    def _absorbed(self, t: FloatArray) -> FloatArray:
+        """Crush energy of all parts at times ``t``, J."""
+        total = np.sum(list(self.plastic_energy.values()), axis=0)
+        return np.asarray(np.interp(t, self.time, total))
+
+    def contact_output(self, times: ArrayLike | None = None) -> AsciiOutput:
+        """Contact energies as LS-DYNA's sleout gives them (J): the wall
+        contact and a bumper contact with friction, and the self contact
+        of the front end, which loses energy when the model's
+        ``contact_loss`` is set."""
+        t = self.time if times is None else np.asarray(times, dtype=float)
+        q = self.model.quality
+        w = self._absorbed(t)
+        ids = (1, 2, 3)
+        names = {1: "Vehicle to rigid wall", 2: "Front end self contact",
+                 3: "Bumper to crash boxes"}
+        friction = np.column_stack((0.6 * q.friction * w, 0.3 * q.friction * w,
+                                    0.1 * q.friction * w))
+        surfa = 0.5 * friction
+        surfa[:, 1] -= 0.5 * q.contact_loss * w
+        surfb = surfa.copy()
+        data = {"surfa_energy": surfa, "surfb_energy": surfb,
+                "friction_energy": friction}
+        totals = {"surfa_energy": surfa.sum(axis=1), "surfb_energy": surfb.sum(axis=1),
+                  "total_energy": (surfa + surfb).sum(axis=1),
+                  "friction_energy": friction.sum(axis=1)}
+        return AsciiOutput("sleout", t, ids, data, totals, names, self._title(),
+                           _VERSION_LINE)
+
+    def global_energies(self, times: ArrayLike | None = None) -> GlobalEnergies:
+        """Global energies as LS-DYNA's glstat gives them (J, kg, ms):
+        the part energies summed, the contact (sliding) energy, the added
+        mass and the time step."""
+        t = self.time if times is None else np.asarray(times, dtype=float)
+        q = self.model.quality
+        p = self.part_energies(t)
+        kinetic = np.nan_to_num(p.kinetic).sum(axis=1)
+        internal = p.internal.sum(axis=1)
+        hourglass = np.nan_to_num(p.hourglass).sum(axis=1)
+        sliding = self.contact_output(t).totals["total_energy"]
+        total = kinetic + internal + hourglass + sliding
+        w = self._absorbed(t)
+        progress = w / max(float(np.max(w)), 1e-12)
+        added = (q.added_mass + q.added_mass_growth * progress) * self.model.mass
+        return GlobalEnergies(
+            t, kinetic, internal, hourglass, sliding, total=total,
+            energy_ratio=total / total[0], added_mass=added,
+            added_mass_percent=100.0 * added / self.model.mass,
+            time_step=q.timestep * (1.0 - q.timestep_drop * progress))
+
     def weld_output(self, times: ArrayLike | None = None) -> AsciiOutput:
         """Spot weld forces as LS-DYNA's swforc gives them (kN): a weld
         has no force and ``failure`` 1 from its failure time on."""
@@ -470,13 +581,16 @@ class FrontalRun:
     def write(self, directory: str | Path, *, matsum_interval: float = 0.5,
               secforc_interval: float = 0.2, swforc_interval: float = 0.5,
               date: dt.date | None = None) -> tuple[Path, Path]:
-        """Write ``matsum`` and ``secforc`` (the paths returned) and, when
-        the model has spot welds, ``swforc`` into ``directory`` (created),
-        sampled every ``matsum_interval`` / ``secforc_interval`` /
-        ``swforc_interval`` ms."""
+        """Write ``matsum`` and ``secforc`` (the paths returned), ``glstat``,
+        ``sleout``, ``d3hsp`` and, when the model has spot welds,
+        ``swforc`` into ``directory`` (created), sampled every
+        ``matsum_interval`` / ``secforc_interval`` / ``swforc_interval``
+        ms. A model with ``quality.error_at`` stops there."""
         folder = Path(directory)
         folder.mkdir(parents=True, exist_ok=True)
-        end = float(self.time[-1])
+        q = self.model.quality
+        planned = float(self.time[-1])
+        end = planned if q.error_at is None else min(planned, q.error_at)
         tm = np.arange(0.0, end + 1e-9, matsum_interval)
         ts = np.arange(0.0, end + 1e-9, secforc_interval)
         p = self.part_energies(tm)
@@ -489,6 +603,25 @@ class FrontalRun:
             tw = np.arange(0.0, end + 1e-9, swforc_interval)
             write_swforc(folder / "swforc", self.weld_output(tw),
                          title=self._title(), date=date)
+        write_glstat(folder / "glstat", self.global_energies(tm), title=self._title(),
+                     date=date)
+        write_sleout(folder / "sleout", self.contact_output(tm), title=self._title(),
+                     date=date)
+        small = [("shell", q.smallest_part * 1000 + k, q.smallest_part,
+                  q.smallest_timestep * (1.0 + 0.004 * k)) for k in range(6)]
+        small += [("shell", 120001 + k, 120, 1.02e-3 * (1.0 + 0.003 * k))
+                  for k in range(4)]
+        write_d3hsp(
+            folder / "d3hsp", title=self._title(), part_masses=self.part_masses(),
+            total_mass=self.model.mass, mass_center=q.mass_center,
+            end_time=planned, problem_time=end,
+            dt2ms=-q.timestep / 0.9 if q.mass_scaled else 0.0,
+            smallest_timesteps=sorted(small, key=lambda r: r[3]),
+            warnings=q.warnings, error=q.error_at is not None,
+            counts={"nodes": 412_530, "shell_elements": 398_214,
+                    "solid_elements": 5_120, "beam_elements": len(self.weld_ids),
+                    "materials": len(self.part_masses()), "contacts": 3},
+            date=date)
         return m, s
 
 
@@ -742,6 +875,149 @@ def write_swforc(path: str | Path, output: AsciiOutput, *, title: str = "",
                        f"{_e(float(ti), 13, 5)}  {flag}    {element}  ID "
                        f"{int(wid):10d}{extra}")
         out.append("")
+    target = Path(path)
+    target.write_text("\n".join(out) + "\n")
+    return target
+
+
+def write_glstat(path: str | Path, energies: GlobalEnergies, *, title: str = "",
+                 date: dt.date | None = None) -> Path:
+    """Write global energies in the LS-DYNA glstat layout (the energy
+    lines, the energy ratio, the time step and the added mass)."""
+    g = energies
+    n = len(g.time)
+
+    def col(a: FloatArray | None) -> FloatArray:
+        return np.zeros(n) if a is None else np.asarray(a, dtype=float)
+
+    rows: list[tuple[str, FloatArray]] = [
+        ("time...........................", g.time),
+        ("time step......................", col(g.time_step)),
+        ("kinetic energy.................", g.kinetic),
+        ("internal energy................", g.internal),
+        ("hourglass energy ..............", col(g.hourglass)),
+        ("system damping energy..........", col(g.damping)),
+        ("sliding interface energy.......", col(g.sliding)),
+        ("external work..................", col(g.external_work)),
+        ("total energy...................", g.total_energy()),
+        ("total energy / initial energy..", g.ratio()),
+    ]
+    out = _header(title, date)
+    for i in range(n):
+        out += ["", f" dt of cycle {i * 500 + 1:7d} is controlled by shell "
+                "element of the model", ""]
+        out += [f" {label}{_e(float(a[i]), 14, 5)}" for label, a in rows]
+        if g.added_mass is not None:
+            out += ["", "",
+                    " added mass....................."
+                    f"{_e(float(g.added_mass[i]), 14, 5)}",
+                    " percentage increase............"
+                    f"{_e(float(col(g.added_mass_percent)[i]), 14, 5)}"]
+        out += [""]
+    target = Path(path)
+    target.write_text("\n".join(out) + "\n")
+    return target
+
+
+def write_sleout(path: str | Path, output: AsciiOutput, *, title: str = "",
+                 date: dt.date | None = None) -> Path:
+    """Write contact energies (an `AsciiOutput` with ``surfa_energy``,
+    ``surfb_energy`` and ``friction_energy``) in the LS-DYNA sleout
+    layout."""
+    need = ("surfa_energy", "surfb_energy", "friction_energy")
+    missing = [c for c in need if c not in output.data]
+    if missing:
+        raise ValueError(f"Missing channels {missing}.")
+    out = _header(title or output.title, date) + _legend(output.names, output.ids)
+    for i, ti in enumerate(output.time):
+        a, b, f = (output.data[c][i] for c in need)
+        out += [f" contact interface energy file, time={_e(float(ti), 14, 7)}",
+                f"    #             slave       master       cycle={i * 500 + 1:14d}"
+                "    frictional", ""]
+        out += [f"{int(cid):10d}{_e(float(a[j]), 13)}{_e(float(b[j]), 13)}"
+                f"{'':31}{_e(float(f[j]), 13)}" for j, cid in enumerate(output.ids)]
+        out += ["",
+                f" summary   total slave side={_e(float(np.sum(a)), 14, 7)}",
+                f"           total mastr side={_e(float(np.sum(b)), 14, 7)}",
+                "           total energy    ="
+                f"{_e(float(np.sum(a) + np.sum(b)), 14, 7)}",
+                f"           friction energy ={_e(float(np.sum(f)), 14, 7)}",
+                "", "", ""]
+    target = Path(path)
+    target.write_text("\n".join(out) + "\n")
+    return target
+
+
+def write_d3hsp(
+    path: str | Path,
+    *,
+    title: str = "",
+    part_masses: dict[int, float],
+    total_mass: float,
+    mass_center: tuple[float, float, float] | None = None,
+    end_time: float,
+    problem_time: float | None = None,
+    dt2ms: float = 0.0,
+    smallest_timesteps: Sequence[tuple[str, int, int, float]] = (),
+    warnings: int = 0,
+    error: bool = False,
+    counts: dict[str, int] | None = None,
+    date: dt.date | None = None,
+) -> Path:
+    """Write the lines of an LS-DYNA d3hsp that `crashmetrics.d3hsp`
+    reads: run information, model size, termination time and ``dt2ms``,
+    the mass summary with the mass centre, the smallest time steps,
+    warnings and the termination (with an error message when ``error``).
+    """
+    day = date or dt.date(2026, 1, 1)
+    c = counts or {}
+
+    def setting(label: str, value: str) -> str:
+        return f"    {label:.<47}{value:>14}"
+
+    out = [f" {title[:72]:<72}", "",
+           f"      Date: {day.strftime('%m/%d/%Y')}      Time: 00:00:00",
+           "     |  Version : smp s crashmetrics synthetic         |",
+           "     |  Revision: not LS-DYNA output                   |",
+           "     |  Precision  : Single precision (I4R4)             |", "",
+           " Input file: synthetic.k", "",
+           setting("number of materials or property sets", str(c.get("materials", 0))),
+           setting("number of nodal+scalar points", str(c.get("nodes", 0))),
+           setting("number of solid elements", str(c.get("solid_elements", 0))),
+           setting("number of beam elements", str(c.get("beam_elements", 0))),
+           setting("number of shell elements", str(c.get("shell_elements", 0))),
+           setting("number of number of contact definitions",
+                   str(c.get("contacts", 0))),
+           setting("termination time", _e(end_time, 14)),
+           setting("time step scale factor", _e(0.9, 14)),
+           setting("time step size for mass scaled solution, dt2ms", _e(dt2ms, 14)),
+           "", " summary of mass"]
+    out += [f" part id   ={pid:9d}   mass={_e(mass, 15, 8)}"
+            for pid, mass in part_masses.items()]
+    out += ["", f" t o t a l  m a s s          ={_e(total_mass, 15, 8)}"]
+    if mass_center is not None:
+        out += [f" {axis}-coordinate of mass center ={_e(v, 15, 8)}"
+                for axis, v in zip("xyz", mass_center)]
+    if smallest_timesteps:
+        out += ["", f" {len(smallest_timesteps)} smallest timesteps",
+                " ------------------------------------------------",
+                " element       number                part    timestep"]
+        out += [f" {kind:<10}{eid:10d}{pid:20d}{_e(step, 12)}"
+                for kind, eid, pid, step in smallest_timesteps]
+    for k in range(warnings):
+        out += ["", f" *** Warning {40538 if k % 2 else 41123} "
+                f"({'SOL+538' if k % 2 else 'SOL+1123'})",
+                "     Synthetic warning of the crashmetrics teaching model."]
+    reached = end_time if problem_time is None else problem_time
+    if error:
+        out += ["", " *** Error 40509 (SOL+509)",
+                "     Negative volume in a solid element (synthetic).", "",
+                " E r r o r   t e r m i n a t i o n"]
+    else:
+        out += ["", " *** termination time reached ***", "",
+                " N o r m a l    t e r m i n a t i o n"]
+    out += ["", f" Problem time       ={_e(reached, 14)}",
+            f" Problem cycle      ={int(reached * 1000):10d}"]
     target = Path(path)
     target.write_text("\n".join(out) + "\n")
     return target

@@ -319,6 +319,24 @@ Virtual Testing Protocol v1.0.2 and Frontal Impact Protocol v1.2.
 | Groups | swforc has no titles | Name → IDs from the user, or from the numbering | `groups_by_id(divisor=)` |
 | ⚠️ Synthetic welds | Not LS-DYNA output | A teaching model: shear share of the path force, peel with folding, partial load redistribution, strength loss of the part | |
 
+## Model quality check sheet
+
+| Topic | Source | crashmetrics | Change it |
+| --- | --- | --- | --- |
+| ⚠️ Limits | No standard; team rules differ | Common rules of thumb as defaults | `QualityLimits`, `EnergyLimits` |
+| Verdict | — | Passed when no check fails; advisory checks only warn; skipped checks do not fail | |
+| End time | d3hsp `Problem time` against the termination time | ≥ 99.5 %; the last glstat time if d3hsp has no problem time | `end_time=` |
+| Total mass, centre of gravity | d3hsp mass summary (the lines after the total mass) | Against the targets given; reported only without targets | `mass_tolerance=`, `cg_tolerance=` |
+| Added mass | glstat `added mass` and `percentage increase` | The printed percentage; without it, added mass over the d3hsp total mass | `added_mass=` |
+| Added mass growth | Not defined | Peak minus the first value, % points (advisory) | `added_mass_growth=` |
+| Added mass per part | matsum added mass, d3hsp part masses | Peak added mass over the part's mass | `part_added_mass=` |
+| Time step drop | glstat `time step` | Lowest against the first value (advisory) | `timestep_drop=` |
+| ⚠️ Mass-scaled time step | `dt2ms`, negative: only where needed | `|dt2ms|` times the time step scale factor for negative values | |
+| Element mass factor | Not defined | `(time step / smallest element time step)²` (advisory) | `element_mass_factor=` |
+| Energy checks | See LS-DYNA energy checks | The same checks; the added mass one is replaced by the two above | `energy=` |
+| Contact energy | sleout slave and master side energies | Their sum per contact; its lowest value against the peak internal energy of glstat | `contact_negative=` |
+| ⚠️ Synthetic quality data | Not LS-DYNA output | `ModelQuality` sets what is written; it does not change the crash | |
+
 ## Found something else?
 
 If a protocol you use reads differently, or a newer version changes a

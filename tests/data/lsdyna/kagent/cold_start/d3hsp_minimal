@@ -67,6 +67,9 @@ total # of *TITLE..................................       1
  part id   =        2   mass= 0.12569384E-04 rigid body
 
  t o t a l  m a s s          = 0.13406892E-03
+ x-coordinate of mass center =-0.48957577E-09
+ y-coordinate of mass center =-0.48957610E-09
+ z-coordinate of mass center = 0.28125846E+01
 
  Memory required to begin solution      :     280K
  Additional dynamically allocated memory:     476K

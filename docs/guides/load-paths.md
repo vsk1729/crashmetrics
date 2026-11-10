@@ -62,11 +62,13 @@ The result is a realistic run: 432 mm of crush, a 53 g peak, about
 | `weak_front_rail_lh` | LH front rail 80 kN instead of 150 kN | The LH front rail crushes before the LH crash box; it absorbs 15 kJ less; the rear rails pick it up |
 | `no_lower_path` | Subframe extensions and subframe removed | The middle path carries about 80 %; the rear rails crush (+17 kJ each) |
 | `weak_welds_front_rail_lh` | LH front rail flange welds at about a third of their strength | The welds unzip and the rail absorbs 3 kJ less; see [Spot weld failure](spot-welds.md) |
+| `poor_model_quality` | The same crash from a poorly prepared model (added mass, hourglass, contact energy) | See [Model quality check sheet](model-quality.md) |
 
 The files are written in the LS-DYNA ASCII layout and say in their
 header that they are synthetic. The model also has spot welds and writes
-`swforc`. `write_matsum`, `write_secforc` and `write_swforc` write any
-data in those layouts. The model is for teaching and for testing
+`swforc`, and it writes `glstat`, `sleout` and a short `d3hsp` for the
+model quality checks. The `write_...` functions write any data in those
+layouts. The model is for teaching and for testing
 tools, not a vehicle simulation.
 
 ## Reading runs
