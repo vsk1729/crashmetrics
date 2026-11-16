@@ -7,7 +7,8 @@ validate numerical results and confirm that input processing, filtering,
 sampling and calculation methods match the applicable assessment
 protocol. The software does not certify regulatory compliance, and its
 results are not official ratings. See [Protocol notes](../protocol-notes.md)
-for every interpretation the package makes.
+for every interpretation the package makes, and [Validation](../validation.md)
+for what each function is checked against and what is not validated yet.
 
 ## Sources
 

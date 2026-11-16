@@ -131,6 +131,7 @@ nav:
       - "Failure with GISSMO": guides/gissmo.md
       - Test-versus-CAE correlation: guides/test-cae-correlation.md
   - Protocol notes: protocol-notes.md
+  - Validation: validation.md
   - API reference:
       - reference/index.md
       - signals: reference/signals.md

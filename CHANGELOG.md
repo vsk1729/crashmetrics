@@ -29,6 +29,14 @@ follow [Semantic Versioning](https://semver.org/).
   `stiff_inner`, with the truth of every impact.
 - `crashmetrics.synthetic.write_nodout`.
 - Guide "Bonnet clearance and bottoming out" and example 34.
+- Validation page: what every function is checked against (real data,
+  independent implementations, protocol examples, closed forms,
+  synthetic truth) and what is not validated yet.
+- Real crash test data: vehicle acceleration channels of NHTSA tests
+  2320 and 4429 (`tests/data/nhtsa/`). `pulse_summary` with CFC 60
+  reproduces the peak, crush, time and restitution an independent
+  project reports for test 2320 (restitution 0.162 against 0.163), and the two cars of test 4429 satisfy
+  momentum conservation within 10 %.
 
 ## [0.21.0] - 2026-11-10
 

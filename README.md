@@ -122,6 +122,14 @@ for the checks CI runs, and the
 [changelog](https://github.com/vsk1729/crashmetrics/blob/main/CHANGELOG.md)
 for what changed.
 
+## Validation
+
+The [Validation](https://vsk1729.github.io/crashmetrics/validation/)
+page lists what every function is checked against: protocol worked
+examples, independent implementations (ISO/TS 18571, DAMAGE), closed
+forms, real LS-DYNA output and real NHTSA crash test signals. It also
+lists what is not validated yet.
+
 ## Disclaimer and trademarks
 
 crashmetrics is an engineering calculation aid and an independent
@@ -139,4 +147,6 @@ MIT. See the [LICENSE](https://github.com/vsk1729/crashmetrics/blob/main/LICENSE
 
 The real LS-DYNA and ISO-MME files in `tests/data/` come from other
 MIT-licensed projects and keep their own copyright notices: each folder
-has its licence file and a README naming the source and commit.
+has its licence file and a README naming the source and commit. The
+NHTSA crash test signals are public information of the NHTSA Vehicle
+Crash Test Database, copied from an MIT-licensed project.
