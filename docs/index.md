@@ -66,7 +66,9 @@ the [Bharat NCAP guide](guides/bharat-ncap.md).
    each built around a runnable example with its real output.
 3. **[Protocol notes](protocol-notes.md)**: where a protocol is
    ambiguous or silent, what crashmetrics does and why.
-4. **[API reference](reference/index.md)**: every function, parameter and
+4. **[Validation](validation.md)**: what every function is checked
+   against, and what is not validated yet.
+5. **[API reference](reference/index.md)**: every function, parameter and
    result field.
 
 ## Where the numbers come from
@@ -76,7 +78,9 @@ standards: Euro NCAP (assessment protocols, CP 005, CP 007), Bharat NCAP
 (AIS-197), AIS-100, UN regulations (R94, R127), UN GTR 9, FMVSS 208,
 SAE J211 and published research. The test suite reproduces the
 protocols' own worked examples wherever they give one, and checks the
-other formulas against hand calculations and closed-form solutions.
+other formulas against hand calculations, closed-form solutions,
+independent implementations and real test data. The
+[Validation](validation.md) page lists the evidence for every function.
 
 crashmetrics is an independent project and is not affiliated with or
 endorsed by any of these organisations.
