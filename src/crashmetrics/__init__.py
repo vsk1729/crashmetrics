@@ -78,4 +78,4 @@ crashmetrics.bncap_channels, crashmetrics.bncap_report
 """
 
 # Single source of the package version; pyproject.toml reads it.
-__version__ = "0.22.0"
+__version__ = "0.23.0"
