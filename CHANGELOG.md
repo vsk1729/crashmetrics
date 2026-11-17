@@ -6,6 +6,31 @@ follow [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- `crashmetrics.binout`: LS-DYNA binout reader, written from the binary
+  layout of the files (worked out from public binout files and checked
+  against the ASCII files of the same runs; no code of other readers
+  used). `read_binout` (a run folder, one file or several), `Binout`:
+  `branches`, `metadata`, `variables`, `time`, `read` (one variable over
+  all states), `legend`, `output` (any output as the `AsciiOutput` the
+  ASCII readers return: rcforc sides, sleout single-sided contacts,
+  spcforc resultants, deforc rotational springs, swforc failure times
+  and jntforc split by joint type handled), `glstat` (`GlobalEnergies`), `matsum`
+  (`PartEnergies`), `to_csv`, `summary`, `verify` (symbol tables against
+  the records). Single and double precision, several files (MPP),
+  restarts, outputs with kinds (`elout/shell`, `ncforc/slave_1` ...),
+  files cut off while writing. `write_binout`, `find_binout`, and the
+  `crashmetrics-binout` command.
+- Run folders with binout only: `read_run`, `check_run`, `check_model`,
+  `load_run` and `load_welds` read the outputs they need from binout
+  files when the ASCII file is missing.
+- `crashmetrics.synthetic`: `write(folder, binout=True)` writes the run's
+  time histories as a binout.
+- The plate run's binout, glstat and matsum (MIT) in
+  `tests/data/lsdyna/pladebuk/`, next to its rcforc and spcforc.
+- Guide "LS-DYNA binout" and example 36.
+
 ## [0.22.0] - 2026-11-17
 
 ### Added

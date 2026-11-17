@@ -150,7 +150,8 @@ def load_run(directory: str | Path, name: str | None = None, *,
     """Read the ``matsum`` and ``secforc`` of a run folder.
 
     Files are found by name (``matsum``, ``MATSUM`` or a job prefix such
-    as ``run1.matsum``), or given; either may be missing, not both.
+    as ``run1.matsum``), or given, or read from the folder's binout files;
+    either may be missing, not both.
     ``name`` defaults to the folder name.
     """
     folder = Path(directory)
@@ -158,10 +159,20 @@ def load_run(directory: str | Path, name: str | None = None, *,
         raise FileNotFoundError(f"{folder} is not a directory.")
     m = Path(matsum) if matsum is not None else _find_file(folder, "matsum")
     s = Path(secforc) if secforc is not None else _find_file(folder, "secforc")
-    if m is None and s is None:
+    energies = read_matsum(m) if m else None
+    sections = read_secforc(s) if s else None
+    if energies is None or sections is None:
+        from crashmetrics.binout import find_binout, read_binout
+        files = find_binout(folder)
+        if files:
+            bo = read_binout(files)
+            if energies is None and "matsum" in bo:
+                energies = bo.matsum()
+            if sections is None and "secforc" in bo:
+                sections = bo.output("secforc")
+    if energies is None and sections is None:
         raise FileNotFoundError(f"No matsum or secforc in {folder}.")
-    return CrashRun(name or folder.name, read_matsum(m) if m else None,
-                    read_secforc(s) if s else None, unit_system, str(folder))
+    return CrashRun(name or folder.name, energies, sections, unit_system, str(folder))
 
 
 def _select(ids: Sequence[int], names: Mapping[int, str],

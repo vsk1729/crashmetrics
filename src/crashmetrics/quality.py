@@ -500,7 +500,8 @@ def check_model(
     ----------
     directory:
         Run folder with ``d3hsp``, ``glstat``, ``matsum`` and ``sleout``
-        (upper case or a job prefix such as ``run1.glstat`` also work).
+        (upper case or a job prefix such as ``run1.glstat`` also work);
+        glstat, matsum and sleout are also read from binout files.
         Missing files skip their checks; at least one is needed.
     name:
         Run name; the folder name by default.
@@ -518,18 +519,34 @@ def check_model(
     if not folder.is_dir():
         raise FileNotFoundError(f"{folder} is not a directory.")
     paths = {k: _find_file(folder, k) for k in ("d3hsp", "glstat", "matsum", "sleout")}
-    found = {k: p for k, p in paths.items() if p is not None}
+    found: dict[str, Any] = {k: p for k, p in paths.items() if p is not None}
+    readers: dict[str, Any] = {"d3hsp": read_d3hsp, "glstat": read_glstat,
+                               "matsum": read_matsum, "sleout": read_sleout}
+    from crashmetrics.binout import find_binout, read_binout
+    binout = find_binout(folder)
+    if binout and any(k not in found for k in ("glstat", "matsum", "sleout")):
+        try:
+            bo = read_binout(binout)
+        except ValueError:
+            bo = None
+        if bo is not None:
+            from_binout = {"glstat": bo.glstat, "matsum": bo.matsum,
+                           "sleout": lambda: bo.output("sleout")}
+            for kind, read in from_binout.items():
+                if kind not in found and kind in bo:
+                    found[kind] = binout[0]
+                    readers[kind] = (lambda _f, r=read: r())
     if not found:
         raise FileNotFoundError(f"No d3hsp, glstat, matsum or sleout in {folder}.")
-    readers = {"d3hsp": read_d3hsp, "glstat": read_glstat, "matsum": read_matsum,
-               "sleout": read_sleout}
     data: dict[str, Any] = {}
     notes = []
     for kind, file in found.items():
         try:
             data[kind] = readers[kind](file)
         except ValueError as exc:
-            notes.append(f"{file.name} could not be read: {str(exc)[:80]}")
+            label = file.name if file.name.lower().endswith(kind) else (
+                f"{kind} in {file.name}")
+            notes.append(f"{label} could not be read: {str(exc)[:80]}")
     if not data:
         raise ValueError(f"No readable d3hsp, glstat, matsum or sleout in {folder}: "
                          + "; ".join(notes))

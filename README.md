@@ -13,7 +13,7 @@
 
 Open-source Python for automotive crash safety calculations: injury
 criteria, Euro NCAP and Bharat NCAP scoring, pedestrian protection
-(with bonnet clearance and bottoming out), homologation checks, test-versus-CAE correlation, LS-DYNA keyword deck checks and output readers,
+(with bonnet clearance and bottoming out), homologation checks, test-versus-CAE correlation, LS-DYNA keyword deck checks and binout and ASCII output readers,
 energy and model quality checks, load path and spot weld analysis across runs.
 
 **Documentation: <https://vsk1729.github.io/crashmetrics/>**, with
@@ -49,7 +49,7 @@ Python 3.10 or later; the only dependency is NumPy 1.24 or later.
 | Vehicle | OLC, delta-V, rebound, crush, absorbed energy, CFE, SEA | [Pulse and energy](https://vsk1729.github.io/crashmetrics/guides/pulse-energy/) |
 | Materials | Tensile tests from machine exports (CSV, text, xlsx): fracture cut, smoothing, toe correction; E, Rp0.2, Rm, Ag, A; Lüders plateau, machine compliance, mean curve and scatter of several specimens; true stress, necking, Swift / Voce / Hockett-Sherby / Swift-Voce extrapolation, n and K; Cowper-Symonds / Johnson-Cook rate fits and checked strain-rate `*DEFINE_TABLE`; the complete `*MAT_024` card in mm-ms-kg, mm-s-t, mm-s-kg or m-s-kg; GISSMO failure: failure strain against triaxiality from fracture tests and their paths (Hosford-Coulomb, Johnson-Cook, tabulated), instability from the FLC, element size regularisation, `*MAT_ADD_DAMAGE_GISSMO` written, read and checked; read, check, convert and compare existing cards, single-element verification, material library | [Material cards](https://vsk1729.github.io/crashmetrics/guides/material-cards/), [GISSMO](https://vsk1729.github.io/crashmetrics/guides/gissmo/) |
 | Data formats | ISO-MME (ISO/TS 13499) read and write for test and simulation channels | [Virtual testing](https://vsk1729.github.io/crashmetrics/guides/euroncap-virtual-testing/), [Loading data](https://vsk1729.github.io/crashmetrics/getting-started/loading-data/) |
-| LS-DYNA | ASCII output readers (nodout, rcforc, sleout, secforc, rwforc, sbtout, deforc, jntforc, abstat, rbdout, spcforc, swforc), `crashmetrics-ascii` to CSV; glstat / matsum energy checks, d3hsp run summary, `crashmetrics-energy` command | [ASCII output](https://vsk1729.github.io/crashmetrics/guides/lsdyna-ascii/), [LS-DYNA energy](https://vsk1729.github.io/crashmetrics/guides/lsdyna-energy/) |
+| LS-DYNA | binout reader (every output, several files, restarts; run folders with binout only work in every analysis), `crashmetrics-binout`; ASCII output readers (nodout, rcforc, sleout, secforc, rwforc, sbtout, deforc, jntforc, abstat, rbdout, spcforc, swforc), `crashmetrics-ascii` to CSV; glstat / matsum energy checks, d3hsp run summary, `crashmetrics-energy` command | [binout](https://vsk1729.github.io/crashmetrics/guides/binout/), [ASCII output](https://vsk1729.github.io/crashmetrics/guides/lsdyna-ascii/), [LS-DYNA energy](https://vsk1729.github.io/crashmetrics/guides/lsdyna-energy/) |
 | Keyword decks | Read a deck with every include and `*PARAMETER` (fixed, long, comma formats); parts with mass and centre of gravity, time step and mass scaling estimate before the run; missing includes and IDs, duplicates, parts in no contact, welds without a tied contact; load case summary and whether the outputs give what the analyses need; edits written back with only the edited fields changed, DOE variants; `crashmetrics-deck` command | [Keyword decks](https://vsk1729.github.io/crashmetrics/guides/keyword-decks/) |
 | Load paths | Energy absorbed per part and group (matsum), section forces (secforc), load split between upper, middle and lower paths, crush sequence check, baseline against variant with the culprit parts, energy matrix of many runs; a synthetic frontal crash (matsum, secforc, swforc, glstat, sleout, d3hsp) to try it without a solver | [Load paths](https://vsk1729.github.io/crashmetrics/guides/load-paths/) |
 | Spot welds | Failed and critical welds from swforc, utilisation against force limits, failure sequence and unzipping bursts, new and earlier failures against a baseline | [Spot weld failure](https://vsk1729.github.io/crashmetrics/guides/spot-welds/) |
@@ -86,8 +86,8 @@ are in the [guides](https://vsk1729.github.io/crashmetrics/guides/).
 ## Runnable examples
 
 The [`examples/`](https://github.com/vsk1729/crashmetrics/tree/main/examples)
-folder has thirty-five scripts, one per topic, from `01_signals_hic.py` to
-`35_keyword_deck.py`, with synthetic data except the three LS-DYNA
+folder has thirty-six scripts, one per topic, from `01_signals_hic.py` to
+`36_binout.py`, with synthetic data except the four LS-DYNA
 examples, which read real output files and decks. The test suite checks that
 each one still prints exactly its documented output.
 
@@ -140,9 +140,10 @@ whose software, file formats, protocols or regulations it refers to.
 LS-DYNA, LS-PrePost, Ansys, Euro NCAP, ANSA, HyperMesh and PRIMER are
 trademarks or registered trademarks of their respective owners, used here
 only to describe compatibility. The LS-DYNA readers were written from the
-text layout of output files, and the keyword deck reader from the keyword
-file format; no LS-DYNA code or documentation, and no code of other
-keyword readers, is included.
+text layout of output files, the binout reader from the binary layout of
+binout files (worked out from public files), and the keyword deck reader
+from the keyword file format; no LS-DYNA code or documentation, and no
+code of other binout or keyword readers, is included.
 
 ## License
 

@@ -22,6 +22,8 @@ crashmetrics.energy
     Energy and force-displacement metrics.
 crashmetrics.lsdyna, crashmetrics.d3hsp
     LS-DYNA glstat, matsum and d3hsp readers.
+crashmetrics.binout
+    LS-DYNA binout files: every output as the ASCII readers return it.
 crashmetrics.lsdyna_ascii
     LS-DYNA ASCII output readers (nodout, rcforc, sleout, secforc, rwforc,
     sbtout, deforc, jntforc, abstat, rbdout, spcforc, swforc).

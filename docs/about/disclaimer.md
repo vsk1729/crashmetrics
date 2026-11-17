@@ -42,7 +42,11 @@ The LS-DYNA readers were written from the text layout of output files;
 no LS-DYNA code or documentation is included. The keyword deck reader
 (`crashmetrics.deck`) was written from the keyword file format itself;
 no code of other keyword readers (open-source or not) was used or
-consulted for it. The real output files and decks in the repository's
+consulted for it. The binout reader (`crashmetrics.binout`) was written
+from the binary layout of binout files, worked out from public files
+whose values were checked against the ASCII files of the same runs; no
+code or documentation of other binout readers (open-source or not) was
+used. The real output files and decks in the repository's
 test data come from MIT-licensed projects (K-agent,
 helmet-fit-bayes-opt, dyna_pladebuk, LS-PrePost-MCP, pyisomme), each folder with its
 licence file and a README naming the source and commit. Files whose

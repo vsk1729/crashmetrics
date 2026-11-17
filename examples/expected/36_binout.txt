@@ -1,0 +1,57 @@
+binout: binout (5 outputs)
+  LS-DYNA SIMULERING AF VARME DER BUKKER PLADE - J. G
+  ls-dyna smp d R14 R14.0_515_8a12796b62 date 12/12/2022
+  glstat: 1 states, time 0 to 0
+  matsum: 1 states, time 0 to 0, 3 entities
+  rcforc: 1 states, time 0 to 0, 4 entities
+  spcforc: 2 states, time 0 to 0.1, 32 entities
+  tprint: 1 states, time 0 to 0
+symbol tables agree with the records: True
+spcforc y force, binout against ASCII: largest difference 4.9e-06 (ASCII prints 5 digits); resultant 13.768601 against 13.769
+
+files: binout, d3hsp
+Absorbed energy, binout_run, at 100 ms: 176.5 kJ
+
+| # | Part | kJ | Share | Cumulative | 10/50/90 % at ms | Hourglass |
+| --- | --- | --- | --- | --- | --- | --- |
+| 1 | Front rail LH (120) | 32.65 | 18.5 % | 18.5 % | 15.6 / 23.7 / 35.8 | 2.0 % |
+| 2 | Front rail RH (121) | 32.65 | 18.5 % | 37.0 % | 15.6 / 23.7 / 35.8 | 2.0 % |
+| 3 | Subframe (152) | 31.48 | 17.8 % | 54.9 % | 17.9 / 25.8 / 38.1 | 2.0 % |
+| 4 | Upper rail LH (140) | 16.31 | 9.2 % | 64.1 % | 6.29 / 17.3 / 34.5 | 2.0 % |
+| 5 | Upper rail RH (141) | 16.31 | 9.2 % | 73.3 % | 6.29 / 17.3 / 34.5 | 2.0 % |
+Spot welds, binout_run: 84 welds, 0 failed
+
+| Group | Welds | Failed | First failure ms | Highest utilisation |
+| --- | --- | --- | --- | --- |
+| (no group) | 84 | 0 | - | - |
+Model quality, binout_run: PASSED, 2 skipped
+Run:
+  PASS Termination                        normal  [normal]
+  PASS End time reached                   100.0 of 100.0 ms (100.0 %)  [≥ 99.5 %]
+  PASS Errors                             0  [0]
+  INFO Warnings                           2  (most frequent: 41123 x1, 40538 x1)
+Mass:
+  PASS Total mass                         1500.0 kg (+0.00 % of target 1500.0)  [± 1 %]
+  PASS Centre of gravity                  (1310, 2.00, 545.0) mm, 7.35 mm from target  [≤ 10 mm]
+  PASS Added mass, start                  0.40 %  [≤ 5 %]
+  PASS Added mass, peak                   0.60 % (9.00 kg)  [≤ 5 %]
+  PASS Added mass, growth                 +0.20 % points  [≤ 1 % points]
+  SKIP Added mass per part                -  (no added mass in matsum)
+Time step:
+  PASS Time step                          1.00 µs, lowest 1.00 µs (-0.0 %)  [≤ 10 % drop]
+  INFO Mass scaling                       dt2ms -0.0011111: time step 1.000 µs  (negative dt2ms: mass added only where needed)
+  PASS Smallest elements                  0.900 µs: shell 110000 of part 110; mass factor 1.23  [≤ 4 x mass]  (in the table: part 110 x6, part 120 x4)
+Energy:
+  PASS Energy ratio                       1.009  [0.95 to 1.05]
+  PASS Hourglass energy                   2.2 %  [≤ 10 %]
+  PASS Negative contact energy            0.0 %  [≤ 5 %]
+  SKIP Damping energy                     -  [≤ 5 %]
+  PASS Hourglass energy per part          3.1 %  [≤ 10 %]  (part 110 (Crash box LH))
+  PASS Negative internal energy per part  0.0 %  [≤ 1 %]
+Contacts:
+  PASS Negative energy per contact        none (3 contacts)  [≤ 1 % of internal energy]
+
+matsum internal energy: largest difference 1.5e-05 of the peak (ASCII rounding)
+secforc x force: largest difference 1.8e-05 of the peak (ASCII rounding)
+written: runs/binout_csv/secforc.csv
+written: runs/binout_csv/glstat.csv

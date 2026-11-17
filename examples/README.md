@@ -1,7 +1,7 @@
 # crashmetrics examples
 
-Runnable scripts with synthetic (made-up) data, except examples 09, 18
-and 35, which read real LS-DYNA output and keyword decks from
+Runnable scripts with synthetic (made-up) data, except examples 09, 18,
+35 and 36, which read real LS-DYNA output and keyword decks from
 `tests/data/lsdyna` (run them from a clone of the repository). Each one prints its results; the
 expected output is in `expected/`, and the test suite checks that the
 scripts still produce exactly that output.
@@ -48,6 +48,7 @@ python examples/07_bharat_ncap.py
 | `33_model_quality.py` | Model quality check sheet of synthetic frontal runs (d3hsp, glstat, matsum, sleout): a well prepared model against targets, a poorly prepared one (added mass, hourglass, negative contact energy, tiny elements), both side by side, an error termination, and stricter team limits |
 | `34_bonnet_clearance.py` | Headform study of a synthetic bonnet (keyword mesh, grid points CSV, a nodout per impact): free space under every point and the space HIC targets need, HIC, bottoming out and its cause for all 130 points, one red point explained, the engine 20 mm lower and a stiffer inner panel compared |
 | `35_keyword_deck.py` | Real LS-DYNA decks checked before a run: files, includes and version; parts, masses and centre of gravity equal to the solver's d3hsp; time step; a clean deck and one with a missing section; load case and output requirements; thickness, end time, speed and missing outputs edited and written back with only those lines changed; three DOE variants |
+| `36_binout.py` | A real LS-DYNA R14 binout: its outputs, symbol tables checked, spcforc against the ASCII file of the same run; a synthetic frontal crash written as binout: load paths, spot welds and the model quality sheet from the run folder; the same run as ASCII and binout compared |
 | `hic_convergence.py` | Grid search against the exact HIC maximum for several pulses (including a real LS-DYNA head drop), and run times |
 
 The full step-by-step explanations are in the documentation:

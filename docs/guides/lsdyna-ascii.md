@@ -26,9 +26,9 @@ scoring and feature functions in this package.
 | `spcforc` | Constraint (SPC) reactions | Nodes | `x_force` ... `z_moment`; resultants in `totals` |
 | `swforc` | Spotwelds and constrained welds | Weld element or constraint IDs | `axial`, `shear`, `failure`, `length`, `resultant_moment`, `torsion`, `failure_time` |
 
-The channel names are the binout variable names, so code written for
-binout data (for example read with lasso-python) works with the same
-names. The `glstat` and `matsum` readers are part of the
+The channel names are the binout variable names, and
+[`crashmetrics.binout`](binout.md) returns binout outputs as the same
+objects, so code written for one works with the other. The `glstat` and `matsum` readers are part of the
 [energy checks](lsdyna-energy.md).
 
 ## Reading one file

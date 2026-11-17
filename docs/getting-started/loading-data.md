@@ -87,11 +87,12 @@ t_ms, ax = np.loadtxt("headform_ax.txt", comments=("#", "$"), unpack=True)
 ```
 
 !!! note "binout"
-    For binary `binout` files, read the variables with a binout reader
-    such as the BSD-licensed `lasso-python` package, then pass the arrays
-    to crashmetrics; the channel names of the ASCII readers are the
-    binout variable names. Or write ASCII output instead
-    (`*DATABASE_<NAME>` with `BINARY = 1` or `3`).
+    Binary `binout` files are read by `crashmetrics.binout`
+    (`read_binout("run_folder")`); each output comes back as the same
+    object the ASCII readers return, and the run-folder functions
+    (`read_run`, `check_run`, `check_model`, `load_run`, `load_welds`)
+    use binout files when the ASCII file is missing. See
+    [LS-DYNA binout](../guides/binout.md).
 
 ## Physical test data
 

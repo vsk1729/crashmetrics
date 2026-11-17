@@ -64,6 +64,11 @@ double precision.
 - `rcforc`, `spcforc`: unchanged copies of `Plade_300_150_4/BB/rcforc`
   and `Plade_300_150_4/BB/spcforc` (contact labels `SURFA` / `SURFB`,
   mortar contact legend).
+- `binout`, `glstat`, `matsum`: unchanged copies of
+  `Plade_300_150_4/BB/binout`, `glstat` and `matsum` of the same run
+  (LS-DYNA R14.0 SMP double precision, revision 515). The binout holds
+  glstat, matsum, rcforc, spcforc and tprint; its values are compared
+  with the ASCII files in `tests/test_binout.py`.
 - `deck/main.k`, `deck/MAT_CWM355.k`: unchanged copies of the main deck
   and its material include, written by LS-PrePost 2024/R2 (4.11.14):
   `*PARAMETER_DUPLICATION`, many control cards, titled curves, thermal
@@ -118,6 +123,19 @@ parser:
   reported as unreadable).
 - All 36 runs of the helmet study: HIC, BrIC and neck moment from the
   readers' arrays equal `master.csv` to 1e-15.
+- `crashmetrics.binout` on four more runs (not copied: too large or no
+  licence): the MIT 2D impact
+  [saudbinayed/binout](https://github.com/saudbinayed/binout) (81 MB,
+  LS-DYNA R11 single precision: nodout, elout, glstat, matsum, ncforc);
+  an MPP bolted joint run (R12, four files, 1000 states, ten outputs) in
+  [hu-shuhan/editOpeniGame](https://github.com/hu-shuhan/editOpeniGame);
+  an MPP frontal crash's swforc, jntforc, deforc and abstat (R9.3.1) in
+  [PallavME/binout-extraction-lassodyna](https://github.com/PallavME/binout-extraction-lassodyna)
+  (only its binout data files were used). Coordinates equal initial
+  coordinates plus displacements, energy totals equal their parts, and
+  every symbol table agrees with its records. The ASCII files LS-DYNA's
+  `l2a` converter wrote from these binouts (see above) were compared
+  with the reader's output: the same numbers to the printed digits.
 - `crashmetrics.deck` on the full pladebuk deck (20 276 nodes, 15 390
   solids, four files) and on the MIT deck
   [`plane_strain_impact.k`](https://github.com/saudbinayed/binout)

@@ -27,6 +27,7 @@ dataclass, so `dataclasses.asdict(result)` turns it into a plain dict.
 | [`energy_check` and `lsdyna`](lsdyna.md) | Energy balance checks, glstat / matsum / d3hsp readers |
 | [`isomme`](isomme.md) | ISO-MME (ISO/TS 13499) test data: read and write |
 | [`lsdyna_ascii`](lsdyna_ascii.md) | nodout, rcforc, sleout, secforc, rwforc, sbtout, deforc, jntforc, abstat, rbdout, spcforc, swforc readers |
+| [`binout`](binout.md) | LS-DYNA binout files: every output as the ASCII readers return it (and glstat and matsum as energies), variables, metadata, restarts, several files, symbol table check, CSV; `crashmetrics-binout` command |
 | [`loadpath`](loadpath.md) | Load paths from matsum and secforc: energy ranking and groups, section forces, load split, crush sequence, run comparison with culprit parts, energy matrix, Markdown report |
 | [`spotweld`](spotweld.md) | Spot weld failure from swforc: peak forces and utilisation of every weld, failed and critical welds, failure sequence and bursts, baseline against variant |
 | [`quality`](quality.md) | Model quality check sheet of a run: termination, mass and centre of gravity, added mass, time step, energy balance, contact energies; several runs side by side |

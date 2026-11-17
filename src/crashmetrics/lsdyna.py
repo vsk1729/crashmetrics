@@ -30,9 +30,9 @@ LS-DYNA version writes:
   ``+mass=``.
 
 Fortran numbers such as ``1.23456-100`` (no ``E``) and ``1.0D+03`` are
-read correctly. For binout output, read the variables with a binout
-reader (for example lasso-python) and pass them to
-`GlobalEnergies.from_mapping` / `PartEnergies.from_mapping`.
+read correctly. Binout files are read by `crashmetrics.binout`
+(`Binout.glstat`, `Binout.matsum`); `check_run` uses them when a run
+folder has no ASCII glstat.
 """
 
 import argparse
@@ -262,7 +262,7 @@ def check_run(
     ----------
     run:
         Run directory containing ``glstat`` (and optionally ``matsum``),
-        or the path of a glstat file.
+        or binout files with them, or the path of a glstat file.
     matsum:
         matsum file; by default ``matsum`` next to the glstat file is
         used if it exists.
@@ -273,6 +273,17 @@ def check_run(
     if path.is_dir():
         glstat_path = _find(path, "glstat")
         if glstat_path is None:
+            from crashmetrics.binout import find_binout, read_binout
+
+            files = find_binout(path)
+            if files:
+                with read_binout(files) as bo:
+                    if "glstat" in bo:
+                        parts = (
+                            read_matsum(matsum) if matsum is not None
+                            else bo.matsum() if "matsum" in bo else None
+                        )
+                        return check_energies(bo.glstat(), parts, limits)
             raise FileNotFoundError(f"No glstat file in {path}.")
     elif path.is_file():
         glstat_path = path

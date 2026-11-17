@@ -354,6 +354,28 @@ Virtual Testing Protocol v1.0.2 and Frontal Impact Protocol v1.2.
 | Contact energy | sleout slave and master side energies | Their sum per contact; its lowest value against the peak internal energy of glstat | `contact_negative=` |
 | ⚠️ Synthetic quality data | Not LS-DYNA output | `ModelQuality` sets what is written; it does not change the crash | |
 
+## LS-DYNA binout
+
+The binout layout was worked out from real files (see the
+[binout guide](guides/binout.md#the-file-layout)); where a choice had
+to be made it is listed here.
+
+| Topic | Source | crashmetrics | Change it |
+| --- | --- | --- | --- |
+| ⚠️ Type codes | Five codes occur in the files seen: 1, 3, 4, 9, 10 | Text, int32, int64, float32, float64; other codes are kept as raw bytes | |
+| ⚠️ Byte order, field sizes | All files seen: little-endian, 8-byte lengths and offsets, 1-byte command and type | 4- or 8-byte lengths and offsets read; other layouts refused with a message | |
+| Reading | Records in file order, or through the symbol tables | Records in file order (a file cut off while writing still reads); `verify` compares the symbol tables | |
+| Several files | MPP runs write `binout0000` ... | Read in name order; an output in several files: states in file order | Give the files in the order wanted |
+| Restarts | — | A state at or before the previous time replaces the states from that time on (as for ASCII) | |
+| ⚠️ sleout master side | binout has master values only for two-sided contacts | Single-sided contacts: `surfb_energy` 0 | |
+| spcforc | A node can be in several constraint sets | Values added per node (as for ASCII); resultants as totals | |
+| ⚠️ matsum added mass | binout has `added_cms_mass` and `added_sms_mass` per part (zero in the files seen) | Added mass = their sum, unless an `added_mass` variable is there | |
+| Several values per entity | elout stresses at integration points | Not made into channels | `Binout.read` |
+| ⚠️ deforc rotational springs | binout writes forces and `displacement` for every spring; `irot` (stored as the bits of a float with an integer type code) marks rotational ones | `irot` ≠ 0: moments and `relative_rotation`, as the ASCII file names them; else `change_in_length` | |
+| ⚠️ swforc `failure_time` | 1e16 while a weld holds, -1e6 or 0 after it fails in the files seen | Only values between 0 and 1e15 are kept as times; the failure state comes from `failure` (as for ASCII) | |
+| Outputs split by type | jntforc as `jntforc/type0`, `jntforc/type1` ... | `output("jntforc")` combines them when their times agree | Read each one |
+| Version line | ASCII files print the version and a shortened build ID | `ls-dyna {version} {build_id} date {date}` from the metadata (full build ID) | |
+
 ## LS-DYNA keyword decks
 
 The keyword file format leaves some things to the solver; where the
