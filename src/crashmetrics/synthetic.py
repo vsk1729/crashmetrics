@@ -582,12 +582,16 @@ class FrontalRun:
 
     def write(self, directory: str | Path, *, matsum_interval: float = 0.5,
               secforc_interval: float = 0.2, swforc_interval: float = 0.5,
-              date: dt.date | None = None) -> tuple[Path, Path]:
+              date: dt.date | None = None, binout: bool = False) -> tuple[Path, Path]:
         """Write ``matsum`` and ``secforc`` (the paths returned), ``glstat``,
         ``sleout``, ``d3hsp`` and, when the model has spot welds,
         ``swforc`` into ``directory`` (created), sampled every
         ``matsum_interval`` / ``secforc_interval`` / ``swforc_interval``
-        ms. A model with ``quality.error_at`` stops there."""
+        ms. A model with ``quality.error_at`` stops there.
+
+        ``binout=True``: the time histories go into one ``binout`` file
+        instead (`crashmetrics.binout` layout; the path returned twice),
+        with ``d3hsp`` as text, as LS-DYNA writes them."""
         folder = Path(directory)
         folder.mkdir(parents=True, exist_ok=True)
         q = self.model.quality
@@ -596,19 +600,26 @@ class FrontalRun:
         tm = np.arange(0.0, end + 1e-9, matsum_interval)
         ts = np.arange(0.0, end + 1e-9, secforc_interval)
         p = self.part_energies(tm)
-        m = write_matsum(folder / "matsum", p.time, p.part_ids, p.part_names,
-                         p.internal, p.kinetic, p.hourglass, title=self._title(),
-                         date=date)
-        s = write_secforc(folder / "secforc", self.section_output(ts),
-                          title=self._title(), date=date)
-        if self.weld_ids:
-            tw = np.arange(0.0, end + 1e-9, swforc_interval)
-            write_swforc(folder / "swforc", self.weld_output(tw),
+        tw = np.arange(0.0, end + 1e-9, swforc_interval)
+        if binout:
+            m = s = _write_binout_run(
+                folder / "binout", self._title(), date, self.global_energies(tm), p,
+                {"secforc": self.section_output(ts),
+                 "swforc": self.weld_output(tw) if self.weld_ids else None,
+                 "sleout": self.contact_output(tm)})
+        else:
+            m = write_matsum(folder / "matsum", p.time, p.part_ids, p.part_names,
+                             p.internal, p.kinetic, p.hourglass, title=self._title(),
+                             date=date)
+            s = write_secforc(folder / "secforc", self.section_output(ts),
+                              title=self._title(), date=date)
+            if self.weld_ids:
+                write_swforc(folder / "swforc", self.weld_output(tw),
+                             title=self._title(), date=date)
+            write_glstat(folder / "glstat", self.global_energies(tm),
                          title=self._title(), date=date)
-        write_glstat(folder / "glstat", self.global_energies(tm), title=self._title(),
-                     date=date)
-        write_sleout(folder / "sleout", self.contact_output(tm), title=self._title(),
-                     date=date)
+            write_sleout(folder / "sleout", self.contact_output(tm),
+                         title=self._title(), date=date)
         small = [("shell", q.smallest_part * 1000 + k, q.smallest_part,
                   q.smallest_timestep * (1.0 + 0.004 * k)) for k in range(6)]
         small += [("shell", 120001 + k, 120, 1.02e-3 * (1.0 + 0.003 * k))
@@ -765,6 +776,77 @@ def simulate(model: FrontalModel, *, end_time: float = 100.0,
 
 
 # --- Writers -------------------------------------------------------------------
+
+
+_BINOUT_GLOBAL = (
+    ("kinetic", "kinetic_energy"), ("internal", "internal_energy"),
+    ("hourglass", "hourglass_energy"), ("sliding", "sliding_interface_energy"),
+    ("external_work", "external_work"), ("damping", "system_damping_energy"),
+    ("total", "total_energy"), ("energy_ratio", "energy_ratio"),
+    ("added_mass", "added_mass"), ("added_mass_percent", "percent_increase"),
+    ("time_step", "time_step"),
+)
+
+
+def _write_binout_run(path: Path, title: str, date: dt.date | None,
+                      glstat: GlobalEnergies, matsum: PartEnergies,
+                      outputs: dict[str, AsciiOutput | None]) -> Path:
+    """The run's time histories as one binout file, with LS-DYNA's
+    binout variable names."""
+    from crashmetrics.binout import write_binout
+
+    day = (date or dt.date(2026, 1, 1)).strftime("%m/%d/%Y")
+    head = {"title": title[:80].ljust(80), "version": "synthetic",
+            "build_id": "crashmetrics", "date": day}
+    folders: dict[str, dict[str, Any]] = {}
+
+    def legend(ids: Sequence[int], names: dict[int, str]) -> dict[str, Any]:
+        if not any(names.get(int(i)) for i in ids):
+            return {}
+        return {"legend": "".join(names.get(int(i), "")[:80].ljust(80) for i in ids),
+                "legend_ids": np.asarray(ids, dtype=np.int64)}
+
+    folders["/glstat/metadata"] = dict(head)
+    for k, t in enumerate(glstat.time):
+        d: dict[str, Any] = {"time": np.array([t])}
+        for attr, name in _BINOUT_GLOBAL:
+            v = getattr(glstat, attr)
+            if v is not None:
+                d[name] = np.array([v[k]])
+        folders[f"/glstat/d{k + 1:06d}"] = d
+    ids = np.asarray(matsum.part_ids, dtype=np.int64)
+    folders["/matsum/metadata"] = {**head, "ids": ids,
+                                   **legend(ids.tolist(), matsum.part_names)}
+    for k, t in enumerate(matsum.time):
+        d = {"time": np.array([t]), "internal_energy": matsum.internal[k]}
+        for attr, name in (("kinetic", "kinetic_energy"),
+                           ("hourglass", "hourglass_energy"),
+                           ("added_mass", "added_cms_mass")):
+            if getattr(matsum, attr) is not None:
+                d[name] = getattr(matsum, attr)[k]
+        folders[f"/matsum/d{k + 1:06d}"] = d
+    sleout_names = {"surfa_energy": "slave", "surfb_energy": "master",
+                    "friction_energy": "friction_energy"}
+    sleout_totals = {"surfa_energy": "total_slave", "surfb_energy": "total_master",
+                     "friction_energy": "total_friction",
+                     "total_energy": "total_energy"}
+    for kind, out in outputs.items():
+        if out is None:
+            continue
+        ids = np.asarray(out.ids, dtype=np.int64)
+        meta = {**head, "ids": ids, **legend(out.ids, out.names)}
+        if kind == "sleout":
+            meta["single_sided"] = np.zeros(len(ids), dtype=np.int64)
+        folders[f"/{kind}/metadata"] = meta
+        for k, t in enumerate(out.time):
+            d = {"time": np.array([t])}
+            for c, v in out.data.items():
+                d[sleout_names.get(c, c) if kind == "sleout" else c] = v[k]
+            if kind == "sleout":
+                for c, v in out.totals.items():
+                    d[sleout_totals[c]] = np.array([v[k]])
+            folders[f"/{kind}/d{k + 1:06d}"] = d
+    return write_binout(path, folders)
 
 
 def _header(title: str, date: dt.date | None) -> list[str]:

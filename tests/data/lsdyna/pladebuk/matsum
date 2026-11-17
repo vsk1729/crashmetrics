@@ -1,0 +1,31 @@
+ LS-DYNA SIMULERING AF VARME DER BUKKER PLADE - J. G                     
+                    ls-dyna smp d R14 R14.0_515_8a12796 date 12/12/2022
+
+{BEGIN LEGEND}
+ Entity #        Title
+        1     middle                                                                  
+        2     left                                                                    
+        3     right                                                                   
+{END LEGEND}
+
+
+
+ time =   0.0000E+00
+ mat.#=    1             inten=   0.0000E+00     kinen=   0.0000E+00     eroded_ie=   0.0000E+00     eroded_ke=   0.0000E+00
+ x-mom=   0.0000E+00     y-mom=   0.0000E+00     z-mom=   0.0000E+00
+ x-rbv=   0.0000E+00     y-rbv=   0.0000E+00     z-rbv=   0.0000E+00
+                         hgeng=   0.0000E+00     +mass=   0.0000E+00     eroded_he=   0.0000E+00
+
+
+ mat.#=    2             inten=   0.0000E+00     kinen=   0.0000E+00     eroded_ie=   0.0000E+00     eroded_ke=   0.0000E+00
+ x-mom=   0.0000E+00     y-mom=   0.0000E+00     z-mom=   0.0000E+00
+ x-rbv=   0.0000E+00     y-rbv=   0.0000E+00     z-rbv=   0.0000E+00
+                         hgeng=   0.0000E+00     +mass=   0.0000E+00     eroded_he=   0.0000E+00
+
+
+ mat.#=    3             inten=   0.0000E+00     kinen=   0.0000E+00     eroded_ie=   0.0000E+00     eroded_ke=   0.0000E+00
+ x-mom=   0.0000E+00     y-mom=   0.0000E+00     z-mom=   0.0000E+00
+ x-rbv=   0.0000E+00     y-rbv=   0.0000E+00     z-rbv=   0.0000E+00
+                         hgeng=   0.0000E+00     +mass=   0.0000E+00     eroded_he=   0.0000E+00
+
+

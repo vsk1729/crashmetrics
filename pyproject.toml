@@ -54,6 +54,7 @@ docs = [
 [project.scripts]
 crashmetrics-energy = "crashmetrics.lsdyna:main"
 crashmetrics-ascii = "crashmetrics.lsdyna_ascii:main"
+crashmetrics-binout = "crashmetrics.binout:main"
 crashmetrics-deck = "crashmetrics.deck:main"
 
 [project.urls]

@@ -75,9 +75,9 @@ python -m pip install pandas matplotlib openpyxl
 
 ## Run the examples
 
-The repository has thirty-five runnable examples, with synthetic data except
-the three LS-DYNA examples (9, 18 and 35), which read real output files and
-keyword decks:
+The repository has thirty-six runnable examples, with synthetic data except
+the four LS-DYNA examples (9, 18, 35 and 36), which read real output files,
+binout and keyword decks:
 
 ```bash
 git clone https://github.com/vsk1729/crashmetrics.git

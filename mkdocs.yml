@@ -121,6 +121,7 @@ nav:
       - Intrusion measurement: guides/intrusion.md
       - LS-DYNA energy checks: guides/lsdyna-energy.md
       - LS-DYNA ASCII output: guides/lsdyna-ascii.md
+      - LS-DYNA binout: guides/binout.md
       - Load paths and energy across runs: guides/load-paths.md
       - Spot weld failure: guides/spot-welds.md
       - Model quality check sheet: guides/model-quality.md
@@ -158,6 +159,7 @@ nav:
       - energy: reference/energy.md
       - energy_check and lsdyna: reference/lsdyna.md
       - lsdyna_ascii: reference/lsdyna_ascii.md
+      - binout: reference/binout.md
       - loadpath: reference/loadpath.md
       - spotweld: reference/spotweld.md
       - quality: reference/quality.md

@@ -1,0 +1,36 @@
+ LS-DYNA SIMULERING AF VARME DER BUKKER PLADE - J. G                     
+                    ls-dyna smp d R14 R14.0_515_8a12796 date 12/12/2022
+
+
+ dt of cycle       1 is controlled by load curve
+
+ time...........................   0.00000E+00
+ time step......................   1.00000E-01
+ kinetic energy.................   0.00000E+00
+ internal energy................   2.00000E-20
+ spring and damper energy.......   1.00000E-20
+ hourglass energy ..............   0.00000E+00
+ system damping energy..........   0.00000E+00
+ sliding interface energy.......   0.00000E+00
+ external work..................   0.00000E+00
+ eroded kinetic energy..........   0.00000E+00
+ eroded internal energy.........   0.00000E+00
+ eroded hourglass energy........   0.00000E+00
+ total energy...................   2.00000E-20
+ total energy / initial energy..   1.00000E+00
+ energy ratio w/o eroded energy.   1.00000E+00
+ global x velocity..............   0.00000E+00
+ global y velocity..............   0.00000E+00
+ global z velocity..............   0.00000E+00
+ dissipated kinetic energy......   0.00000E+00
+ dissipated internal energy.....   0.00000E+00
+ drilling energy................   0.00000E+00
+ time per zone cycle.(nanosec)..             0
+
+
+ number of shell elements that  
+ reached the minimum time step..    0
+
+
+ added mass.....................   0.00000E+00
+ percentage increase............   0.00000E+00

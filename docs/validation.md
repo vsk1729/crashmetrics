@@ -87,6 +87,9 @@ every scoring module; that is not repeated in each row below.
 | rcforc, spcforc | LS-DYNA R14 plate buckling run | Real data | `test_lsdyna_ascii.py` |
 | glstat, matsum | LS-DYNA R14.1.1 drop test | Real data | `test_lsdyna.py`, `test_quality.py` |
 | d3hsp | LS-DYNA R14.1.1 file; expected values read from the raw file | Real data | `test_d3hsp.py` |
+| binout | LS-DYNA R14 plate run: rcforc, glstat and matsum values equal to the ASCII files the same run wrote, spcforc to their 5 printed digits, entity order and titles equal; symbol tables agree with every record | Real data | `test_binout.py` |
+| binout, LS-DYNA's converter | The ASCII files LS-DYNA's l2a converter wrote from four public binouts (run locally): the same numbers to the printed digits for nodout, glstat, matsum, rcforc, sleout, spcforc, swforc, deforc and abstat; the same 32 failed welds of 394 | Independent implementation (checked locally) | — |
+| binout, whole run | The synthetic frontal crash as binout: energy ranking, section forces, spot weld failures, model quality sheet and energy checks equal to those from its ASCII files | Synthetic truth | `test_binout.py` |
 | Other ASCII files (sleout, rwforc, sbtout, deforc, jntforc, abstat, rbdout, swforc) | Short files written in the solver's layout | Synthetic truth | `test_lsdyna_ascii.py` |
 | Energy checks | Balanced and faulty energy histories | Synthetic truth | `test_energy_check.py` |
 | Load paths | Synthetic frontal runs with a known cause; two real secforc runs compared | Synthetic truth, real data | `test_loadpath.py` |
@@ -98,6 +101,11 @@ every scoring module; that is not repeated in each row below.
 | Bonnet clearance | 130 synthetic impacts with known bottoming; analytic geometry; the square-wave limit; the real head drop nodout | Synthetic truth, closed form, real data | `test_clearance.py` |
 | ISO-MME | Hand-built containers of another project (pyisomme) in three encodings | Synthetic truth | `test_isomme.py` |
 
+The binout reader was also checked on four further runs (LS-DYNA R9.3.1
+to R12, SMP and MPP, single precision, up to 1501 states and 81 MB): node
+coordinates equal the initial coordinates plus the displacements, glstat
+totals equal the sum of their parts, matsum part energies add up to the
+glstat internal energy, and every symbol table agrees with its records.
 Several readers were also run on real files whose licences do not allow
 copying them into the repository (a full-width frontal crash with 394
 spot welds, a hat section crush, a bolted joint and others). Those
@@ -119,7 +127,7 @@ checks are described in the guides and are not part of the test suite.
 
 ## The examples
 
-All 35 example scripts run in the test suite, and their printed output
+All 36 example scripts run in the test suite, and their printed output
 must match the files shown in the guides character for character
 (`test_examples.py`). So every number in the documentation is the
 number the current code prints.
@@ -155,7 +163,7 @@ Be aware of these gaps when you use the results:
 | Drop test (LS-DYNA R14.1.1) | An LS-DYNA modelling project | MIT | glstat, matsum, d3hsp; its keyword deck |
 | Tube crush deck (LS-DYNA R14 template) | The same LS-DYNA modelling project | MIT | Keyword deck reader, edits |
 | Block on plate decks | An LS-PrePost automation project | MIT | Keyword deck checks |
-| Plate buckling (LS-DYNA R14) | A plate buckling study | MIT | rcforc, spcforc; its main keyword deck (LS-PrePost 2024/R2) |
+| Plate buckling (LS-DYNA R14) | A plate buckling study | MIT | binout, rcforc, spcforc, glstat, matsum; its main keyword deck (LS-PrePost 2024/R2) |
 | ISO-MME containers | pyisomme | MIT | ISO-MME reader |
 
 Each folder under `tests/data/` has a README with the exact source,

@@ -176,9 +176,9 @@ def load_welds(path: str | Path | AsciiOutput, name: str | None = None, *,
     """Read the spot weld forces of a run.
 
     ``path`` is a run folder (with ``swforc``, ``SWFORC`` or a job prefix
-    such as ``run1.swforc``), a swforc file, or an `AsciiOutput` already
-    read. A weld counts as failed from the first state LS-DYNA marks it
-    ``failure``. ``name`` defaults to the folder name.
+    such as ``run1.swforc``, or binout files with swforc), a swforc file,
+    or an `AsciiOutput` already read. A weld counts as failed from the
+    first state LS-DYNA marks it ``failure``. ``name`` defaults to the folder name.
     """
     if isinstance(path, AsciiOutput):
         return _from_output(path, name or "run", unit_system, "")
@@ -188,6 +188,13 @@ def load_welds(path: str | Path | AsciiOutput, name: str | None = None, *,
             p for p in target.iterdir() if p.name.lower().endswith(".swforc"))
         files = [p for p in found if p.is_file()]
         if not files:
+            from crashmetrics.binout import find_binout, read_binout
+            binout = find_binout(target)
+            if binout:
+                bo = read_binout(binout)
+                if "swforc" in bo:
+                    return _from_output(bo.output("swforc"), name or target.name,
+                                        unit_system, str(binout[0]))
             raise FileNotFoundError(f"No swforc in {target}.")
         file, label = files[0], target.name
     elif target.is_file():

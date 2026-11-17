@@ -94,9 +94,10 @@ optional channels of different LS-DYNA versions do not matter. They were
 verified on real LS-DYNA R14.1 and R16.1 SMP output; MPP output is
 accepted but has not been checked on real files yet.
 
-For `binout` files, read the variables with a binout reader (such as
-`lasso-python`) and pass them to `GlobalEnergies.from_mapping` and
-`PartEnergies.from_mapping`.
+For `binout` files, `crashmetrics.binout` gives the same objects
+(`read_binout(run).glstat()`, `.matsum()`), and `check_run` reads them
+by itself when a run folder has no ASCII glstat. See
+[LS-DYNA binout](binout.md).
 
 ## Complete example
 

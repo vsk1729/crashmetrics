@@ -954,8 +954,10 @@ def read_run(
     """Read every supported ASCII file in a run directory.
 
     Files are found by name (``nodout`` or ``NODOUT``; a job-ID prefix
-    such as ``run1.nodout`` also works). Files without any state (an
-    empty output request) are left out.
+    such as ``run1.nodout`` also works). An output without an ASCII file
+    is read from the folder's binout files if they have it
+    (`crashmetrics.binout`). Files without any state (an empty output
+    request) are left out.
 
     Parameters
     ----------
@@ -992,7 +994,24 @@ def read_run(
             raise ValueError(f"{found[kind]}: {error}") from error
         if len(output):
             results[kind] = output
-    return results
+    missing = [k for k in wanted if k not in results and k not in found]
+    if missing:
+        from crashmetrics.binout import find_binout, read_binout
+
+        files = find_binout(directory)
+        if files:
+            try:
+                bo = read_binout(files)
+            except (OSError, ValueError) as error:
+                if not skip_errors:
+                    raise ValueError(f"{files[0]}: {error}") from error
+            else:
+                for kind in missing:
+                    if kind in bo:
+                        output = bo.output(kind)
+                        if len(output):
+                            results[kind] = output
+    return {k: results[k] for k in wanted if k in results}
 
 
 def main(argv: Sequence[str] | None = None) -> int:
