@@ -6,6 +6,14 @@ follow [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Project
+
+- Issue forms (bug report, protocol or limit correction, feature
+  request, question), a pull request template, a code of conduct and a
+  security policy.
+- Test coverage measured in CI (summary of the Python 3.12 test job) and
+  shown as a README badge, published with the documentation site.
+
 ## [0.23.0] - 2026-11-17
 
 ### Added

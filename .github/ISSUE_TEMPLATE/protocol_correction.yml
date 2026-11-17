@@ -1,0 +1,42 @@
+name: Protocol or limit correction
+description: A limit, formula, score or interpretation that does not match the public protocol or standard.
+labels: ["protocol"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        These are the most valuable reports. Please cite the public source; describe it in your own words rather than pasting protocol text.
+  - type: input
+    id: protocol
+    attributes:
+      label: Protocol or standard
+      description: Name, version and date.
+      placeholder: e.g. Euro NCAP MPDB Assessment Protocol v1.2, 2025
+    validations:
+      required: true
+  - type: input
+    id: section
+    attributes:
+      label: Section, table or page
+    validations:
+      required: true
+  - type: textarea
+    id: now
+    attributes:
+      label: What crashmetrics does now
+      description: Function, input and the value it gives.
+    validations:
+      required: true
+  - type: textarea
+    id: should
+    attributes:
+      label: What the protocol says it should be
+      description: The rule or value in your own words, with units, and a worked example if the protocol has one.
+    validations:
+      required: true
+  - type: checkboxes
+    id: notes
+    attributes:
+      label: Checked
+      options:
+        - label: I checked the protocol notes page (https://vsk1729.github.io/crashmetrics/protocol-notes/) for a documented interpretation.

@@ -12,3 +12,8 @@ htmlcov/
 .env.*site/
 crashmetrics_doe_results.csv
 crashmetrics_features.csv
+
+# Coverage
+coverage.json
+coverage-badge.json
+docs/coverage.json

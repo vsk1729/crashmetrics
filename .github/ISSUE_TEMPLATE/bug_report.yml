@@ -1,0 +1,65 @@
+name: Bug report
+description: A wrong value, an error, or a file that does not read.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting. Please search the [existing issues](https://github.com/vsk1729/crashmetrics/issues) first.
+        **Do not attach confidential data** (company models, test reports, proprietary dummy or vehicle files). Share a minimal, cleaned or synthetic sample instead.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you did, what you expected and what you got.
+    validations:
+      required: true
+  - type: textarea
+    id: code
+    attributes:
+      label: Minimal script
+      description: The shortest code that shows the problem.
+      render: python
+    validations:
+      required: true
+  - type: textarea
+    id: traceback
+    attributes:
+      label: Full traceback or output
+      render: text
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Signals, HIC, filters
+        - Dummy injury criteria
+        - Euro NCAP / Bharat NCAP / regulation scoring
+        - Pedestrian (headform, legform, clearance)
+        - LS-DYNA output (binout, ASCII, d3hsp)
+        - LS-DYNA keyword decks
+        - Load paths, spot welds, model quality
+        - Materials (tensile, MAT_024, GISSMO)
+        - Correlation, DOE, ML features
+        - Documentation
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: versions
+    attributes:
+      label: Versions
+      description: 'Output of: python -c "import sys, numpy, crashmetrics; print(crashmetrics.__version__, numpy.__version__, sys.version)"'
+      placeholder: 0.23.0 2.1.3 3.12.4 ...
+    validations:
+      required: true
+  - type: input
+    id: solver
+    attributes:
+      label: Solver or file version (for file readers)
+      placeholder: e.g. LS-DYNA R13.1 MPP double precision
+  - type: input
+    id: os
+    attributes:
+      label: Operating system
+      placeholder: e.g. Windows 11, Ubuntu 22.04

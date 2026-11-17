@@ -231,7 +231,13 @@ describe the layout in the issue instead.
 ## 10. Reporting bugs and requesting features
 
 Search the [existing issues](https://github.com/vsk1729/crashmetrics/issues)
-first.
+first, then pick a form under
+[New issue](https://github.com/vsk1729/crashmetrics/issues/new/choose):
+bug report, protocol or limit correction, feature request or question.
+Security problems are reported privately (see [SECURITY.md](SECURITY.md)),
+and everyone follows the [code of conduct](CODE_OF_CONDUCT.md). Never
+attach confidential data (company models, test reports, vehicle or
+dummy files).
 
 **Bug report**
 
@@ -250,6 +256,9 @@ first.
 - whether you can provide a test case or test data.
 
 ## 11. Pull request checklist
+
+The pull request template repeats this list. Coverage is reported in the
+summary of the Python 3.12 test job; new code should come with tests.
 
 - [ ] Linked issue (for anything larger than a small fix)
 - [ ] Tests added or updated; `python -m pytest -q` passes

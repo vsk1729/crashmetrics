@@ -1,0 +1,31 @@
+name: Feature request
+description: A new criterion, protocol, reader or analysis.
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: need
+    attributes:
+      label: What you need and why
+      description: The engineering task this would help with.
+    validations:
+      required: true
+  - type: textarea
+    id: source
+    attributes:
+      label: Public source
+      description: Document, version, date and sections; formulas, limits and units; any worked example.
+  - type: dropdown
+    id: data
+    attributes:
+      label: Can you provide test data or a test case?
+      description: Test data must be openly licensed (MIT preferred), synthetic, or public; never confidential.
+      options:
+        - "Yes"
+        - "No"
+        - "Maybe, after checking the licence"
+  - type: checkboxes
+    id: help
+    attributes:
+      label: Contribution
+      options:
+        - label: I would like to implement this myself (see CONTRIBUTING.md).
