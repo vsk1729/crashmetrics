@@ -1,0 +1,46 @@
+# crashmetrics.deck
+
+::: crashmetrics.deck
+    options:
+      members:
+        - read_deck
+        - parse_deck
+        - Deck
+        - DeckFile
+        - DeckInfo
+        - Block
+        - Parameter
+        - IncludeTransform
+        - nodes
+        - elements
+        - mass_elements
+        - sets
+        - curves
+        - model_summary
+        - ModelSummary
+        - PartInfo
+        - time_steps
+        - TimeStepEstimate
+        - guess_units
+        - UNIT_SYSTEMS
+        - check_deck
+        - DeckSheet
+        - DeckCheck
+        - load_case
+        - LoadCase
+        - Output
+        - output_requirements
+        - ANALYSES
+        - set_parameter
+        - part_card
+        - set_thickness
+        - set_material
+        - set_section
+        - set_end_time
+        - set_mass_scaling
+        - set_initial_velocity
+        - set_output
+        - add_history_nodes
+        - prepare_outputs
+        - write_variants
+        - main

@@ -11,6 +11,7 @@ dataclass, so `dataclasses.asdict(result)` turns it into a plain dict.
 | [`pedestrian`](pedestrian.md) | HIC, headform and legform grid scoring, Flex-PLI, AIS-100 |
 | [`pedestrian.clearance`](clearance.md) | Bonnet clearance to the hard parts, deformation space needed, headform impacts from nodout: bottoming out, its time and cause, why a point is red; a synthetic bonnet and its impacts (`pedestrian.synthetic`) |
 | [`mesh`](mesh.md) | Nodes, elements and part titles of an LS-DYNA keyword file; node coordinates per part |
+| [`deck`](deck.md) | LS-DYNA keyword decks: every include and parameter read, parts with mass and centre of gravity, time step estimate, checks (missing includes and IDs, duplicates, contacts, welds), load case and output requirements, edits written back unchanged elsewhere, DOE variants; `crashmetrics-deck` command |
 | [`head`](head.md) | DAMAGE, BrIC, loading phase |
 | [`neck`](neck.md) | Neck loads, occipital condyle moment, R94 limits, Nij |
 | [`thorax`](thorax.md) | Chest deflection, VC, THOR Rmax and abdomen, CTI |

@@ -1,0 +1,75 @@
+cold start: steel ball drop onto aluminum plate (mm-ton-s): 31 keywords in 3 files
+files: ball_drop.k, mesh_plate.k, mesh_ball.k
+
+2 parts, 988 nodes, 900 shell, 8 solid
+Total mass 0.000134069 (0.1341 kg), centre of gravity (5.054e-17, -1.074e-15, 2.813) [mm-s-t]
+| Part | Title | Elements | Section | t | Material | Density | Mass (kg) |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | aluminum plate 150x150x2mm | 900 shell | 1 SHELL 16 | 2 | 1 024 PIECEWISE_LINEAR_PLASTICITY | 2.7e-09 | 0.1215 |
+| 2 | rigid steel ball r8 (50 mm drop) | 8 solid | 2 SOLID 1 |  | 2 020 RIGID (rigid) | 7.85e-09 | 0.01257 |
+d3hsp of this run: part 1 1.2149954E-04, part 2 1.2569384E-05, centre z 2.8125846
+Smallest estimated time step 0.0008409 ms (TSSFAC 0.9)
+  shell 100000 (part 1): 0.0008409 ms, length 5
+  8 elements not estimated: rigid (solid)
+d3hsp of this run: smallest time step 8.4091E-07
+
+ball_drop.k: PASSED (0 failed, 0 warnings, 10 passed, 3 info)
+ℹ️ INFO Time step / Smallest estimated time step: 0.0008409 ms (shell 100000, part 1)
+      shell 100000 part 1: 0.0008409 ms
+      shell 100001 part 1: 0.0008409 ms
+      shell 100002 part 1: 0.0008409 ms
+      shell 100003 part 1: 0.0008409 ms
+      shell 100004 part 1: 0.0008409 ms
+      ... 5 more
+ℹ️ INFO Time step / Not estimated: 8 rigid (solid)
+ℹ️ INFO Unused / Unused node sets: 4
+      11: mesh_plate.k:1870
+      12: mesh_plate.k:1877
+      13: mesh_plate.k:1884
+      14: mesh_plate.k:1891
+impact_broken.k: FAILED (1 failed, 1 warnings, 8 passed, 1 info)
+❌ FAIL References / Missing sections: 1 IDs referred to but not defined
+      3: *PART (impact_broken.k:15)
+⚠️ WARN Contacts / Contacts: no contact defined
+ℹ️ INFO Time step / Smallest estimated time step: 0.0005999 ms (solid 1, part 1)
+      solid 1 part 1: 0.0005999 ms
+      solid 2 part 1: 0.0005999 ms
+      solid 3 part 1: 0.0005999 ms
+      solid 4 part 1: 0.0005999 ms
+      solid 5 part 1: 0.0005999 ms
+      ... 5 more
+
+crash: thin-wall tube axial impact on rigid wall, 20kg tail mass, mm-ton-s [mm-s-t]
+End time 4 ms
+Time step: TSSFAC 0.9, no mass scaling
+Energy: HGEN 2, RWEN 2, SLNTEN 2, RYLEN 2
+Initial velocity: part 1: (0, 0, -10000) (36.0 km/h)
+Rigid wall: planar at (0, 0, 0.5), normal (0, 0, 1), friction 0.3
+1 contacts:
+  automatic_single_surface 1 'tube self contact': part set 801, friction 0.2/0.2, SOFT 1
+Outputs: glstat every 0.02 ms (ASCII); matsum every 0.02 ms (ASCII); rwforc every 0.02 ms (ASCII); d3plot every 0.2 ms
+crash.k: outputs: FAILED (4 failed, 0 warnings, 5 passed, 0 info)
+❌ FAIL Model quality / sleout: not written; add *DATABASE_SLEOUT (contact energies)
+❌ FAIL Node channels / nodout: not written; add *DATABASE_NODOUT (node motion)
+❌ FAIL Node channels / history nodes: none: add *DATABASE_HISTORY_NODE
+❌ FAIL Contacts / rcforc: not written; add *DATABASE_RCFORC (contact forces)
+added: SLEOUT every 1e-05
+added: NODOUT every 1e-06
+added: RCFORC every 1e-05
+written: crash.k (mesh_tube.k unchanged)
+  -   4.000E-3         0       0.0       0.0   1.000E8         0
+  +      0.006         0       0.0       0.0   1.000E8         0
+  -        1.5       1.5       1.5       1.5       0.0       0.0       0.0         0
+  +        1.8       1.8       1.8       1.8       0.0       0.0       0.0         0
+  -          1         2       0.0       0.0       0.0  -1.000E4         0         0
+  +          1         2       0.0       0.0       0.0   -1.5E+4         0         0
+  + 8 new lines before *END
+crash.k: outputs: PASSED (0 failed, 0 warnings, 10 passed, 0 info)
+
+run,thickness,speed
+run_001,1.633358791,13196.28507
+run_002,1.940182851,14966.94292
+run_003,1.280044343,14498.07126
+run_001: t 1.63336 mm, mass 20.290 kg, 47.5 km/h
+run_002: t 1.94018 mm, mass 20.344 kg, 53.9 km/h
+run_003: t 1.28004 mm, mass 20.227 kg, 52.2 km/h

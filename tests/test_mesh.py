@@ -68,8 +68,8 @@ def test_fixed_format(tmp_path):
 def test_long_and_comma_formats_and_merge(tmp_path):
     long = tmp_path / "long.k"
     long.write_text("*KEYWORD\n*NODE +\n"
-                    f"{11:20d}{1.5:32.6f}{2.5:32.6f}{-3.5:32.6f}\n"
-                    f"{12:20d}{1.0:32.6f}{2.0:32.6f}{3.0:32.6f}\n"
+                    f"{11:20d}{1.5:20.6f}{2.5:20.6f}{-3.5:20.6f}\n"
+                    f"{12:20d}{1.0:20.6f}{2.0:20.6f}{3.0:20.6f}\n"
                     "*ELEMENT_BEAM +\n" f"{1:20d}{7:20d}{11:20d}{12:20d}\n*END\n")
     comma = tmp_path / "comma.k"
     comma.write_text("*NODE\n21, 1.0, 2.0, 3.5e+2\n22,4,5,6\n"

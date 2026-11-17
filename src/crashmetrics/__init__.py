@@ -12,6 +12,10 @@ crashmetrics.pedestrian.clearance
     bottoming out, its time and cause, why a point is red.
 crashmetrics.mesh
     Nodes, elements and part titles of an LS-DYNA keyword file.
+crashmetrics.deck
+    LS-DYNA keyword decks before a run: includes and parameters, parts
+    with mass and time step, checks, load case and output requirements,
+    edits and DOE variants.
 crashmetrics.acceleration
     Peak acceleration and the 3 ms clip.
 crashmetrics.energy

@@ -1,8 +1,9 @@
 # LS-DYNA test data
 
-Real LS-DYNA output used to test the readers in `crashmetrics.lsdyna`,
-`crashmetrics.lsdyna_ascii` and `crashmetrics.d3hsp`. Only files under
-the MIT licence are included, each with its licence file.
+Real LS-DYNA output and keyword decks used to test the readers in
+`crashmetrics.lsdyna`, `crashmetrics.lsdyna_ascii`, `crashmetrics.d3hsp`
+and `crashmetrics.deck`. Only files under the MIT licence are included,
+each with its licence file.
 
 ## `kagent/`
 
@@ -22,6 +23,15 @@ R14.1.1 SMP single precision, 4 CPUs.
   lines and timing. All descriptive text printed by LS-DYNA (banner,
   legal notice, option descriptions, notes, mass property blocks) was
   removed and the host name replaced with `HOSTNAME`.
+- `cold_start/ball_drop.k`, `mesh_plate.k`, `mesh_ball.k`: unchanged
+  copies of the deck of that same run (fixed format, two include files).
+  Its `d3hsp` gives the part masses, the mass centre and the smallest
+  time step that `crashmetrics.deck.model_summary` and `time_steps`
+  reproduce from the deck.
+- `crash/crash.k`, `mesh_tube.k`: unchanged copies of
+  `skills/lsdyna-kfile/templates/crash/` (a tube against a rigid wall:
+  contact with an ID, part set, lumped masses, rigid wall, initial
+  velocity, comment headers).
 
 ## `helmet/`
 
@@ -54,6 +64,23 @@ double precision.
 - `rcforc`, `spcforc`: unchanged copies of `Plade_300_150_4/BB/rcforc`
   and `Plade_300_150_4/BB/spcforc` (contact labels `SURFA` / `SURFB`,
   mortar contact legend).
+- `deck/main.k`, `deck/MAT_CWM355.k`: unchanged copies of the main deck
+  and its material include, written by LS-PrePost 2024/R2 (4.11.14):
+  `*PARAMETER_DUPLICATION`, many control cards, titled curves, thermal
+  contacts with IDs. The two large mesh includes (`geometry.k`,
+  `boundary.k`, 3.5 MB) are not copied, so the deck tests also cover
+  include files that are not found.
+
+## `lsprepost_mcp/`
+
+From [lwz20210407/LS-PrePost-MCP](https://github.com/lwz20210407/LS-PrePost-MCP),
+commit `892aca96a2b01ea7c2bc97635c2decc225a1f566`, MIT licence (see
+`lsprepost_mcp/LICENSE`, Copyright (c) 2026 LS-PrePost-MCP contributors).
+
+- `impact.k`, `impact_mesh.k`, `impact_broken.k`: unchanged copies of
+  `tests/l3/fixtures/`: a block above a plate in mm-t-s, and the same
+  deck with one deliberate fault (part 2 refers to section 3, which
+  does not exist), which `crashmetrics.deck.check_deck` reports.
 
 ## Checked locally, not included
 
@@ -91,6 +118,13 @@ parser:
   reported as unreadable).
 - All 36 runs of the helmet study: HIC, BrIC and neck moment from the
   readers' arrays equal `master.csv` to 1e-15.
+- `crashmetrics.deck` on the full pladebuk deck (20 276 nodes, 15 390
+  solids, four files) and on the MIT deck
+  [`plane_strain_impact.k`](https://github.com/saudbinayed/binout)
+  (765 kB, LS-PrePost V4.9.9, m-s-kg, 2D contact kept unchanged; not
+  copied for its size); the K-agent drop test deck (`drop_e2e`): masses
+  and mass centre equal its `d3hsp` (block 2.512E-04, centre z 10.110008),
+  smallest time step 8.4091E-07.
 
 LS-DYNA is a trademark of its owner. This project is not affiliated with
 or endorsed by Ansys.

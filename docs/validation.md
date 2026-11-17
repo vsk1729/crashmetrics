@@ -93,6 +93,8 @@ every scoring module; that is not repeated in each row below.
 | Spot welds | Synthetic runs with known failure times | Synthetic truth | `test_spotweld.py` |
 | Model quality sheet | Synthetic runs with known faults; the real drop test files | Synthetic truth, real data | `test_quality.py` |
 | Keyword mesh | Fixed, long and comma formats; round trip | Synthetic truth | `test_mesh.py` |
+| Keyword decks: masses, centre of gravity, time step | LS-DYNA R14.1.1 ball drop deck: part masses, the model's centre of gravity and the smallest time step equal what the solver printed in its d3hsp (to its single-precision output) | Real data | `test_deck.py` |
+| Keyword decks: reading, checks, write-back | Four real decks (R14 drop and tube crush, a deck with one deliberate fault, an LS-PrePost 2024/R2 thermal deck with missing includes); unchanged write-back byte for byte; synthetic decks for every format, parameters, includes and edits | Real data, synthetic truth | `test_deck.py` |
 | Bonnet clearance | 130 synthetic impacts with known bottoming; analytic geometry; the square-wave limit; the real head drop nodout | Synthetic truth, closed form, real data | `test_clearance.py` |
 | ISO-MME | Hand-built containers of another project (pyisomme) in three encodings | Synthetic truth | `test_isomme.py` |
 
@@ -117,7 +119,7 @@ checks are described in the guides and are not part of the test suite.
 
 ## The examples
 
-All 34 example scripts run in the test suite, and their printed output
+All 35 example scripts run in the test suite, and their printed output
 must match the files shown in the guides character for character
 (`test_examples.py`). So every number in the documentation is the
 number the current code prints.
@@ -134,7 +136,8 @@ Be aware of these gaps when you use the results:
   Euro NCAP or Bharat NCAP datasheet of a real car.
 - **Solver runs of the generated cards.** The `*MAT_024` and GISSMO
   cards and the single-element deck are checked as text and against
-  exact responses, not by running LS-DYNA.
+  exact responses, not by running LS-DYNA. Decks edited by
+  `crashmetrics.deck` are checked by reading them back, not by a run.
 - **ASCII files without a real sample in the repository** (the row
   "Other ASCII files" above).
 - **Synthetic models.** The frontal crash and bonnet models are
@@ -149,8 +152,10 @@ Be aware of these gaps when you use the results:
 | --- | --- | --- | --- |
 | NHTSA tests 2320 and 4429, vehicle accelerations | NHTSA Vehicle Crash Test Database, through an MIT-licensed repository | NHTSA public information; MIT | Pulse, CFC filter |
 | Head drop and pendulum runs (LS-DYNA R16) | A helmet fit study | MIT | nodout, secforc, HIC, BrIC, neck moment |
-| Drop test (LS-DYNA R14.1.1) | An LS-DYNA modelling project | MIT | glstat, matsum, d3hsp |
-| Plate buckling (LS-DYNA R14) | A plate buckling study | MIT | rcforc, spcforc |
+| Drop test (LS-DYNA R14.1.1) | An LS-DYNA modelling project | MIT | glstat, matsum, d3hsp; its keyword deck |
+| Tube crush deck (LS-DYNA R14 template) | The same LS-DYNA modelling project | MIT | Keyword deck reader, edits |
+| Block on plate decks | An LS-PrePost automation project | MIT | Keyword deck checks |
+| Plate buckling (LS-DYNA R14) | A plate buckling study | MIT | rcforc, spcforc; its main keyword deck (LS-PrePost 2024/R2) |
 | ISO-MME containers | pyisomme | MIT | ISO-MME reader |
 
 Each folder under `tests/data/` has a README with the exact source,
