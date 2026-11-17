@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Documentation
+    url: https://vsk1729.github.io/crashmetrics/
+    about: Guides, examples, API reference, protocol notes and validation.
+  - name: Report a security problem
+    url: https://github.com/vsk1729/crashmetrics/security/advisories/new
+    about: Report privately; please do not open a public issue for security problems.

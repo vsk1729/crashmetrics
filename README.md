@@ -4,6 +4,7 @@
 [![Python](https://img.shields.io/pypi/pyversions/crashmetrics)](https://pypi.org/project/crashmetrics/)
 [![Tests](https://github.com/vsk1729/crashmetrics/actions/workflows/tests.yml/badge.svg)](https://github.com/vsk1729/crashmetrics/actions/workflows/tests.yml)
 [![Docs](https://github.com/vsk1729/crashmetrics/actions/workflows/docs.yml/badge.svg)](https://vsk1729.github.io/crashmetrics/)
+[![Coverage](https://img.shields.io/endpoint?url=https%3A%2F%2Fvsk1729.github.io%2Fcrashmetrics%2Fcoverage.json)](https://github.com/vsk1729/crashmetrics/actions/workflows/tests.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](https://github.com/vsk1729/crashmetrics/blob/main/LICENSE)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23806423.svg)](https://doi.org/10.5281/zenodo.23806423)
 

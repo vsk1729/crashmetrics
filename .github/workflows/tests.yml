@@ -53,4 +53,11 @@ jobs:
         run: python -m pip install -e ".[dev]" ${{ matrix.numpy-pin }}
 
       - name: Run tests
+        if: matrix.python-version != '3.12'
         run: python -m pytest -v
+
+      - name: Run tests with coverage
+        if: matrix.python-version == '3.12'
+        run: |
+          python -m pytest -v --cov=crashmetrics --cov-report=term-missing:skip-covered --cov-report=json:coverage.json
+          python tools/coverage_badge.py coverage.json coverage-badge.json >> "$GITHUB_STEP_SUMMARY"

@@ -1,0 +1,15 @@
+name: Question
+description: How to do something, or what a result means.
+labels: ["question"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        The [guides](https://vsk1729.github.io/crashmetrics/guides/) and [examples](https://github.com/vsk1729/crashmetrics/tree/main/examples) answer many questions. Please do not attach confidential data.
+  - type: textarea
+    id: question
+    attributes:
+      label: Question
+      description: What you are trying to do, and what you tried.
+    validations:
+      required: true

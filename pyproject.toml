@@ -41,6 +41,7 @@ classifiers = [
 [project.optional-dependencies]
 dev = [
     "pytest>=8",
+    "pytest-cov",
     "build",
     "twine",
     "mypy",
