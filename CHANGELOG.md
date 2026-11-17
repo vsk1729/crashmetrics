@@ -6,6 +6,8 @@ follow [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.22.0] - 2026-11-17
+
 ### Added
 
 - `crashmetrics.pedestrian.clearance`: why a headform point is red.
@@ -708,7 +710,8 @@ follow [Semantic Versioning](https://semver.org/).
 - `crashmetrics.pedestrian.calculate_hic` for HIC on a refined,
   linearly interpolated time grid.
 
-[Unreleased]: https://github.com/vsk1729/crashmetrics/compare/v0.21.0...main
+[Unreleased]: https://github.com/vsk1729/crashmetrics/compare/v0.22.0...main
+[0.22.0]: https://github.com/vsk1729/crashmetrics/compare/v0.21.0...v0.22.0
 [0.21.0]: https://github.com/vsk1729/crashmetrics/compare/v0.20.0...v0.21.0
 [0.20.0]: https://github.com/vsk1729/crashmetrics/compare/v0.19.1...v0.20.0
 [0.19.1]: https://github.com/vsk1729/crashmetrics/compare/v0.19.0...v0.19.1
