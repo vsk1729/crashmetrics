@@ -124,6 +124,7 @@ nav:
       - Load paths and energy across runs: guides/load-paths.md
       - Spot weld failure: guides/spot-welds.md
       - Model quality check sheet: guides/model-quality.md
+      - "Keyword decks: check before you run": guides/keyword-decks.md
       - Batch runs, analytics and ML: guides/batch-analytics.md
       - Features for machine learning: guides/ml-features.md
       - DOE, sensitivity and probabilistic ratings: guides/doe-sensitivity.md
@@ -139,6 +140,7 @@ nav:
       - pedestrian: reference/pedestrian.md
       - pedestrian.clearance: reference/clearance.md
       - mesh: reference/mesh.md
+      - deck: reference/deck.md
       - head: reference/head.md
       - neck: reference/neck.md
       - thorax: reference/thorax.md

@@ -54,6 +54,7 @@ docs = [
 [project.scripts]
 crashmetrics-energy = "crashmetrics.lsdyna:main"
 crashmetrics-ascii = "crashmetrics.lsdyna_ascii:main"
+crashmetrics-deck = "crashmetrics.deck:main"
 
 [project.urls]
 Homepage = "https://github.com/vsk1729/crashmetrics"

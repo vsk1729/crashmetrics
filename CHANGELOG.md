@@ -37,6 +37,49 @@ follow [Semantic Versioning](https://semver.org/).
   reproduces the peak, crush, time and restitution an independent
   project reports for test 2320 (restitution 0.162 against 0.163), and the two cars of test 4429 satisfy
   momentum conservation within 10 %.
+- `crashmetrics.deck`: LS-DYNA keyword decks before a run.
+  - Reading: `read_deck` / `parse_deck` follow `*INCLUDE`,
+    `*INCLUDE_PATH(_RELATIVE)` and `*INCLUDE_TRANSFORM` (ID offsets,
+    `*DEFINE_TRANSFORMATION`), read `*PARAMETER`, `_LOCAL`,
+    `_EXPRESSION` and `_DUPLICATION`, in fixed, long, `%` and comma
+    formats, and keep every line, so a deck written back is unchanged
+    except where edited. `Deck.records` gives typed card values for parts,
+    sections, materials, contacts, connections, initial conditions,
+    walls, boundary conditions, controls, outputs and definitions;
+    `nodes`, `elements`, `mass_elements`, `sets`, `curves` for bulk data.
+    `Deck.info`: title, files, the tool and version that wrote the deck,
+    keywords without a layout (kept unchanged).
+  - Model tables: `model_summary` (parts with elements, section,
+    thickness, material, density, mass and centre of gravity; total;
+    units from `*CONTROL_UNITS` or guessed), `time_steps` (estimated
+    element time steps, mass that mass scaling would add).
+  - Checks: `check_deck` (include files, parameters, duplicate IDs,
+    missing references, parts without elements, thickness or density,
+    degenerate elements, free nodes, parts in no contact, spot welds
+    without a tied contact, time step and mass scaling, unused
+    definitions).
+  - Load case: `load_case` and `output_requirements` (whether the outputs
+    give what the model quality, load path, spot weld, node channel,
+    contact and rigid wall analyses read, including the nodout rate for
+    CFC 1000).
+  - Edits: `set_parameter`, `set_thickness` (shared sections changed or
+    copied), `set_material`, `set_section`, `set_end_time`,
+    `set_mass_scaling`, `set_initial_velocity`, `set_output`,
+    `add_history_nodes`, `prepare_outputs`; `write_variants` writes one
+    deck per DOE row with a `design.csv`.
+  - `crashmetrics-deck` command.
+- Real keyword decks (MIT) in `tests/data/lsdyna/`: the ball drop deck
+  whose d3hsp was already included (part masses, centre of gravity and
+  smallest time step from the deck equal the solver's), a tube crush, a
+  block-on-plate deck and a copy with one fault, and an LS-PrePost
+  2024/R2 thermal deck.
+- Guide "Keyword decks: check before you run" and example 35.
+
+### Changed
+
+- `crashmetrics.mesh`: long-format keyword files are read with
+  20-character node and element fields, and `%` files with 10-character
+  IDs.
 
 ## [0.21.0] - 2026-11-10
 

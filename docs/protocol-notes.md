@@ -354,6 +354,28 @@ Virtual Testing Protocol v1.0.2 and Frontal Impact Protocol v1.2.
 | Contact energy | sleout slave and master side energies | Their sum per contact; its lowest value against the peak internal energy of glstat | `contact_negative=` |
 | ⚠️ Synthetic quality data | Not LS-DYNA output | `ModelQuality` sets what is written; it does not change the crash | |
 
+## LS-DYNA keyword decks
+
+The keyword file format leaves some things to the solver; where the
+reader had to choose, it says so here.
+
+| Topic | Source | crashmetrics | Change it |
+| --- | --- | --- | --- |
+| Blank lines | A blank card line is a card of default values | Counted as a card, except at the end of a keyword | |
+| ⚠️ Include search | `*INCLUDE_PATH`, `*INCLUDE_PATH_RELATIVE`, the folder of the input | Absolute path, then the including file's folder, the main file's folder, relative paths, then the include paths, in that order | |
+| ⚠️ Include offsets | `*INCLUDE_TRANSFORM` offsets per ID type | Node, element, part, material, section, function/curve, set and other definition offsets applied to the matching IDs and references | |
+| ⚠️ Local parameters | `*PARAMETER_LOCAL` is seen in its file | Seen in its file and the files it includes; a global parameter of the same name is hidden there | |
+| ⚠️ Repeated parameters | `*PARAMETER_DUPLICATION` decides | The later definition wins (also without the keyword), except with DUPLICATION 2, where the first is kept; a repeat is listed in the reading notes | |
+| Expressions | `*PARAMETER_EXPRESSION` | Numbers, names, + - * / ^ ( ), the usual functions (radians); evaluated without `eval`; anything else is an error | |
+| ⚠️ Solid volume | Under-integrated solids are integrated at their centre | ELFORM 0, 1, 10, 13, 15, 16, -1, -2: 8 x the Jacobian at the centre (equal to the solver's d3hsp for a sphere of eight hexahedra); other formulations: exact volume | |
+| ⚠️ Time step | The solver's own estimate depends on many options | Shells: area / longest side (x 2 for triangles; ISDO 1: the diagonal), plane-stress sound speed; solids: volume / largest face area (x 3 for tetrahedra), dilatational wave speed; beams: length, bar wave speed; times TSSFAC. Equal to the d3hsp of the shell drop test | |
+| Mass scaling | DT2MS < 0: mass added only where the step is below TSSFAC x abs(DT2MS) | Estimated as the mass needed to bring each element up to that step | |
+| ⚠️ Binary flag 0 | `*DATABASE_` BINARY 0 is the solver's default | Treated as ASCII written (an R14.1.1 SMP run wrote ASCII files) | Set BINARY 1 or 3 |
+| ⚠️ Node sampling | SAE J211: sample well above the channel class | nodout at most 1 / (10 x CFC): 0.1 ms for CFC 1000 | `output_requirements(..., cfc=)` |
+| ⚠️ Contact coverage | Contacts can use segment, node and element sets | Only part, part-set and all-part contacts are counted; others make the result INFO | |
+| Unknown keywords | — | Kept and written back unchanged; listed in `DeckInfo.unknown` and the check sheet | |
+| Units | `*CONTROL_UNITS`, else none in the file | `*CONTROL_UNITS`, else a vote of the materials' density and modulus | `unit_system=` |
+
 ## Found something else?
 
 If a protocol you use reads differently, or a newer version changes a

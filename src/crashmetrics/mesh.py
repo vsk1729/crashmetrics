@@ -131,6 +131,7 @@ def read_mesh(path: str | Path, *, parts: Iterable[int] | None = None) -> Mesh:
     names: dict[int, str] = {}
     block: str | None = None
     long_format = False
+    i10 = False
     part_lines: list[str] = []
 
     def flush_part() -> None:
@@ -156,7 +157,8 @@ def read_mesh(path: str | Path, *, parts: Iterable[int] | None = None) -> Mesh:
             if block == "part":
                 flush_part()
             head = line.strip().upper()
-            long_format = head.endswith(("+", "%"))
+            long_format = head.endswith("+") or head.split()[-1:] == ["+"]
+            i10 = head.endswith("%") or head.split()[-1:] == ["%"]
             head = head.rstrip("+%")
             if head.startswith("*NODE") and not head.startswith("*NODE_"):
                 block = "node"
@@ -175,7 +177,8 @@ def read_mesh(path: str | Path, *, parts: Iterable[int] | None = None) -> Mesh:
         if block is None or not line.strip():
             continue
         if block == "node":
-            f = _fields(line, (20, 32, 32, 32) if long_format else (8, 16, 16, 16))
+            f = _fields(line, (20, 20, 20, 20) if long_format else
+                        (10, 16, 16, 16) if i10 else (8, 16, 16, 16))
             try:
                 node_ids.append(int(f[0]))
                 coords.append((_float(f[1]), _float(f[2]), _float(f[3])))
@@ -183,7 +186,7 @@ def read_mesh(path: str | Path, *, parts: Iterable[int] | None = None) -> Mesh:
                 continue
         elif block in _ELEMENT_NODES:
             n = _ELEMENT_NODES[block]
-            w: tuple[int, ...] = (20 if long_format else 8,) * (2 + n)
+            w: tuple[int, ...] = (20 if long_format else 10 if i10 else 8,) * (2 + n)
             f = _fields(line, w)
             try:
                 eid, pid = int(f[0]), int(f[1])

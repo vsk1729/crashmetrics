@@ -6,7 +6,7 @@
 
 **Open-source Python for automotive crash safety calculations:** injury
 criteria, Euro NCAP and Bharat NCAP scoring, pedestrian protection
-(with bonnet clearance and bottoming out), homologation checks, test-versus-CAE correlation, LS-DYNA output readers,
+(with bonnet clearance and bottoming out), homologation checks, test-versus-CAE correlation, LS-DYNA keyword deck checks and output readers,
 energy and model quality checks, load path and spot weld analysis across runs, all in one package.
 
 ```bash
@@ -37,6 +37,7 @@ pip install crashmetrics
 | Materials | Tensile tests from machine exports: cleaning and E, Rp0.2, Rm, Ag, A; Lüders plateau, machine compliance, mean curve of several specimens; necking and extrapolated hardening curve (Swift, Voce, ...), n and K; strain-rate fits and checked `*DEFINE_TABLE`; the complete `*MAT_024` card in any unit system; GISSMO failure from fracture tests (Hosford-Coulomb failure curve, FLC instability, element size regularisation) and `*MAT_ADD_DAMAGE_GISSMO`; checking, converting and comparing existing cards; material library | [Material cards](guides/material-cards.md), [GISSMO](guides/gissmo.md) |
 | Data formats | ISO-MME (ISO/TS 13499) read and write | [Virtual testing](guides/euroncap-virtual-testing.md) |
 | LS-DYNA | ASCII output readers (nodout, rcforc, sleout, secforc, rwforc, sbtout, abstat and more), `crashmetrics-ascii` to CSV; glstat / matsum energy balance checks, d3hsp run summary, `crashmetrics-energy` command | [ASCII output](guides/lsdyna-ascii.md), [LS-DYNA energy](guides/lsdyna-energy.md) |
+| Keyword decks | Includes and parameters read; mass, centre of gravity and time step before the run; missing IDs, duplicates, contacts; load case and output requirements; edits and DOE variants | [Keyword decks](guides/keyword-decks.md) |
 | Load paths | Part energies and section forces: energy ranking, load split, crush sequence, culprit parts between runs; synthetic frontal runs to try it | [Load paths](guides/load-paths.md) |
 | Spot welds | Failed and critical welds from swforc, failure sequence and bursts, new failures against a baseline | [Spot weld failure](guides/spot-welds.md) |
 | Model quality | One pass/fail sheet per run: termination, mass, added mass, time step, energy balance, contact energies | [Model quality](guides/model-quality.md) |
